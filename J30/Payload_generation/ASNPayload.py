@@ -1,5 +1,5 @@
-from J30.Payload_generation.Worksheet_extract import Worksheet
-from J30.Payload_generation.Number_Generation import NumberGeneration
+from Payload_generation.Worksheet_extract import Worksheet
+from Payload_generation.Number_Generation import NumberGeneration
 
 
 class Asn_Payload_Generator:

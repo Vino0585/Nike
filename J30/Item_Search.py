@@ -1,8 +1,8 @@
 import pandas as pd
-from J30.Environment.Get_Token import Get_Token
-from J30.Payload_generation.Item_Search_Payload import ItemPayload
+from Environment.Get_Token import Get_Token
+from Payload_generation.Item_Search_Payload import ItemPayload
 from collections import defaultdict
-from J30.Environment.WM_Environment import AWM_Env
+from Environment.WM_Environment import AWM_Env
 import requests
 from pathlib import Path
 

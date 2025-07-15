@@ -1,10 +1,10 @@
+from pathlib import Path
 import requests
 import pandas as pd
-from pathlib import Path
 from collections import defaultdict
-from J30.Environment.Get_Token import Get_Token
-from J30.Environment.WM_Environment import AWM_Env
-from J30.Payload_generation.ASNPayload import Asn_Payload_Generator
+from Environment.Get_Token import Get_Token
+from Environment.WM_Environment import AWM_Env
+from Payload_generation.ASNPayload import Asn_Payload_Generator
 
 
 def create_asns():

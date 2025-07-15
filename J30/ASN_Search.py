@@ -1,7 +1,7 @@
 import requests
 import json
-from J30.Environment.Get_Token import Get_Token
-from J30.Environment.WM_Environment import AWM_Env
+from Environment.Get_Token import Get_Token
+from Environment.WM_Environment import AWM_Env
 from pathlib import Path
 import pandas as pd
 from Payload_generation.Worksheet_extract import Worksheet

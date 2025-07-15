@@ -1,6 +1,3 @@
-# Version 1
-from unittest.mock import DEFAULT
-
 import pandas as pd
 from pathlib import Path
 
@@ -288,6 +285,6 @@ class Worksheet:
 
         return self.all_goods_holder_weighed_parameters
 
-Work = Worksheet()
-payload = Work.create_asn_extract_parameters()
-print(payload)
+# Work = Worksheet()
+# payload = Work.create_asn_extract_parameters()
+# print(payload)

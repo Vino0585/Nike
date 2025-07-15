@@ -1,6 +1,6 @@
 import uuid
 import datetime as dt
-from J30.Payload_generation.Worksheet_extract import Worksheet
+from Payload_generation.Worksheet_extract import Worksheet
 
 
 class Goods_Holder:
