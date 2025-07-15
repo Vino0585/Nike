@@ -8,7 +8,9 @@ from Payload_generation.Worksheet_extract import Worksheet
 
 # --- Configuration ---
 # Centralize configuration variables for easy changes.
-OUTPUT_FILENAME = "/Users/vgana3/Documents/Pycharm/MAWM/J30/Output_files/ASN_Search.xlsx"
+output_dir = Path("Output_files")
+output_dir.mkdir(parents=True, exist_ok=True)
+OUTPUT_FILENAME = output_dir / "ASN_Search_Results.xlsx"
 
 def prepare_asn_search_tasks() -> list:
     """

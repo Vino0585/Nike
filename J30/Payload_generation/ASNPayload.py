@@ -124,6 +124,7 @@ class Asn_Payload_Generator:
             num_of_asn = int(data_row.get('Number of ASN', 0))
             envn = data_row.get("Environment")
             o_facility = data_row.get("O_Facility", '0005005401')
+            carrier_id = data_row.get("CarrierId", 'AUPU')
 
             lpn_definitions = self._parse_lpn_definitions_from_row(data_row, row_num_in_sheet)
             if not lpn_definitions:
@@ -145,7 +146,7 @@ class Asn_Payload_Generator:
                     asn_extended = {"BolNumber": bol, "ProNumber": pro, "SealNumber": seal}
                     asn_payload = {
                         "AsnId": current_asn_id, "AsnOriginTypeId": "P", "OriginFacilityId": o_facility,
-                        "VendorId": None,
+                        "VendorId": None, "CarrierId": carrier_id, "BolNumber": bol, "ProNumber": pro,
                         "OrgId": str(plant), "DestinationFacilityId": str(plant),
                         "AsnStatus": "1000", "AsnLevel": "LPN", "TrailerId": str(trailer), "Extended": asn_extended,
                         "Lpn": lpn_list
@@ -156,16 +157,16 @@ class Asn_Payload_Generator:
         return self.all_asn_payloads
 
 
-# # This block is excellent for testing your class in isolation.
-# if __name__ == "__main__":
-#     asn_generator = Asn_Payload_Generator()
-#     final_payloads = asn_generator.generate_payloads
-#     # Optional: Pretty-print the first payload for verification
-#     if final_payloads:
-#         import json
-#
-#         print("\n--- First Generated Payload ---")
-#         print(json.dumps(final_payloads[0], indent=2))
+# This block is excellent for testing your class in isolation.
+if __name__ == "__main__":
+    asn_generator = Asn_Payload_Generator()
+    final_payloads = asn_generator.generate_payloads
+    # Optional: Pretty-print the first payload for verification
+    if final_payloads:
+        import json
+
+        print("\n--- First Generated Payload ---")
+        print(json.dumps(final_payloads[0], indent=2))
 
 
 

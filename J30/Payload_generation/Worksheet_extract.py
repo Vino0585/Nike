@@ -1,10 +1,20 @@
 # Version 1
-import pandas as pd
+from unittest.mock import DEFAULT
 
+import pandas as pd
+from pathlib import Path
+
+
+# 1. Get the path to the directory containing this script.
+SCRIPT_DIR = Path(__file__).resolve().parent
+# 2. Define the project root relative to this script.
+PROJECT_ROOT = SCRIPT_DIR.parent
+# 3. Construct the full, robust path to the Excel file.
+DEFAULT_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Worksheet.xlsx'
 
 class Worksheet:
-    def __init__(self):
-        self.excel_file_path = ''
+    def __init__(self, excel_path=DEFAULT_EXCEL_PATH):
+        self.excel_file_path = excel_path
         self.data_dict_index = {}
         self.plant = None
         self.num_of_asn = 0
@@ -24,7 +34,11 @@ class Worksheet:
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
         try:
-            self.excel_file_path = "/Users/vgana3/Documents/Pycharm/MAWM/J30/Input_files/WorkSheet.xlsx"
+            # The hardcoded path is now gone! It uses the one from __init__.
+            if not Path(self.excel_file_path).is_file():
+                raise FileNotFoundError(f"Error: The file '{self.excel_file_path}' was not found.")
+
+            # self.excel_file_path = "J30/Input_files/Worksheet.xlsx"
             xls = pd.ExcelFile(self.excel_file_path)
             sheet_names = xls.sheet_names
             print(f"Sheets found in '{self.excel_file_path}': {sheet_names}")
@@ -77,6 +91,7 @@ class Worksheet:
             case_qty = entry_dict.get('Case qty')
             envn = entry_dict.get("Environment")
             o_facility = entry_dict.get("Origin Facility", '0005005401')
+            carrier_id = entry_dict.get("CarrierId", 'AUPU')
 
             # Ensure case_qty is not zero to prevent division by zero errors later
             if case_qty == 0:  # Use the local 'case_qty'
@@ -93,7 +108,8 @@ class Worksheet:
                 "Qty": qty,
                 "Case qty": case_qty,
                 "Environment": envn,
-                "O_Facility": o_facility
+                "O_Facility": o_facility,
+                "Carrier": carrier_id
             }
             self.all_asn_parameters.append(asn_params)  # Add to our new list
 
@@ -272,6 +288,6 @@ class Worksheet:
 
         return self.all_goods_holder_weighed_parameters
 
-# Work = Worksheet()
-# payload = Work.create_asn_extract_parameters()
-# print(payload)
+Work = Worksheet()
+payload = Work.create_asn_extract_parameters()
+print(payload)

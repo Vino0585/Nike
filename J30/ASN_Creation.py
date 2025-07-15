@@ -1,5 +1,3 @@
-# /Users/vgana3/Documents/Pycharm/MAWM/J30/ASN_Creation.py
-
 import requests
 import pandas as pd
 from pathlib import Path
@@ -7,6 +5,7 @@ from collections import defaultdict
 from J30.Environment.Get_Token import Get_Token
 from J30.Environment.WM_Environment import AWM_Env
 from J30.Payload_generation.ASNPayload import Asn_Payload_Generator
+
 
 def create_asns():
     """
@@ -79,6 +78,7 @@ def create_asns():
                         asn_id = payload_to_send.get('AsnId')
                         origin_facility = payload_to_send.get('OriginFacilityId')
                         lpn_list = payload_to_send.get('Lpn', []) # Default to empty list
+                        carrier_id = payload_to_send.get('CarrierId')
 
                         for lpn in lpn_list:
                             lpn_id = lpn.get('LpnId')
@@ -93,7 +93,8 @@ def create_asns():
                                     "LPN_ID": lpn_id,
                                     "ITEM_ID": item_id,
                                     "QTY": quantity,
-                                    "O_FACILITY": origin_facility
+                                    "O_FACILITY": origin_facility,
+                                    "Carrier": carrier_id
                                 }
                                 extracted_report_data.append(report_entry)
 
@@ -117,9 +118,14 @@ def create_asns():
         print("\n" + "=" * 25 + " Generating Report " + "=" * 25)
         try:
             report_df = pd.DataFrame(extracted_report_data)
-            output_filename = '/Users/vgana3/Documents/Pycharm/MAWM/J30/Output_files/ASN_Creation_Report.xlsx'
-            report_df.to_excel(output_filename, index=False)
-            print(f"Successfully created report: {output_filename}")
+
+            # Define the Output path.
+            output_dir = Path("Output_files")
+            output_dir.mkdir(parents=True, exist_ok=True) # Just safe guaring.
+            output_filepath = output_dir / "ASN_Creation_Report.xlsx"
+
+            report_df.to_excel(output_filepath, index=False)
+            print(f"Successfully created report: {output_filepath}")
         except Exception as e:
             print(f"--> ERROR: Failed to create Excel report. Error: {e}")
     else:

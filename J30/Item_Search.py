@@ -113,6 +113,7 @@ def item_search():
             print(f"--> FATAL: Could not process batch for environment {environment.upper()}. Error: {e}")
 
     # --- Final Step: Process all collected results after the loops are done ---
+    # --- Final Step: Process all collected results after the loops are done ---
     if not all_results_data:
         print("\n--- Script finished, but no results were collected from any API calls. ---")
         return
@@ -121,23 +122,26 @@ def item_search():
     try:
         # Create a pandas DataFrame from the list of result dictionaries
         results_df = pd.DataFrame(all_results_data)
-
         # Clean up data types for better presentation
         results_df['Length'] = pd.to_numeric(results_df['Length'], errors='coerce').fillna(0)
 
         # 1. Print the results to the console in a clean table format
-        # .to_string() ensures that pandas doesn't truncate the output on wide consoles
         print(results_df.to_string(index=False))
 
-        # 2. Export the DataFrame to an Excel file
-        output_filename = f"/Users/vgana3/Documents/Pycharm/MAWM/J30/Output_files/item_search_results.xlsx"
-        results_df.to_excel(output_filename, sheet_name='ItemSearchResult', index=False)
+        # 2. Export the DataFrame to an Excel file (Improved Path Handling)
+        # Create a Path object for the output directory.
+        output_dir = Path("Output_files")
+        # Check if directory exist.
+        output_dir.mkdir(parents=True, exist_ok=True)
+        # Define the full path to the output file.
+        output_filepath = output_dir / "item_search_results.xlsx"
+        results_df.to_excel(output_filepath, sheet_name='ItemSearchResult', index=False)
 
-        print(f"\n-> Successfully exported {len(results_df)} results to '{output_filename}'")
+        print(f"\n-> Successfully exported {len(results_df)} results to '{output_filepath}'")
+        # --- End of suggested change ---
 
     except Exception as e:
         print(f"\n--> ERROR: Failed to generate or export the final report: {e}")
-
 
 if __name__ == "__main__":
     item_search()
