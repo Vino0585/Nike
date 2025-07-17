@@ -81,10 +81,10 @@ class Asn_Payload_Generator:
                         "PurchaseOrderId": "25050501", "PurchaseOrderLineId": ""
                     } for item_id, case_qty in zip(lpn_def['items'], lpn_def['case_qtys'])
                 ]
-                lpn_extended = {"LpnHeight": "12", "LpnWidth": "12", "LpnLength": "24", "LpnVendor": "0005005401"}
+                lpn_extended = {"LpnHeight": "12", "LpnWidth": "12", "LpnLength": "24"}
                 lpn_data = {
                     "AsnId": current_asn_id, "VendorId": None, "LpnId": current_lpn_id,
-                    "LpnStatus": "1000", "OrgId": plant,
+                    "LpnStatus": "1000", "OrgId": plant, "LpnSizeTypeId": 'CARTON',
                     "SingleItemLPN": "0" if lpn_def['is_mixed'] else "1",
                     "LpnTypeId": "ILPN", "Extended": lpn_extended, "LpnDetail": lpn_detail_list
                 }
@@ -146,8 +146,8 @@ class Asn_Payload_Generator:
                     asn_extended = {"BolNumber": bol, "ProNumber": pro, "SealNumber": seal}
                     asn_payload = {
                         "AsnId": current_asn_id, "AsnOriginTypeId": "P", "OriginFacilityId": o_facility,
-                        "VendorId": None, "CarrierId": carrier_id, "BolNumber": bol, "ProNumber": pro,
-                        "OrgId": str(plant), "DestinationFacilityId": str(plant),
+                        "VendorId": None, "CarrierId": carrier_id, "BillOfLadingNumber": bol,
+                        "ProNumber": pro, "OrgId": str(plant), "DestinationFacilityId": str(plant),
                         "AsnStatus": "1000", "AsnLevel": "LPN", "TrailerId": str(trailer), "Extended": asn_extended,
                         "Lpn": lpn_list
                     }
@@ -157,16 +157,17 @@ class Asn_Payload_Generator:
         return self.all_asn_payloads
 
 
-# This block is excellent for testing your class in isolation.
-if __name__ == "__main__":
-    asn_generator = Asn_Payload_Generator()
-    final_payloads = asn_generator.generate_payloads
-    # Optional: Pretty-print the first payload for verification
-    if final_payloads:
-        import json
-
-        print("\n--- First Generated Payload ---")
-        print(json.dumps(final_payloads[0], indent=2))
+# # This block is excellent for testing your class in isolation.
+# if __name__ == "__main__":
+#     asn_generator = Asn_Payload_Generator()
+#     final_payloads = asn_generator.generate_payloads
+#     # Optional: Pretty-print the first payload for verification
+#     if final_payloads:
+#         import json
+#         for i, payloads in enumerate(final_payloads):
+#             num = i+1
+#             print(f"\n--- No {num} Generated Payload ---")
+#             print(json.dumps(payloads, indent=2))
 
 
 

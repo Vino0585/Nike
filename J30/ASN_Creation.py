@@ -52,7 +52,7 @@ def create_asns():
                     plant_id = payload_to_send['OrgId']
                     print(f"\n--- [{environment.upper()}] Processing Payload {i + 1}/{len(payloads)} for Plant {plant_id} ---")
 
-                    env_handler.get_wm_host(host=environment.lower(), facility=plant_id)
+                    env_handler.get_wm_host(host=environment.lower(), facility=str(plant_id))
                     url_value = env_handler.get_program_url(program=Path(__file__).stem)
                     print(f"Sending payload to URL: {url_value}")
 

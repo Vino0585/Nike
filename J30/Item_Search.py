@@ -82,6 +82,13 @@ def item_search():
                     print(f"-> Success: Found {len(item_list)} item(s) in response.")
                     for response_payload in item_list:
                         extended_data = response_payload.get('Extended', {})
+                        PRODUCT_CODE_MAP = {
+                            '10': 'Apparel',
+                            '20': 'Footwear',
+                            '30': 'Equipment'
+                        }
+                        product_code = PRODUCT_CODE_MAP.get(extended_data.get('DivisionCode'))
+
                         result_row = {
                             'Environment': environment.upper(),
                             'Plant': plant_id,
@@ -95,7 +102,7 @@ def item_search():
                             'Weight': response_payload.get('Weight'),
                             'WeightUOM': response_payload.get('WeightUomId'),
                             'PrimaryBarCode': response_payload.get('PrimaryBarCode'),
-                            'DivisionCode': extended_data.get('DivisionCode'),
+                            'DivisionCode': product_code,
                             'MarkforCubiScan': extended_data.get('MarkForCubiscan')
                         }
                         all_results_data.append(result_row)

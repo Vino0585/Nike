@@ -17,6 +17,10 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/receiving/api/receiving/asn/search"
         elif program == 'Item_Search':
             self.url = f"https://{self.host_name}/item-master/api/item-master/item/search"
+        elif program == 'Goods_Holder_Announced':
+            self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKEGoodsholderAnnouncedSRCEndpointV1"
+        elif program == 'Search_Task_Detail':
+            self.url = f"https://{self.host_name}/task/api/task/taskDetail/search"
         else:
             self.url = None  # Set to None if no match
         return self.url

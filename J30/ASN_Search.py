@@ -73,7 +73,16 @@ def parse_asn_response(response_data: dict) -> list:
                     "ShippedQty": detail.get("ShippedQuantity"),
                     "UpdatedBy": detail.get("UpdatedBy"),
                     "UpdatedTimestamp": detail.get("UpdatedTimestamp"),
-                    "OrgId": detail.get("OrgId")
+                    "OrgId": detail.get("OrgId"),
+                    "BOL": asn.get('BillOfLadingNumber'),
+                    "ProNbr": asn.get('ProNumber'),
+                    "Carrier": asn.get('CarrierId'),
+                    "LPNSizeType": lpn.get('LpnSizeTypeId'),
+                    "Length": lpn['Extended'].get('LpnLength'),
+                    "Height": lpn['Extended'].get('LpnHeight'),
+                    "Width": lpn['Extended'].get('LpnWidth'),
+                    "Origin_facility": asn.get('OriginFacilityId'),
+                    "TrailerNbr": asn.get('TrailerId')
                 }
                 extracted_rows.append(row)
     return extracted_rows

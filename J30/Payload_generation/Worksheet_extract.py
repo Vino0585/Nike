@@ -27,6 +27,7 @@ class Worksheet:
         self.all_asn_search_parameters = []
         self.all_goods_holder_announced_parameters = []
         self.all_goods_holder_weighed_parameters = []
+        self.all_putaway_complete_parameters = []
 
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
@@ -284,6 +285,47 @@ class Worksheet:
             self.all_goods_holder_weighed_parameters.append(goods_holder_weighed_params)
 
         return self.all_goods_holder_weighed_parameters
+
+    def putaway_task_complete(self):
+
+        if not self._excel_open(input_sheet_name='PutawayTaskComplete'):
+            # The open method already prints the error, so we just exit.
+            return []
+
+        if not self.list_of_entry:
+            print("No ItemSearch entries found to extract parameters.")
+            return []
+
+            # Define which columns are mandatory for each row.
+        required_fields = ["Plant", "Environment", "ASNID", "LPNID"]
+        validation_errors = []
+
+        for i, entry in enumerate(self.list_of_entry):
+            excel_row_num = i + 1
+
+            missing_fields = [field for field in required_fields if not entry.get(field)]
+
+            if missing_fields:
+                error_message = (f"Row {excel_row_num}: Validation failed. "
+                                 f"Required field(s) are empty: {', '.join(missing_fields)}")
+                validation_errors.append(error_message)
+                continue
+
+            plant = entry.get("Plant")
+            envn = entry.get("Environment")
+            asn_id = entry.get("ASNID")
+            lpn_id = entry.get("LPNID")
+
+            putaway_complete_params = {
+                "Plant": plant,
+                "Environment": envn,
+                "ASN_ID": asn_id,
+                "LPN_ID": lpn_id
+            }
+            self.all_putaway_complete_parameters.append(putaway_complete_params)
+
+        return self.all_putaway_complete_parameters
+
 
 # Work = Worksheet()
 # payload = Work.create_asn_extract_parameters()

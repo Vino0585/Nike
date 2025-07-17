@@ -11,7 +11,7 @@ class Goods_Holder:
         # but we'll keep it for consistency with your original structure.
         self.all_goods_holder_announced = []
 
-    def create_goods_holder_announced_payloads(self):
+    def create_goods_holder_announced_payloads(self) -> list:
         """
         Generates a list of GOODSHOLDER_ANNOUNCED payloads from worksheet data.
         """
@@ -65,14 +65,22 @@ class Goods_Holder:
                 }
                 payloads.append(payload)
 
-        return payloads
+            gha_payload = {
+                'environment': envn,
+                'plant': plant,
+                'GHAPayload': payloads
+            }
+
+            self.all_goods_holder_announced.append(gha_payload)
+
+        return self.all_goods_holder_announced
 
 
-# It's best practice to run scripts within this block.
-# Also, avoid using 'list' as a variable name as it shadows the built-in type.
-if __name__ == "__main__":
-    gh_announced = Goods_Holder()
-    generated_payloads = gh_announced.create_goods_holder_announced_payloads()
-    # Pretty-print the result for better readability
-    import json
-    print(json.dumps(generated_payloads, indent=2))
+# # It's best practice to run scripts within this block.
+# # Also, avoid using 'list' as a variable name as it shadows the built-in type.
+# if __name__ == "__main__":
+#     gh_announced = Goods_Holder()
+#     generated_payloads = gh_announced.create_goods_holder_announced_payloads()
+#     # Pretty-print the result for better readability
+#     import json
+#     print(json.dumps(generated_payloads, indent=2))
