@@ -59,7 +59,7 @@ def create_goods_holder_announced():
 
             for i, payload_to_send in enumerate(payloads):
                 try:
-                    print(json.dumps(payload_to_send, indent=2))
+                    # print(json.dumps(payload_to_send, indent=2))
                     print(f"\n--- [{environment.upper()}] Processing Payload {i + 1}/{len(payloads)} ---")
                     for payload in payload_to_send:
                         response = requests.post(url=api_url, headers=headers, json=payload)
