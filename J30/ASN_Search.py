@@ -4,51 +4,13 @@ from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 from pathlib import Path
 import pandas as pd
-from Payload_generation.Worksheet_extract import Worksheet
+from Payload_generation.ASN_Search_Payload import ASN_Search_Payload
 
 # --- Configuration ---
 # Centralize configuration variables for easy changes.
 output_dir = Path("Output_files")
 output_dir.mkdir(parents=True, exist_ok=True)
 OUTPUT_FILENAME = output_dir / "ASN_Search_Results.xlsx"
-
-def prepare_asn_search_tasks() -> list:
-    """
-    Reads ASN search parameters from the worksheet, cleans the data,
-    and prepares a list of tasks for the main script.
-    """
-    worksheet = Worksheet()
-    all_asn_search_parameter = worksheet.search_asn_extract_parameters()
-
-    if not all_asn_search_parameter:
-        print("No valid ASN parameters found in the worksheet.")
-        return []
-
-    tasks = []
-    for entry in all_asn_search_parameter:
-        plant = entry.get("Plant")
-        envn = entry.get("Environment")
-        asn_id_str = entry.get("ASNID")
-
-        # --- IMPROVEMENT: Robust data cleaning ---
-        # Ensure asn_id_str is a string and handle messy input (extra spaces, empty entries)
-        if not (asn_id_str and isinstance(asn_id_str, str)):
-            print(f"--> WARNING: Skipping row for Plant {plant} due to invalid or empty ASNID.")
-            continue
-
-        # Cleanly split, strip whitespace, and filter out any empty strings
-        cleaned_asn_ids = [item.strip() for item in asn_id_str.split(';') if item.strip()]
-
-        if not cleaned_asn_ids:
-            print(f"--> WARNING: Skipping row for Plant {plant} as no valid ASN IDs were found after cleaning.")
-            continue
-
-        tasks.append({
-            "plant": str(plant),
-            "environment": envn,
-            "asn_ids": cleaned_asn_ids  # Store as a list for easier processing later
-        })
-    return tasks
 
 def parse_asn_response(response_data: dict) -> list:
     """
@@ -87,15 +49,18 @@ def parse_asn_response(response_data: dict) -> list:
                 extracted_rows.append(row)
     return extracted_rows
 
-def main():
+
+def search_asn_sending():
     """Main function to orchestrate the ASN search process."""
-    search_tasks = prepare_asn_search_tasks()
+    asn_search_payload_init = ASN_Search_Payload()
+    search_tasks = asn_search_payload_init.parse_asn_search_worksheet()
     if not search_tasks:
         print("\nScript finished: No valid search tasks to process.")
         return
 
     all_results = []  # --- Collect all results here before writing to file ---
     raw_data = None
+    response_data = ''
     # --- Loop correctly over each task ---
     # The try/except block is now INSIDE the loop to handle errors per task.
     for i, task in enumerate(search_tasks):
@@ -194,6 +159,24 @@ def main():
     except Exception as e:
         print(f"\n❌ Error exporting final report to Excel: {e}")
 
+    return response_data
+
+
+def create_from_asn_list_of_lpn() -> list:
+    get_data = search_asn_sending()
+    if not get_data:
+        print("-> Success, but no ASN data was returned in the response.")
+        return []
+
+    extracted_lpn_ids = []
+    for asn in get_data.get("data", []):
+        for lpn in asn.get("Lpn", []):
+            row = {
+                "LpnId": lpn.get("LpnId")
+            }
+            extracted_lpn_ids.append(row)
+    return extracted_lpn_ids
+
 
 if __name__ == "__main__":
-    main()
+    search_asn_sending()

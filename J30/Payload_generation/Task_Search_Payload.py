@@ -2,7 +2,6 @@ import requests
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 
-
 class Task_Search_Payload:
 
     def __init__(self):
@@ -40,7 +39,12 @@ class Task_Search_Payload:
         response.raise_for_status()
 
         response_data = response.json()
-        print(f"-> Success: {response_data.get('success', 'N/A')}, Message: {response_data.get('messageKey', 'No message key')}")
+        response_result = response_data.get('success')
+
+        if response_result is True:
+            print("Task information search for the iLPN is complete and successfully sent to the program that called this function")
+        else:
+            print(f"-> Success: {response_data.get('success', 'N/A')}, Message: {response_data.get('messageKey', 'No message key')}")
 
         return response_data
 

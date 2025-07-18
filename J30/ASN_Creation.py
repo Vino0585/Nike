@@ -4,7 +4,7 @@ import pandas as pd
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Payload_generation.ASNPayload import Asn_Payload_Generator
+from Payload_generation.ASN_Creation_Payload import Asn_Payload_Generator
 
 
 def create_asns():

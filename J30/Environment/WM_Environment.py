@@ -21,6 +21,8 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKEGoodsholderAnnouncedSRCEndpointV1"
         elif program == 'Search_Task_Detail':
             self.url = f"https://{self.host_name}/task/api/task/taskDetail/search"
+        elif program == "Putaway_Task_Complete":
+            self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKEPutawayTaskResultSRCEndpointV1"
         else:
             self.url = None  # Set to None if no match
         return self.url

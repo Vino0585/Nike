@@ -26,7 +26,7 @@ def create_putaway_task_complete():
 
         env = package.get('environment')
         plant_id = package.get('plant')
-        payload = package.get('GHAPayload')
+        payload = package.get('PTWYCPayload')
 
         if env and plant_id and payload:
             payloads_by_group[(env, plant_id)].append(payload)
@@ -35,6 +35,7 @@ def create_putaway_task_complete():
 
     env_handler = AWM_Env()  # Instantiate once outside the loop
 
+    response_result = []
     for (environment, plant_id), payloads in payloads_by_group.items():
         print(
             f"\n{'=' * 20} Processing {len(payloads)} Payloads for Env: {environment.upper()} / Plant: {plant_id} {'=' * 20}")
@@ -47,7 +48,7 @@ def create_putaway_task_complete():
             # Get URL ONCE for this group
             env_handler.get_wm_host(host=environment.lower(), facility=plant_id)
             # Hardcode the program name for reliability, fixing the issue where it resolves incorrectly.
-            api_url = env_handler.get_program_url(program="Goods_Holder_Announced")
+            api_url = env_handler.get_program_url(program="Putaway_Task_Complete")
             print(f"Sending payloads to URL: {api_url}")
 
             headers = {
@@ -57,17 +58,17 @@ def create_putaway_task_complete():
                 "authorization": f'Bearer {bearer_token}'
             }
 
+
             for i, payload_to_send in enumerate(payloads):
                 try:
                     print(json.dumps(payload_to_send, indent=2))
                     print(f"\n--- [{environment.upper()}] Processing Payload {i + 1}/{len(payloads)} ---")
+
                     for payload in payload_to_send:
                         response = requests.post(url=api_url, headers=headers, json=payload)
                         response.raise_for_status()
-
                         response_data = response.json()
-                        print(
-                            f"-> Success: {response_data.get('success', 'N/A')}, Message: {response_data.get('messageKey', 'No message key')}")
+                        response_result.append(response_data.get('success'))
                 except KeyError as e:
                     print(f"--> ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
                 except requests.exceptions.RequestException as e:
@@ -79,7 +80,12 @@ def create_putaway_task_complete():
         except Exception as e:
             print(
                 f"--> FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
+    if response_result:
+        print(f"--- Total of {len(response_result)} "
+              f"putaway Complete Payload is sent with the data provided from Putaway Complete Payload Program")
+    else:
+        print("The message failed to send check Putaway Complete from lin 60 to 71")
 
 
 if __name__ == "__main__":
-    create_goods_holder_announced()
+    create_putaway_task_complete()

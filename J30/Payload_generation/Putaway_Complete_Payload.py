@@ -1,7 +1,9 @@
 import uuid
 import datetime as dt
+
+from ASN_Search import create_from_asn_list_of_lpn
 from Payload_generation.Worksheet_extract import Worksheet
-from Task_Search_Payload import Task_Search_Payload
+from Payload_generation.Task_Search_Payload import Task_Search_Payload
 
 
 class Payload_Complete_Payload:
@@ -25,14 +27,28 @@ class Payload_Complete_Payload:
             return []
 
         payloads = []
+        get_task_list_response = {}
+        get_task_payload = []
 
         for entry in putaway_complete_data:
             plant = entry.get("Plant")
             envn = entry.get("Environment")
             lpn_id_string = entry.get("LPN_ID")
-
-            get_task_list_response = {}
-            get_task_payload = []
+            asn_id = entry.get("ASN")
+            get_list_from_asn_search = []
+            # asn_list = []
+            # lpn_list = []
+            # if asn_id:
+            #     asn_list = asn_id.split(';')
+            #     for asn in
+            #     get_list_from_asn_search = create_from_asn_list_of_lpn()
+            #     if not get_list_from_asn_search:
+            #         print("ASN entered in worksheet but couldn't get information from ASN search program check the ASN program for error")
+            #
+            #     for entry in get_list_from_asn_search:
+            #         lpn_list.append(entry.get("LpnId"))
+            #
+            # print(lpn_list)
 
             get_task_list_response = self.task_search.search_task_detail_payloads(lpn_id_string, envn, plant)
             get_task_payload = get_task_list_response['data']
@@ -79,8 +95,10 @@ class Payload_Complete_Payload:
 
                 self.all_putaway_complete_payload.append(ptwy_payload)
 
+            print(f"\nSuccessfully created {len(self.all_putaway_complete_payload)} payload generation(s) and sent to the program that called this function")
+
         return self.all_putaway_complete_payload
 
-initiation = Payload_Complete_Payload()
-payload = initiation.create_putaway_complete_payloads()
-print(payload)
+# initiation = Payload_Complete_Payload()
+# payload = initiation.create_putaway_complete_payloads()
+# print(payload)
