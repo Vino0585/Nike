@@ -1,4 +1,3 @@
-from pathlib import Path
 import requests
 import json
 from collections import defaultdict
@@ -12,7 +11,7 @@ def create_putaway_task_complete():
     # ptwy means putaway task complete
     raw_payloads = ptwy_instance.create_putaway_complete_payloads()
     if not raw_payloads:
-        print("No Goods Holder Announced Payload Found")
+        print("No Putaway Completed Payload Found")
         return None
 
     # Group payloads by both environment and plant to ensure correct token and URL are used for each.
@@ -53,8 +52,8 @@ def create_putaway_task_complete():
 
             headers = {
                 "content-type": "application/json",
-                "organization": str(plant_id),
-                "location": str(plant_id),
+                "selectedorganization": str(plant_id),
+                "selectedlocation": str(plant_id),
                 "authorization": f'Bearer {bearer_token}'
             }
 
@@ -64,28 +63,30 @@ def create_putaway_task_complete():
                     print(json.dumps(payload_to_send, indent=2))
                     print(f"\n--- [{environment.upper()}] Processing Payload {i + 1}/{len(payloads)} ---")
 
-                    for payload in payload_to_send:
-                        response = requests.post(url=api_url, headers=headers, json=payload)
-                        response.raise_for_status()
-                        response_data = response.json()
-                        response_result.append(response_data.get('success'))
-                except KeyError as e:
-                    print(f"--> ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
+
+                    response = requests.post(url=api_url, headers=headers, json=payload_to_send)
+                    print(response)
+                    response.raise_for_status()
+                    response_data = response.json()
+                    response_result.append(response_data.get('success'))
+                    print(f"--> SUCCESS: Payload {i + 1} processed successfully.")
+
+
+                except requests.exceptions.JSONDecodeError:
+                    print(f"--> ERROR: Failed to decode JSON from response for payload {i + 1}.")
+                    print(f"--> Raw Response Text: {response.text}")
                 except requests.exceptions.RequestException as e:
                     print(f"--> ERROR: API request failed for payload {i + 1}: {e}")
                     if e.response is not None:
-                        print(f"--> Status Code: {e.response.status_code}, Response: {e.response.text}")
+                        print(f"--> API Response Body: {e.response.text}")
                 except Exception as e:
                     print(f"--> ERROR: An unexpected error occurred for payload {i + 1}: {e}")
         except Exception as e:
             print(
                 f"--> FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
-    if response_result:
-        print(f"--- Total of {len(response_result)} "
-              f"putaway Complete Payload is sent with the data provided from Putaway Complete Payload Program")
-    else:
-        print("The message failed to send check Putaway Complete from lin 60 to 71")
 
+    print(f"\n{'=' * 25} Processing Finished {'=' * 25}")
+    print(f"Total of {len(response_result)} payloads were sent successfully.")
 
 if __name__ == "__main__":
     create_putaway_task_complete()

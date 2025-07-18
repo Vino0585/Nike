@@ -125,13 +125,14 @@ class Asn_Payload_Generator:
             envn = data_row.get("Environment")
             o_facility = data_row.get("O_Facility", '0005005401')
             carrier_id = data_row.get("CarrierId", 'AUPU')
+            initial = data_row.get("Initial", 'VG')
 
             lpn_definitions = self._parse_lpn_definitions_from_row(data_row, row_num_in_sheet)
             if not lpn_definitions:
                 print(f"--> INFO: No valid LPNs to generate for row {row_num_in_sheet}. Skipping.")
                 continue
 
-            asn_ids = self.number_gen.asn_number_generation(num_of_asn, envn)
+            asn_ids = self.number_gen.asn_number_generation(num_of_asn, envn, initial)
             if not asn_ids:
                 print(f"--> INFO: Skipping row {row_num_in_sheet} as 'Number of ASN' is 0.")
                 continue

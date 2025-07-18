@@ -1,13 +1,13 @@
 import pandas as pd
 from pathlib import Path
 
-
 # 1. Get the path to the directory containing this script.
 SCRIPT_DIR = Path(__file__).resolve().parent
 # 2. Define the project root relative to this script.
 PROJECT_ROOT = SCRIPT_DIR.parent
 # 3. Construct the full, robust path to the Excel file.
 DEFAULT_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Worksheet.xlsx'
+
 
 class Worksheet:
     def __init__(self, excel_path=DEFAULT_EXCEL_PATH):
@@ -28,6 +28,7 @@ class Worksheet:
         self.all_goods_holder_announced_parameters = []
         self.all_goods_holder_weighed_parameters = []
         self.all_putaway_complete_parameters = []
+        self.all_inbound_delivery_extract_param = []
 
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
@@ -83,6 +84,7 @@ class Worksheet:
         for i, entry_dict in enumerate(self.list_of_entry):
             # Extract parameters for the current row/entry
             plant = entry_dict.get("Plant")
+            user_initial = entry_dict.get("Initial")
             num_of_asn = int(entry_dict.get('Number of ASN', 0))
             item = entry_dict.get("Item")
             qty = entry_dict.get('Qty')
@@ -101,6 +103,7 @@ class Worksheet:
             # or directly use them for whatever processing comes next.
             asn_params = {
                 "Plant": plant,
+                "Initial": user_initial,
                 "Number of ASN": num_of_asn,
                 "Item": item,
                 "Qty": qty,
@@ -326,7 +329,44 @@ class Worksheet:
 
         return self.all_putaway_complete_parameters
 
+    def inbound_delivery_worksheet_extract(self):
+
+        if not self._excel_open(input_sheet_name='InboundDelivery'):
+            # The open method already prints the error, so we just exit.
+            return []
+
+        if not self.list_of_entry:
+            print("No ASN for Inbound Delivery entries found to extract parameters.")
+            return []
+
+            # Define which columns are mandatory for each row.
+        required_fields = ["Plant", "Environment", "ASNID"]
+        validation_errors = []
+
+        for i, entry in enumerate(self.list_of_entry):
+            excel_row_num = i + 1
+
+            missing_fields = [field for field in required_fields if not entry.get(field)]
+
+            if missing_fields:
+                error_message = (f"Row {excel_row_num}: Validation failed. "
+                                 f"Required field(s) are empty: {', '.join(missing_fields)}")
+                validation_errors.append(error_message)
+                continue
+
+            plant = entry.get("Plant")
+            envn = entry.get("Environment")
+            asn_id = entry.get("ASNID")
+
+            inbound_delivery_extract_param = {
+                "Plant": plant,
+                "Environment": envn,
+                "ASN_ID": asn_id
+            }
+            self.all_inbound_delivery_extract_param.append(inbound_delivery_extract_param)
+
+        return self.all_inbound_delivery_extract_param
 
 # Work = Worksheet()
-# payload = Work.create_asn_extract_parameters()
+# payload = Work.inbound_delivery_worksheet_extract()
 # print(payload)

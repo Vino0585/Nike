@@ -14,7 +14,7 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         self.lpn_unique_counter = 0
         self.misc_unique_counter = 0
 
-    def asn_number_generation(self, num_of_asn_to_generate: int, envn: str) -> list:
+    def asn_number_generation(self, num_of_asn_to_generate: int, envn: str, initial: str) -> list:
         if not isinstance(num_of_asn_to_generate, int) or num_of_asn_to_generate <= 0:
             print("Warning: Number of ASN is zero or invalid. No ASN IDs will be generated for this data row.")
             return []
@@ -25,7 +25,7 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         for i in range(num_of_asn_to_generate):
             # Using a wider random range and the loop index for better uniqueness
             unique_part = f"{random.randint(100, 999)}{i}"
-            id_ = f"VASN{timestamp}{envn.upper()}{unique_part}"  # 'id' is a built-in, better to use 'id_'
+            id_ = f"{initial}ASN{timestamp}{envn.upper()}{unique_part}"  # 'id' is a built-in, better to use 'id_'
             self.generated_asn_ids.append(id_)
         return self.generated_asn_ids
 
