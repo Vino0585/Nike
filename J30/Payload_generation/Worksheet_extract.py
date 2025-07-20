@@ -357,11 +357,13 @@ class Worksheet:
             plant = entry.get("Plant")
             envn = entry.get("Environment")
             asn_id = entry.get("ASNID")
+            pre_allocate = entry.get("Pre_Allocate")
 
             inbound_delivery_extract_param = {
                 "Plant": plant,
                 "Environment": envn,
-                "ASN_ID": asn_id
+                "ASN_ID": asn_id,
+                "Pre_Allocate": pre_allocate
             }
             self.all_inbound_delivery_extract_param.append(inbound_delivery_extract_param)
 
