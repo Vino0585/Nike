@@ -9,7 +9,7 @@ class Inbound_Delivery_Payload:
     def __init__(self):
         self.inbound_delivery_id = ''
         self.worksheet = Worksheet()
-        self.all_parse_parameter = []
+        self.all_parse_IB_parameter = []
 
     def parse_inbound_worksheet(self):
         get_ib_data = self.worksheet.inbound_delivery_worksheet_extract()
@@ -27,13 +27,13 @@ class Inbound_Delivery_Payload:
                 'Environment': environment,
                 'ASNID': asn_ids
             }
-            self.all_parse_parameter.append(params)
+            self.all_parsed_IB_parameter.append(params)
 
 
     def create_and_get_inbound_delivery_id(self):
 
         bearer_token = ''
-        for entry in self.all_parse_parameter:
+        for entry in self.all_parsed_IB_parameter:
             environment = entry.get("Environment")
             plant_id = entry.get("Plant")
             token_handler = Get_Token(env=environment.lower(), plant=plant_id)
@@ -43,7 +43,7 @@ class Inbound_Delivery_Payload:
             # Get URL ONCE for this group
             env_handler.get_wm_host(host=environment.lower(), facility=plant_id)
             # Hardcode the program name for reliability, fixing the issue where it resolves incorrectly.
-            api_url = env_handler.get_program_url(program="Putaway_Task_Complete")
+            api_url = env_handler.get_program_url(program="GET_INBOUND_DELIVERY")
             print(f"Sending payloads to URL: {api_url}")
 
             headers = {
@@ -52,4 +52,6 @@ class Inbound_Delivery_Payload:
                 "selectedlocation": str(plant_id),
                 "authorization": f'Bearer {bearer_token}'
             }
+
+            payload_to_send = {}
 
