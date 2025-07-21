@@ -26,39 +26,10 @@ class Payload_Complete_Payload:
             print("No valid item parameters found, cannot create any payloads for putaway complete task.")
             return []
 
-        payloads = []
-        get_task_list_response = {}
-        get_task_payload = []
-
         for entry in putaway_complete_data:
             plant = entry.get("Plant")
             envn = entry.get("Environment")
             lpn_id_string = entry.get("LPN_ID")
-            asn_id = entry.get("ASN")
-            # get_list_from_asn_search = []
-            # # asn_list = []
-            # # lpn_list = []
-            # # if asn_id:
-            # #     asn_list = asn_id.split(';')
-            # #     for asn in
-            # #     get_list_from_asn_search = create_from_asn_list_of_lpn()
-            # #     if not get_list_from_asn_search:
-            # #         print("ASN entered in worksheet but couldn't get information from ASN search program check the ASN program for error")
-            # #
-            # #     for entry in get_list_from_asn_search:
-            # #         lpn_list.append(entry.get("LpnId"))
-            # #
-            # # print(lpn_list)
-            #
-            # get_task_list_response = self.task_search.search_task_detail_payloads(lpn_id_string, envn, plant)
-            # get_task_payload = get_task_list_response['data']
-            # if not get_task_payload:
-            #     print(f"Task_search_payload returned nothing or having error")
-            #
-            # for each_entry in get_task_payload:
-            #     inbound_lpn = each_entry.get("SourceContainerId")
-            #     dest_locn = each_entry.get("TargetLocationId")
-            #     task_id = each_entry.get("TaskId")
 
             if not lpn_id_string:
                 print("No LPN is given")

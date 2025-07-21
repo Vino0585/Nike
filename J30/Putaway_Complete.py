@@ -57,20 +57,14 @@ def create_putaway_task_complete():
                 "authorization": f'Bearer {bearer_token}'
             }
 
-
             for i, payload_to_send in enumerate(payloads):
                 try:
-                    print(json.dumps(payload_to_send, indent=2))
                     print(f"\n--- [{environment.upper()}] Processing Payload {i + 1}/{len(payloads)} ---")
-
-
                     response = requests.post(url=api_url, headers=headers, json=payload_to_send)
-                    print(response)
                     response.raise_for_status()
                     response_data = response.json()
                     response_result.append(response_data.get('success'))
                     print(f"--> SUCCESS: Payload {i + 1} processed successfully.")
-
 
                 except requests.exceptions.JSONDecodeError:
                     print(f"--> ERROR: Failed to decode JSON from response for payload {i + 1}.")

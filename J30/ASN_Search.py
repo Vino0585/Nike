@@ -33,9 +33,9 @@ def parse_asn_response(response_data: dict) -> list:
                     "LpnStatus": lpn.get("LpnStatus"),
                     "ItemId": detail.get("ItemId"),
                     "ShippedQty": detail.get("ShippedQuantity"),
-                    "UpdatedBy": detail.get("UpdatedBy"),
-                    "UpdatedTimestamp": detail.get("UpdatedTimestamp"),
-                    "OrgId": detail.get("OrgId"),
+                    "DiversionCode": lpn.get('DiversionCodeId'),
+                    "Pre_receipt_Status": asn.get("PreReceiptStatusId"),
+                    "Single_Item_LPN": lpn.get("SingleItemLpn"),
                     "BOL": asn.get('BillOfLadingNumber'),
                     "ProNbr": asn.get('ProNumber'),
                     "Carrier": asn.get('CarrierId'),
@@ -44,7 +44,10 @@ def parse_asn_response(response_data: dict) -> list:
                     "Height": lpn['Extended'].get('LpnHeight'),
                     "Width": lpn['Extended'].get('LpnWidth'),
                     "Origin_facility": asn.get('OriginFacilityId'),
-                    "TrailerNbr": asn.get('TrailerId')
+                    "TrailerNbr": asn.get('TrailerId'),
+                    "UpdatedBy": detail.get("UpdatedBy"),
+                    "UpdatedTimestamp": detail.get("UpdatedTimestamp")
+
                 }
                 extracted_rows.append(row)
     return extracted_rows
