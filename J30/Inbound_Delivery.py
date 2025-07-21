@@ -55,7 +55,7 @@ def pre_allocate_inbound_delivery(payload_info: Dict[str, Any], env_handler: AWM
     environment = payload_info['environment']
     plant_id = payload_info['plant']
     token = payload_info.get('token')
-    shipment_id = payload_info.get('Shipment_ID')
+    shipment_id = str(payload_info.get('Shipment_ID'))
 
     if not token:
         logging.error(f"No token found for {environment}/{plant_id}. Skipping.")
@@ -68,18 +68,28 @@ def pre_allocate_inbound_delivery(payload_info: Dict[str, Any], env_handler: AWM
 
         headers = {
                     "Content-Type": "application/json",
-                    "Organization": str(plant_id),
-                    "Location": str(plant_id),
+                    "selectedOrganization": str(plant_id),
+                    "selectedLocation": str(plant_id),
                     "Authorization": f"Bearer {token}"
                  }
-        params = {
+
+        body = {
             "ShipmentId": shipment_id
         }
 
-        response = requests.post(api_url, headers=headers, params=params, timeout=30)
+        response = requests.post(url=api_url, headers=headers, json=body, timeout=30)
         response.raise_for_status()
-        print(response['messages']['Messages'][0]['Description'])
-        logging.info(f"Successfully pre-allocated {shipment_id} for {plant_id}. Response: {response.json()}")
+        response_data = response.json()
+        logging.info(f"Successfully pre-allocated {shipment_id} for {plant_id}. Response: {response_data}")
+
+        messages_obj = response_data.get('messages', {})
+        message_list = messages_obj.get('Message', [])
+        if message_list:
+            first_message = message_list[0]
+            if isinstance(first_message, dict):
+                description = first_message.get('Description')
+                if description:
+                    logging.info(f"Server Message for {shipment_id}: {description}")
 
 
     except requests.exceptions.HTTPError as http_err:
@@ -113,7 +123,7 @@ def main():
         if payload_info.get('Pre_Allocate') == 'Y':
             pre_allocate_inbound_delivery(payload_info, env_handler)
         else:
-            logging.info("No Pre receipt is triggered as its flag is not set to Y")
+            logging.info("No Pre receipt is triggered as its flag is set to N or null")
 
 if __name__ == "__main__":
     main()
