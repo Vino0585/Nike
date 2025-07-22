@@ -91,7 +91,6 @@ def pre_allocate_inbound_delivery(payload_info: Dict[str, Any], env_handler: AWM
                 if description:
                     logging.info(f"Server Message for {shipment_id}: {description}")
 
-
     except requests.exceptions.HTTPError as http_err:
         logging.error(f"HTTP error occurred for {plant_id}: {http_err}")
         if http_err.response:

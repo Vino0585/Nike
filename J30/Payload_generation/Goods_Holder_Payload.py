@@ -1,6 +1,9 @@
 import uuid
 import datetime as dt
+
+from Archive.ImportASNDev import asn_id
 from Payload_generation.Worksheet_extract import Worksheet
+from ASN_Search import create_from_asn_list_of_lpn
 
 
 class Goods_Holder:
@@ -33,6 +36,17 @@ class Goods_Holder:
             if not all([plant, envn, lpn_id_string]):
                 print(f"Skipping entry due to missing data: {entry}")
                 continue
+
+            asn_id = entry.get("ASN")
+            if asn_id:
+                asn_ids = asn_id.split(';')
+                for asn in asn_ids
+                    param = {
+                        'plant': plant,
+                        'environment': envn,
+                        'asn_ids': asn_id
+                    }
+                get_lpn =
 
             # --- CHANGE 2: Generate the current timestamp in UTC ---
             # This creates a timezone-aware datetime object for the current moment.

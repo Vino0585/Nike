@@ -29,6 +29,7 @@ class Worksheet:
         self.all_goods_holder_weighed_parameters = []
         self.all_putaway_complete_parameters = []
         self.all_inbound_delivery_extract_param = []
+        self.all_verify_asn_extract_param = []
 
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
@@ -369,6 +370,44 @@ class Worksheet:
 
         return self.all_inbound_delivery_extract_param
 
+
+    def verify_asn_worksheet_extract(self):
+        if not self._excel_open(input_sheet_name='ASNVerify'):
+            # The open method already prints the error, so we just exit.
+            return []
+
+        if not self.list_of_entry:
+            print("No ASN for Inbound Delivery entries found to extract parameters.")
+            return []
+
+            # Define which columns are mandatory for each row.
+        required_fields = ["Plant", "Environment", "ASNID"]
+        validation_errors = []
+
+        for i, entry in enumerate(self.list_of_entry):
+            excel_row_num = i + 1
+
+            missing_fields = [field for field in required_fields if not entry.get(field)]
+
+            if missing_fields:
+                error_message = (f"Row {excel_row_num}: Validation failed. "
+                                 f"Required field(s) are empty: {', '.join(missing_fields)}")
+                validation_errors.append(error_message)
+                continue
+
+            plant = entry.get("Plant")
+            envn = entry.get("Environment")
+            asn_id = entry.get("ASNID")
+
+            verify_asn_extract_param = {
+                "Plant": plant,
+                "Environment": envn,
+                "ASN_ID": asn_id
+            }
+            self.all_verify_asn_extract_param.append(verify_asn_extract_param)
+
+        return self.all_verify_asn_extract_param
+
 # Work = Worksheet()
-# payload = Work.inbound_delivery_worksheet_extract()
+# payload = Work.verify_asn_worksheet_extract()
 # print(payload)
