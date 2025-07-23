@@ -301,7 +301,7 @@ class Worksheet:
             return []
 
             # Define which columns are mandatory for each row.
-        required_fields = ["Plant", "Environment", "ASNID", "LPNID"]
+        required_fields = ["Plant", "Environment", "ASNID", "LPNID", "Failed"]
         validation_errors = []
 
         for i, entry in enumerate(self.list_of_entry):
@@ -319,12 +319,14 @@ class Worksheet:
             envn = entry.get("Environment")
             asn_id = entry.get("ASNID")
             lpn_id = entry.get("LPNID")
+            failed = entry.get("Failed")
 
             putaway_complete_params = {
                 "Plant": plant,
                 "Environment": envn,
                 "ASN_ID": asn_id,
-                "LPN_ID": lpn_id
+                "LPN_ID": lpn_id,
+                "Failed": failed
             }
             self.all_putaway_complete_parameters.append(putaway_complete_params)
 

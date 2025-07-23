@@ -3,7 +3,6 @@ import datetime as dt
 import pandas as pd
 
 from Payload_generation.Worksheet_extract import Worksheet
-from ASN_Search import ASN_Search
 from Payload_generation.Get_LPN_List_From_ASN import lpn_list_from_asn
 
 
@@ -67,14 +66,11 @@ class Goods_Holder:
                 lpn_list = [lpn.strip() for lpn in lpn_id_string.split(';')]
 
             # --- CHANGE 2: Generate the current timestamp in UTC ---
-            # This creates a timezone-aware datetime object for the current moment.
-            # The try/except block is no longer needed.
             entry_payloads = []
-            aware_timestamp = dt.datetime.now(dt.timezone.utc)
-            iso_timestamp_str = aware_timestamp.isoformat()
-
             for lpn in lpn_list:
                 event_id = str(uuid.uuid4())
+                aware_timestamp = dt.datetime.now(dt.timezone.utc)
+                iso_timestamp_str = aware_timestamp.isoformat()
                 payload = {
                     "event": {
                         "type": "GOODSHOLDER_ANNOUNCED",

@@ -1,19 +1,16 @@
-import json
 import uuid
 import datetime as dt
+import pandas as pd
+import json
 
-from ASN_Search import create_from_asn_list_of_lpn
+from Payload_generation.Get_LPN_List_From_ASN import lpn_list_from_asn
 from Payload_generation.Worksheet_extract import Worksheet
-from Payload_generation.Task_Search_Payload import Task_Search_Payload
 
 
 class Payload_Complete_Payload:
 
     def __init__(self):
         self.worksheet = Worksheet()
-        self.task_search = Task_Search_Payload()
-        # This instance variable isn't strictly necessary if only used in one method,
-        # but we'll keep it for consistency with your original structure.
         self.all_putaway_complete_payload = []
 
 
@@ -30,41 +27,97 @@ class Payload_Complete_Payload:
         for entry in putaway_complete_data:
             plant = entry.get("Plant")
             envn = entry.get("Environment")
-            lpn_id_string = entry.get("LPN_ID")
+            lpn_id_raw = entry.get("LPN_ID")
+            asn_id_raw = entry.get("ASN_ID")
+            failed_flag = entry.get("Failed")
 
-            if not lpn_id_string:
-                print("No LPN is given")
+            lpn_id_string = str(lpn_id_raw) if pd.notna(lpn_id_raw) and lpn_id_raw != '' else None
+            asn_id = str(asn_id_raw) if pd.notna(asn_id_raw) and asn_id_raw != '' else None
+
+            if not all([plant, envn, (asn_id or lpn_id_string)]):
+                print(f"Skipping entry due to missing data: {entry}")
                 continue
 
-            lpn_in_list = lpn_id_string.split(";")
+            lpn_list = []
+            if asn_id:
+                print(f"Found ASN(s) '{asn_id}'. Searching for associated LPNs...")
+                search_tasks = []
+                for single_asn in asn_id.split(';'):
+                    single_asn = single_asn.strip()
+                    param = {
+                        'plant': plant,
+                        'environment': envn,
+                        'asn_ids': [single_asn.strip()]
+                    }
+                    search_tasks.append(param)
 
-            for lpn in lpn_in_list:
+                if search_tasks:
+                    asn_searcher = lpn_list_from_asn()
+                    lpn_list_from_asn_search = asn_searcher.create_from_asn_list_of_lpn(search_tasks)
+                    for lpn in lpn_list_from_asn_search:
+                        lpn_list.extend(lpn)
+
+
+            elif lpn_id_string:
+                print(f"Using LPNs from worksheet: '{lpn_id_string}'")
+                lpn_list = [lpn.strip() for lpn in lpn_id_string.split(';')]
+
+            # --- CHANGE 2: Generate the current timestamp in UTC ---
+            for lpn in lpn_list:
                 aware_timestamp = dt.datetime.now(dt.timezone.utc)
                 iso_timestamp_str = aware_timestamp.isoformat()
                 event_id = str(uuid.uuid4())
 
-                putaway_each_payload = {
-                    "event": {
-                        "type": "PUTAWAY_TASK_COMPLETED",
-                        "tmst": iso_timestamp_str,
-                        "id": event_id,
-                        "correlationId": None,
-                        "distributionCenterCd": f"NODE_{plant}",
-                        "technicalSolutionSourceCd": "NAS_V001",
-                        "version": "1.0.0"
-                    },
-                    "data": {
-                        "distributionCenterCd": f"NODE_{plant}",
-                        "taskId": f"T-1234324",
-                        "goodsholderId": f"{lpn}",
-                        "putawayTaskCompleted": {
-                            "storedAtLogicalStorageLocationId": f"2401000001",
-                            "substitutionlockActivated": "false",
-                            "confirmedByDeviceId": "12345678"
+                if failed_flag == 'N' or failed_flag is None:
+                    putaway_each_payload = {
+                        "event": {
+                            "type": "PUTAWAY_TASK_COMPLETED",
+                            "tmst": iso_timestamp_str,
+                            "id": event_id,
+                            "correlationId": None,
+                            "distributionCenterCd": f"NODE_{plant}",
+                            "technicalSolutionSourceCd": "NAS_V001",
+                            "version": "1.0.0"
                         },
-                        "executionTmst": iso_timestamp_str
+                        "data": {
+                            "distributionCenterCd": f"NODE_{plant}",
+                            "taskId": f"T-1234324",
+                            "goodsholderId": f"{lpn}",
+                            "putawayTaskCompleted": {
+                                "storedAtLogicalStorageLocationId": f"2401000001",
+                                "substitutionlockActivated": "false",
+                                "confirmedByDeviceId": "12345678"
+                            },
+                            "executionTmst": iso_timestamp_str
+                        }
                     }
-                }
+                else:
+                    putaway_each_payload = {
+                        "event": {
+                            "type": "PUTAWAY_TASK_COMPLETED",
+                            "tmst": iso_timestamp_str,
+                            "id": event_id,
+                            "correlationId": None,
+                            "distributionCenterCd": f"NODE_{plant}",
+                            "technicalSolutionSourceCd": "NAS_V001",
+                            "version": "1.0.0"
+                        },
+                        "data": {
+                            "distributionCenterCd": f"NODE_{plant}",
+                            "taskId": f"T-1234324",
+                            "goodsholderId": f"{lpn}",
+                            "putawayTaskFailed": {
+                                "reasonForFailureList": [
+                                    {
+                                        "reasonForFailureReasonCode": "LOGICAL_STORAGE_LOCATION_FULL",
+                                        "reasonForFailureVendorDesc": ""
+                                    }
+                                ],
+                                "divertedAtDestinationLocationId": "150000000"
+                            },
+                            "executionTmst": iso_timestamp_str
+                        }
+                    }
 
                 ptwy_payload = {
                     'environment': envn,
@@ -78,10 +131,10 @@ class Payload_Complete_Payload:
 
         return self.all_putaway_complete_payload
 
-# initiation = Payload_Complete_Payload()
-# payload = initiation.create_putaway_complete_payloads()
-# for load in payload:
-#     print(json.dumps(load["PTWYCPayload"], indent=2))
+initiation = Payload_Complete_Payload()
+payload = initiation.create_putaway_complete_payloads()
+for load in payload:
+    print(json.dumps(load["PTWYCPayload"], indent=2))
 
 # ---------      Very Important dont delete     --------------------
 # # Version 1 To get task from task search payload
