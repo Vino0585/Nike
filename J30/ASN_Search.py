@@ -6,187 +6,124 @@ from pathlib import Path
 import pandas as pd
 from Payload_generation.ASN_Search_Payload import ASN_Search_Payload
 
+class ASN_Search:
 
-# --- Configuration ---
-# Centralize configuration variables for easy changes.
-output_dir = Path("Output_files")
-output_dir.mkdir(parents=True, exist_ok=True)
-OUTPUT_FILENAME = output_dir / "ASN_Search_Results.xlsx"
+    def __init__(self):
+        # --- Configuration ---
+        # Centralize configuration variables for easy changes.
+        self.output_dir = Path("Output_files")
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.OUTPUT_FILENAME = self.output_dir / "ASN_Search_Results.xlsx"
 
-def search_asn_sending():
-    """Main function to orchestrate the ASN search process."""
-    asn_search_payload_init = ASN_Search_Payload()
-    search_tasks = asn_search_payload_init.parse_asn_search_worksheet()
-    if not search_tasks:
-        print("\nScript finished: No valid search tasks to process.")
-        return
 
-    all_results = []  # --- Collect all results here before writing to file ---
-    raw_data = None
-    response_data = ''
-    # --- Loop correctly over each task ---
-    # The try/except block is now INSIDE the loop to handle errors per task.
-    for i, task in enumerate(search_tasks):
-        # --- FIX: Use correct, lowercase dictionary keys ---
-        envn = task['environment']
-        plant_id = task['plant']
-        asn_ids = task['asn_ids']
+    def search_asn_sending(self):
+        """Main function to orchestrate the ASN search process."""
+        asn_search_payload_init = ASN_Search_Payload()
+        search_tasks = asn_search_payload_init.parse_asn_search_worksheet()
+        if not search_tasks:
+            print("\nScript finished: No valid search tasks to process.")
+            return
 
-        print(f"\n{'='*20} Processing Task {i+1}/{len(search_tasks)}: Plant {plant_id} ({envn.upper()}) {'='*20}")
+        all_results = []  # --- Collect all results here before writing to file ---
+        raw_data = None
+        response_data = ''
+        # --- Loop correctly over each task ---
+        # The try/except block is now INSIDE the loop to handle errors per task.
+        for i, task in enumerate(search_tasks):
+            # --- FIX: Use correct, lowercase dictionary keys ---
+            envn = task['environment']
+            plant_id = task['plant']
+            asn_ids = task['asn_ids']
 
+            print(f"\n{'='*20} Processing Task {i+1}/{len(search_tasks)}: Plant {plant_id} ({envn.upper()}) {'='*20}")
+
+            try:
+                # --- 1. Authentication ---
+                token_handler = Get_Token(env=envn.lower(), plant=plant_id)
+                bearer_token = token_handler.get_bearer()
+                print("Successfully retrieved token.")
+
+                # --- 2. URL Setup ---
+                awm_env = AWM_Env()
+                awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
+                program_name = Path(__file__).stem
+                api_url = awm_env.get_program_url(program=program_name)
+                print(f"Target URL: {api_url}")
+
+                # --- 3. Request Headers & Payload ---
+                headers = {
+                    "Content-Type": "application/json",
+                    "organization": plant_id, # Common practice is to use 'organization' and 'location'
+                    "location": plant_id,
+                    "Authorization": f"Bearer {bearer_token}"
+                }
+
+                # Creates a string like "('ASN1','ASN2','ASN3')"
+                query_values = "','".join(asn_ids)
+                # --- Correctly format the 'in' query string ---
+                query_string = f"AsnId in ('{query_values}')"
+
+                payload = {"Query": query_string}
+                print(f"Sending Payload: {json.dumps(payload)}")
+
+                # --- 4. API Call ---
+                response = requests.post(api_url, json=payload, headers=headers, timeout=30)
+                response.raise_for_status()
+                response_data = response.json()
+                raw_data = response_data.get("data")
+
+                # --- 5. Process and Collect Response ---
+                extracted_data = asn_search_payload_init.parse_asn_response(response_data)
+                if extracted_data:
+                    print(f"-> Success: Found {len(extracted_data)} detail rows for this task.")
+                    all_results.extend(extracted_data) # Add results to the master list
+
+            except requests.exceptions.HTTPError as http_err:
+                print(f"❌ HTTP error occurred: {http_err}")
+                if http_err.response:
+                    print(f"Response content: {http_err.response.text}")
+            except requests.exceptions.RequestException as req_err:
+                print(f"❌ A request error occurred: {req_err}")
+            except Exception as e:
+                print(f"❌ An unexpected error occurred: {e}")
+
+        # --- 6. Final Export ---
+        # This block runs once after all tasks are completed.
+        if not all_results:
+            print("\n--- Script finished, but no results were collected from any API calls. ---")
+            return
+
+        print(f"\n{'=' * 25} Consolidating and Exporting Results {'=' * 25}")
         try:
-            # --- 1. Authentication ---
-            token_handler = Get_Token(env=envn.lower(), plant=plant_id)
-            bearer_token = token_handler.get_bearer()
-            print("Successfully retrieved token.")
+            # Create the main DataFrame with the parsed results
+            df_details = pd.DataFrame(all_results)
+            print("--- ASN Details ---")
+            print(df_details.to_string(index=False))
 
-            # --- 2. URL Setup ---
-            awm_env = AWM_Env()
-            awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
-            program_name = Path(__file__).stem
-            api_url = awm_env.get_program_url(program=program_name)
-            print(f"Target URL: {api_url}")
+            # Use pd.ExcelWriter to save multiple sheets to the SAME file
+            with pd.ExcelWriter(self.OUTPUT_FILENAME, engine='openpyxl') as writer:
+                # Write the first sheet
+                df_details.to_excel(writer, sheet_name="ASN_Details", index=False)
 
-            # --- 3. Request Headers & Payload ---
-            headers = {
-                "Content-Type": "application/json",
-                "organization": plant_id, # Common practice is to use 'organization' and 'location'
-                "location": plant_id,
-                "Authorization": f"Bearer {bearer_token}"
-            }
+                if raw_data:
+                    for each_payload in raw_data:
+                        # Convert the entire raw dictionary to a formatted JSON string
+                        raw_json_string = json.dumps(each_payload, indent=4)
+                        # Create a simple DataFrame to hold this string
+                        df_raw = pd.DataFrame({'Raw_Payload': [raw_json_string]})
 
-            # Creates a string like "('ASN1','ASN2','ASN3')"
-            query_values = "','".join(asn_ids)
-            # --- Correctly format the 'in' query string ---
-            query_string = f"AsnId in ('{query_values}')"
+                        # Write the second sheet
+                        df_raw.to_excel(writer, sheet_name="Raw_ASN_Payload", index=False)
+                        print("\n--- Raw Payload updated in Excel Sheet: Raw_ASN_Payload ---")
 
-            payload = {"Query": query_string}
-            print(f"Sending Payload: {json.dumps(payload)}")
+            print(f"\n✅ Successfully exported {len(df_details)} total rows to '{self.OUTPUT_FILENAME}'")
 
-            # --- 4. API Call ---
-            response = requests.post(api_url, json=payload, headers=headers, timeout=30)
-            response.raise_for_status()
-            response_data = response.json()
-            raw_data = response_data.get("data")
-
-            # --- 5. Process and Collect Response ---
-            extracted_data = asn_search_payload_init.parse_asn_response(response_data)
-            if extracted_data:
-                print(f"-> Success: Found {len(extracted_data)} detail rows for this task.")
-                all_results.extend(extracted_data) # Add results to the master list
-
-        except requests.exceptions.HTTPError as http_err:
-            print(f"❌ HTTP error occurred: {http_err}")
-            if http_err.response:
-                print(f"Response content: {http_err.response.text}")
-        except requests.exceptions.RequestException as req_err:
-            print(f"❌ A request error occurred: {req_err}")
         except Exception as e:
-            print(f"❌ An unexpected error occurred: {e}")
+            print(f"\n❌ Error exporting final report to Excel: {e}")
 
-    # --- 6. Final Export ---
-    # This block runs once after all tasks are completed.
-    if not all_results:
-        print("\n--- Script finished, but no results were collected from any API calls. ---")
-        return
+        return response_data
 
-    print(f"\n{'=' * 25} Consolidating and Exporting Results {'=' * 25}")
-    try:
-        # Create the main DataFrame with the parsed results
-        df_details = pd.DataFrame(all_results)
-        print("--- ASN Details ---")
-        print(df_details.to_string(index=False))
-
-        # Use pd.ExcelWriter to save multiple sheets to the SAME file
-        with pd.ExcelWriter(OUTPUT_FILENAME, engine='openpyxl') as writer:
-            # Write the first sheet
-            df_details.to_excel(writer, sheet_name="ASN_Details", index=False)
-
-            if raw_data:
-                for each_payload in raw_data:
-                    # Convert the entire raw dictionary to a formatted JSON string
-                    raw_json_string = json.dumps(each_payload, indent=4)
-                    # Create a simple DataFrame to hold this string
-                    df_raw = pd.DataFrame({'Raw_Payload': [raw_json_string]})
-
-                    # Write the second sheet
-                    df_raw.to_excel(writer, sheet_name="Raw_ASN_Payload", index=False)
-                    print("\n--- Raw Payload updated in Excel Sheet: Raw_ASN_Payload ---")
-
-        print(f"\n✅ Successfully exported {len(df_details)} total rows to '{OUTPUT_FILENAME}'")
-
-    except Exception as e:
-        print(f"\n❌ Error exporting final report to Excel: {e}")
-
-    return response_data
-
-
-def create_from_asn_list_of_lpn(asn_ids: dict) -> list:
-    if not asn_ids:
-        print("\nScript finished: No valid search tasks to process.")
-        return
-
-    all_results = []  # --- Collect all results here before writing to file ---
-    # --- Loop correctly over each task ---
-    for i, task in asn_ids.items():
-        # --- FIX: Use correct, lowercase dictionary keys ---
-        envn = task['environment']
-        plant_id = task['plant']
-        asn_ids = task['asn_ids']
-
-        print(
-            f"\n{'=' * 20} Processing Task {i + 1}/{len(search_tasks)}: Plant {plant_id} ({envn.upper()}) {'=' * 20}")
-
-        try:
-            # --- 1. Authentication ---
-            token_handler = Get_Token(env=envn.lower(), plant=plant_id)
-            bearer_token = token_handler.get_bearer()
-            print("Successfully retrieved token.")
-
-            # --- 2. URL Setup ---
-            awm_env = AWM_Env()
-            awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
-            api_url = awm_env.get_program_url(program='ASN_Search')
-            print(f"Target URL: {api_url}")
-
-            # --- 3. Request Headers & Payload ---
-            headers = {
-                "Content-Type": "application/json",
-                "organization": plant_id,
-                "location": plant_id,
-                "Authorization": f"Bearer {bearer_token}"
-            }
-
-            # Creates a string like "('ASN1','ASN2','ASN3')"
-            query_values = "','".join(asn_ids)
-            # --- Correctly format the 'in' query string ---
-            query_string = f"AsnId in ('{query_values}')"
-
-            payload = {"Query": query_string}
-            print(f"Sending Payload: {json.dumps(payload)}")
-
-            # --- 4. API Call ---
-            response = requests.post(api_url, json=payload, headers=headers, timeout=30)
-            response.raise_for_status()
-            response_data = response.json()
-
-            # --- 5. Process and Collect Response ---
-            extracted_data = asn_search_payload_init.parse_asn_to_lpn_list(response_data)
-            if extracted_data:
-                print(f"-> Success: Found {len(extracted_data)} detail rows for this task.")
-                all_results.extend(extracted_data)  # Add results to the master list
-
-        except requests.exceptions.HTTPError as http_err:
-            print(f"❌ HTTP error occurred: {http_err}")
-            if http_err.response:
-                print(f"Response content: {http_err.response.text}")
-        except requests.exceptions.RequestException as req_err:
-            print(f"❌ A request error occurred: {req_err}")
-        except Exception as e:
-            print(f"❌ An unexpected error occurred: {e}")
-
-    return all_results
-
-#
-# if __name__ == "__main__":
-#     search_asn_sending()
+if __name__ == "__main__":
+    asn_search = ASN_Search()
+    response_data = asn_search.search_asn_sending()
+    asn_search.create_from_asn_list_of_lpn(response_data=response_data)

@@ -21,7 +21,7 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         # Clear previous results for new generation batch
         self.generated_asn_ids = []
-        timestamp = datetime.now().strftime('%d%m')
+        timestamp = datetime.now().strftime('%m%d')
         for i in range(num_of_asn_to_generate):
             # Using a wider random range and the loop index for better uniqueness
             unique_part = f"{random.randint(100, 999)}{i}"

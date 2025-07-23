@@ -80,24 +80,6 @@ class ASN_Search_Payload:
                     extracted_rows.append(row)
         return extracted_rows
 
-    def parse_asn_to_lpn_list(self, response_data: dict)-> list:
-        if not response_data.get("data"):
-            logging.error("-> Success, but no ASN data was returned in the response.")
-            return []
-
-        extracted_lpn_ids = []
-        lpn_in_list = []
-        for asn in response_data.get("data", []):
-            for lpn in asn.get("Lpn", []):
-                lpn_in_list.append(lpn.get("LpnId"))
-
-            row = {
-                "LpnId": lpn_in_list
-            }
-            extracted_lpn_ids.append(row)
-
-        return extracted_lpn_ids
-
 # initiate = ASN_Search_Payload()
 # result = initiate.create_asn_search_payloads()
 # print(result)

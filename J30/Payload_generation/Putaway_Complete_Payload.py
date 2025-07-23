@@ -1,3 +1,4 @@
+import json
 import uuid
 import datetime as dt
 
@@ -79,7 +80,8 @@ class Payload_Complete_Payload:
 
 # initiation = Payload_Complete_Payload()
 # payload = initiation.create_putaway_complete_payloads()
-# print(payload)
+# for load in payload:
+#     print(json.dumps(load["PTWYCPayload"], indent=2))
 
 # ---------      Very Important dont delete     --------------------
 # # Version 1 To get task from task search payload
