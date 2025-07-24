@@ -4,11 +4,11 @@ import json
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Payload_generation.Goods_Holder_Payload import Goods_Holder
+from Payload_generation.Goods_Holder_Payload import Goods_Holder_Announced
 
 
 def create_goods_holder_announced():
-    gha_instance = Goods_Holder()
+    gha_instance = Goods_Holder_Announced()
     # gha means goods holder announced
     raw_payloads = gha_instance.create_goods_holder_announced_payloads()
     if not raw_payloads:
@@ -79,7 +79,6 @@ def create_goods_holder_announced():
         except Exception as e:
             print(
                 f"--> FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
-
 
 if __name__ == "__main__":
     create_goods_holder_announced()

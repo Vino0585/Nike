@@ -2,15 +2,15 @@ import requests
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Payload_generation.Putaway_Complete_Payload import Payload_Complete_Payload
+from Payload_generation.Goods_Holder_Payload import Goods_Holder_Measured
 
 
-def create_putaway_task_complete():
-    ptwy_instance = Payload_Complete_Payload()
-    # ptwy means putaway task complete
-    raw_payloads = ptwy_instance.create_putaway_complete_payloads()
+def create_goods_holder_measured():
+    gha_instance = Goods_Holder_Measured()
+    # gha means goods holder announced
+    raw_payloads = gha_instance.create_goods_holder_measure_payload()
     if not raw_payloads:
-        print("No Putaway Completed Payload Found")
+        print("No Goods Holder Announced Payload Found")
         return None
 
     # Group payloads by both environment and plant to ensure correct token and URL are used for each.
@@ -24,7 +24,7 @@ def create_putaway_task_complete():
 
         env = package.get('environment')
         plant_id = package.get('plant')
-        payload = package.get('PTWYCPayload')
+        payload = package.get('GHMPayload')
 
         if env and plant_id and payload:
             payloads_by_group[(env, plant_id)].append(payload)
@@ -33,7 +33,6 @@ def create_putaway_task_complete():
 
     env_handler = AWM_Env()  # Instantiate once outside the loop
 
-    response_result = []
     for (environment, plant_id), payloads in payloads_by_group.items():
         print(
             f"\n{'=' * 20} Processing {len(payloads)} Payloads for Env: {environment.upper()} / Plant: {plant_id} {'=' * 20}")
@@ -46,40 +45,39 @@ def create_putaway_task_complete():
             # Get URL ONCE for this group
             env_handler.get_wm_host(host=environment.lower(), facility=plant_id)
             # Hardcode the program name for reliability, fixing the issue where it resolves incorrectly.
-            api_url = env_handler.get_program_url(program="Putaway_Task_Complete")
+            api_url = env_handler.get_program_url(program="Goods_Holder_Measured")
             print(f"Sending payloads to URL: {api_url}")
 
             headers = {
                 "content-type": "application/json",
-                "selectedorganization": str(plant_id),
-                "selectedlocation": str(plant_id),
+                "organization": str(plant_id),
+                "location": str(plant_id),
                 "authorization": f'Bearer {bearer_token}'
             }
 
             for i, payload_to_send in enumerate(payloads):
                 try:
+                    # print(json.dumps(payload_to_send, indent=2))
                     print(f"\n--- [{environment.upper()}] Processing Payload {i + 1}/{len(payloads)} ---")
-                    response = requests.post(url=api_url, headers=headers, json=payload_to_send)
-                    response.raise_for_status()
-                    response_data = response.json()
-                    response_result.append(response_data.get('success'))
-                    print(f"--> SUCCESS: Payload {i + 1} processed successfully.")
+                    for payload in payload_to_send:
+                        response = requests.post(url=api_url, headers=headers, json=payload)
+                        response.raise_for_status()
 
-                except requests.exceptions.JSONDecodeError:
-                    print(f"--> ERROR: Failed to decode JSON from response for payload {i + 1}.")
-                    print(f"--> Raw Response Text: {response.text}")
+                        response_data = response.json()
+                        print(
+                            f"-> Success: {response_data.get('success', 'N/A')}, Message: {response_data.get('messageKey', 'No message key')}")
+                except KeyError as e:
+                    print(f"--> ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
                 except requests.exceptions.RequestException as e:
                     print(f"--> ERROR: API request failed for payload {i + 1}: {e}")
                     if e.response is not None:
-                        print(f"--> API Response Body: {e.response.text}")
+                        print(f"--> Status Code: {e.response.status_code}, Response: {e.response.text}")
                 except Exception as e:
                     print(f"--> ERROR: An unexpected error occurred for payload {i + 1}: {e}")
         except Exception as e:
             print(
                 f"--> FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
 
-    print(f"\n{'=' * 25} Processing Finished {'=' * 25}")
-    print(f"Total of {len(response_result)} payloads were sent successfully.")
 
 if __name__ == "__main__":
-    create_putaway_task_complete()
+    create_goods_holder_measured()

@@ -320,13 +320,15 @@ class Worksheet:
             asn_id = entry.get("ASNID")
             lpn_id = entry.get("LPNID")
             failed = entry.get("Failed")
+            cancelled = entry.get("Cancelled")
 
             putaway_complete_params = {
                 "Plant": plant,
                 "Environment": envn,
                 "ASN_ID": asn_id,
                 "LPN_ID": lpn_id,
-                "Failed": failed
+                "Failed": failed,
+                "Cancelled": cancelled
             }
             self.all_putaway_complete_parameters.append(putaway_complete_params)
 

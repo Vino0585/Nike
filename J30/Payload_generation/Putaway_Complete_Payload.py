@@ -30,6 +30,7 @@ class Payload_Complete_Payload:
             lpn_id_raw = entry.get("LPN_ID")
             asn_id_raw = entry.get("ASN_ID")
             failed_flag = entry.get("Failed")
+            cancelled_flag = entry.get("Cancelled")
 
             lpn_id_string = str(lpn_id_raw) if pd.notna(lpn_id_raw) and lpn_id_raw != '' else None
             asn_id = str(asn_id_raw) if pd.notna(asn_id_raw) and asn_id_raw != '' else None
@@ -68,7 +69,7 @@ class Payload_Complete_Payload:
                 iso_timestamp_str = aware_timestamp.isoformat()
                 event_id = str(uuid.uuid4())
 
-                if failed_flag == 'N' or failed_flag is None:
+                if failed_flag == 'N' or failed_flag is None and cancelled_flag == 'N' or cancelled_flag is None:
                     putaway_each_payload = {
                         "event": {
                             "type": "PUTAWAY_TASK_COMPLETED",
@@ -81,7 +82,7 @@ class Payload_Complete_Payload:
                         },
                         "data": {
                             "distributionCenterCd": f"NODE_{plant}",
-                            "taskId": f"T-1234324",
+                            "taskId": f"IBPW0000000351",
                             "goodsholderId": f"{lpn}",
                             "putawayTaskCompleted": {
                                 "storedAtLogicalStorageLocationId": f"2401000001",
@@ -91,10 +92,10 @@ class Payload_Complete_Payload:
                             "executionTmst": iso_timestamp_str
                         }
                     }
-                else:
+                elif failed_flag == 'Y' and cancelled_flag == 'N' or cancelled_flag is None:
                     putaway_each_payload = {
                         "event": {
-                            "type": "PUTAWAY_TASK_COMPLETED",
+                            "type": "PUTAWAY_TASK_FAILED",
                             "tmst": iso_timestamp_str,
                             "id": event_id,
                             "correlationId": None,
@@ -104,16 +105,43 @@ class Payload_Complete_Payload:
                         },
                         "data": {
                             "distributionCenterCd": f"NODE_{plant}",
-                            "taskId": f"T-1234324",
+                            "taskId": f"IBPW0000000351",
                             "goodsholderId": f"{lpn}",
                             "putawayTaskFailed": {
                                 "reasonForFailureList": [
                                     {
-                                        "reasonForFailureReasonCode": "LOGICAL_STORAGE_LOCATION_FULL",
+                                        "reasonForFailureReasonCode": "TASK_TIMEOUT",
                                         "reasonForFailureVendorDesc": ""
                                     }
                                 ],
-                                "divertedAtDestinationLocationId": "150000000"
+                                "divertedAtDestinationLocationId": "1502000000"
+                            },
+                            "executionTmst": iso_timestamp_str
+                        }
+                    }
+                elif cancelled_flag == 'Y' or cancelled_flag is not None or cancelled_flag != 'N':
+                    putaway_each_payload = {
+                        "event": {
+                            "type": "PUTAWAY_TASK_CANCELLED",
+                            "tmst": iso_timestamp_str,
+                            "id": event_id,
+                            "correlationId": None,
+                            "distributionCenterCd": f"NODE_{plant}",
+                            "technicalSolutionSourceCd": "NAS_V001",
+                            "version": "1.0.0"
+                        },
+                        "data": {
+                            "distributionCenterCd": f"NODE_{plant}",
+                            "taskId": f"IBFD07232343492025QA1121",
+                            "goodsholderId": f"{lpn}",
+                            "putawayTaskCancelled": {
+                                "reasonForCancellationList": [
+                                    {
+                                        "reasonForCancellationReasonCode": "TASK_TIMEOUT",
+                                        "reasonForCancellationVendorDesc": ""
+                                    }
+                                ],
+                                "cancelledBy": "Vinoth"
                             },
                             "executionTmst": iso_timestamp_str
                         }
@@ -126,6 +154,8 @@ class Payload_Complete_Payload:
                 }
 
                 self.all_putaway_complete_payload.append(ptwy_payload)
+
+
 
             print(f"\nSuccessfully created {len(self.all_putaway_complete_payload)} payload generation(s) and sent to the program that called this function")
 

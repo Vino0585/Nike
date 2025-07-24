@@ -36,8 +36,8 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         # Generate the LPN and then increment the counter for the next call
         self.generated_lpn_ids = (
-            f'0000VG{datetime.today().strftime('%m%d%Y')}{envn}'
-            f'{random.randint(1000, 9999)}{self.lpn_unique_counter:04d}'
+            f'00V{datetime.today().strftime('%m%d%Y')}{envn.upper()}'
+            f'{random.randint(100, 999)}{self.lpn_unique_counter:01d}'
         )
         self.lpn_unique_counter += 1
         return self.generated_lpn_ids
@@ -62,11 +62,11 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         return self.bol_nbr, self.pro_nbr, self.trailer_nbr, self.seal_nbr
 
-# # To execute this class to check on in the later stage.
-# number_generation = NumberGeneration()
+# To execute this class to check on in the later stage.
+number_generation = NumberGeneration()
 # asn = number_generation.asn_number_generation(2, 'dev')
 # print(asn)
-# lpn = number_generation.lpn_number_generation('dev')
-# print(lpn)
-# bol, pro, trailer, seal = number_generation.misc_nbr('dev')
-# print(bol, pro, trailer, seal)
+lpn = number_generation.lpn_number_generation('dev')
+print(lpn)
+bol, pro, trailer, seal = number_generation.misc_nbr('dev')
+print(bol, pro, trailer, seal)

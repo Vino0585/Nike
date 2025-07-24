@@ -19,6 +19,8 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/item-master/api/item-master/item/search"
         elif program == 'Goods_Holder_Announced':
             self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKEGoodsholderAnnouncedSRCEndpointV1"
+        elif program == 'Goods_Holder_Measured':
+            self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKEGoodsholderMeasuredSRCEndpointV1"
         elif program == 'Search_Task_Detail':
             self.url = f"https://{self.host_name}/task/api/task/taskDetail/search"
         elif program == "Putaway_Task_Complete":
