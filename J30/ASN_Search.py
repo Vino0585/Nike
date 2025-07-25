@@ -126,4 +126,3 @@ class ASN_Search:
 if __name__ == "__main__":
     asn_search = ASN_Search()
     response_data = asn_search.search_asn_sending()
-    asn_search.create_from_asn_list_of_lpn(response_data=response_data)

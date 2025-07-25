@@ -72,16 +72,16 @@ class Worksheet:
         self.list_of_entry = []
         try:
             # The hardcoded path is now gone! It uses the one from __init__.
-            if not Path(self.master_file_path).is_file():
-                logging.error(f"Error: The file '{self.master_file_path}' was not found.")
+            if not Path(self.excel_file_path).is_file():
+                logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
 
             # self.excel_file_path = "J30/Input_files/Worksheet.xlsx"
-            xls = pd.ExcelFile(self.master_file_path)
+            xls = pd.ExcelFile(self.excel_file_path)
             sheet_names = xls.sheet_names
-            logging.info(f"Sheets found in '{self.master_file_path}': {sheet_names}")
+            logging.info(f"Sheets found in '{self.excel_file_path}': {sheet_names}")
             if input_sheet_name not in sheet_names:
                 logging.error(f"Sheet {input_sheet_name} not found in the Excel file.")
-            df = pd.read_excel(self.master_file_path,
+            df = pd.read_excel(self.excel_file_path,
                                sheet_name=input_sheet_name,
                                dtype=str)  # This is where you have to feed the program name in the future.
             print(f"\nData from {input_sheet_name} sheet:")
@@ -95,7 +95,7 @@ class Worksheet:
                 raise ValueError("Sheet 'CreateASN' is empty or no data found in the first row.")
 
         except FileNotFoundError:
-            logging.error(f"Error: The file '{self.master_file_path}' was not found.")
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
             return False
         except ValueError as ve:
             logging.error(f"Data error during Excel reading: {ve}")
@@ -339,7 +339,7 @@ class Worksheet:
             return []
 
             # Define which columns are mandatory for each row.
-        required_fields = ["Plant", "Environment", "ASNID", "LPNID"]  # , "Failed"
+        required_fields = ["Plant", "Environment", "ASNID", "LPNID", "Failed"]
         validation_errors = []
 
         for i, entry in enumerate(self.list_of_entry):
