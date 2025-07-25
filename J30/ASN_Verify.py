@@ -1,4 +1,4 @@
-from Payload_generation.ASN_Verify_Payload import ASN_Verify
+from Payload_generation.ASN_Verify_Payload import ASN_Verify_Payload
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 
@@ -9,46 +9,49 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-def asn_verify():
-    init_asn_verify_payload = ASN_Verify()
-    asn_verify_payload = init_asn_verify_payload.create_verify_asn_payload()
+class ASN_Verify:
 
-    for i, payload in enumerate(asn_verify_payload):
-        plant_id = payload.get("Plant")
-        environment = payload.get("Environment")
-        query = payload.get("Query")
+    def send_asn_verify(self):
+        init_asn_verify_payload = ASN_Verify_Payload()
+        asn_verify_payload = init_asn_verify_payload.create_verify_asn_payload()
 
-        try:
-            # --- 1. Authentication ---
-            token_handler = Get_Token(env=environment.lower(), plant=plant_id)
-            bearer_token = token_handler.get_bearer()
-            if not bearer_token:
-                logging.error(f"No token found for {environment}/{plant_id}. Skipping.")
-                return
+        for i, payload in enumerate(asn_verify_payload):
+            plant_id = payload.get("Plant")
+            environment = payload.get("Environment")
+            query = payload.get("Query")
 
-            # --- 2. URL Setup ---
-            awm_env = AWM_Env()
-            awm_env.get_wm_host(host=environment.lower(), facility=plant_id)
-            api_url = awm_env.get_program_url(program='ASN_Verify')
-            logging.info(f"Target URL for {plant_id}: {api_url}")
+            try:
+                # --- 1. Authentication ---
+                token_handler = Get_Token(env=environment.lower(), plant=plant_id)
+                bearer_token = token_handler.get_bearer()
+                if not bearer_token:
+                    logging.error(f"No token found for {environment}/{plant_id}. Skipping.")
+                    return
 
-            # --- 3. Request Headers & Payload ---
-            headers = {
-                "Content-Type": "application/json",
-                "organization": plant_id,  # Common practice is to use 'organization' and 'location'
-                "location": plant_id,
-                "Authorization": f"Bearer {bearer_token}"
-            }
+                # --- 2. URL Setup ---
+                awm_env = AWM_Env()
+                awm_env.get_wm_host(host=environment.lower(), facility=plant_id)
+                api_url = awm_env.get_program_url(program='ASN_Verify')
+                logging.info(f"Target URL for {plant_id}: {api_url}")
 
-            # --- 4. Post the request ---
-            response = requests.post(api_url, json=query, headers=headers, timeout=30)
-            response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
-            logging.info(f"Successfully added ASN for {plant_id}. Response: {response.json()}")
+                # --- 3. Request Headers & Payload ---
+                headers = {
+                    "Content-Type": "application/json",
+                    "organization": plant_id,  # Common practice is to use 'organization' and 'location'
+                    "location": plant_id,
+                    "Authorization": f"Bearer {bearer_token}"
+                }
 
-        except requests.exceptions.HTTPError as http_err:
-            logging.error(f"HTTP error occurred for {plant_id}: {http_err}")
-            if http_err.response:
-                logging.error(f"Response content: {http_err.response.text}")
+                # --- 4. Post the request ---
+                response = requests.post(api_url, json=query, headers=headers, timeout=30)
+                response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+                logging.info(f"Successfully added ASN for {plant_id}. Response: {response.json()}")
 
-if __name__ == "__main__":
-    asn_verify()
+            except requests.exceptions.HTTPError as http_err:
+                logging.error(f"HTTP error occurred for {plant_id}: {http_err}")
+                if http_err.response:
+                    logging.error(f"Response content: {http_err.response.text}")
+
+
+asn_verify = ASN_Verify()
+asn_verify.send_asn_verify()

@@ -1,7 +1,7 @@
 from Payload_generation.Worksheet_extract import Worksheet
 
 
-class ASN_Verify:
+class ASN_Verify_Payload:
     def __init__(self):
         self.worksheet = Worksheet()
         self.all_verify_asn_worksheet_parameter = self.worksheet.verify_asn_worksheet_extract()
@@ -67,6 +67,6 @@ class ASN_Verify:
 
         return self.all_verify_asn_payload
 
-initiate = ASN_Verify()
-result = initiate.create_verify_asn_payload()
-print(result)
+# initiate = ASN_Verify_Payload()
+# result = initiate.create_verify_asn_payload()
+# print(result)

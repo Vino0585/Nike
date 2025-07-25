@@ -6,7 +6,7 @@ from Payload_generation.Worksheet_extract import Worksheet
 from Payload_generation.Get_LPN_List_From_ASN import lpn_list_from_asn
 
 
-class Goods_Holder_Announced:
+class Goods_Holder_Announced_Payload:
 
     def __init__(self):
         self.worksheet = Worksheet()
@@ -103,7 +103,7 @@ class Goods_Holder_Announced:
         return self.all_goods_holder_announced
 
 
-class Goods_Holder_Measured:
+class Goods_Holder_Measured_Payload:
 
     def __init__(self):
         self.worksheet = Worksheet()

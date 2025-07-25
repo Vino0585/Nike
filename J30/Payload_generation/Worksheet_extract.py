@@ -487,13 +487,13 @@ class Worksheet:
 
         return self.all_master_sheet_extract_param
 
-Work = Worksheet()
-# # payload = Work.create_asn_extract_parameters()
+# Work = Worksheet()
+# # # payload = Work.create_asn_extract_parameters()
+# # # print(payload)
+# # payload = Work.search_item_extract_parameters()
 # # print(payload)
-# payload = Work.search_item_extract_parameters()
+# payload = Work.search_asn_extract_parameters()
 # print(payload)
-payload = Work.search_asn_extract_parameters()
-print(payload)
 # # payload = Work.inbound_delivery_worksheet_extract()
 # # print(payload)
 # # payload = Work.goods_holder_weighed()
