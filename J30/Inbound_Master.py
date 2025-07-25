@@ -36,19 +36,22 @@ class inbound_master_step:
                 and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(run_all)):
 
                 # Calling the Create ASN function
+                logging.info("ASN Creation Program Started Successfully")
                 asn_create = ASN_Creation()
                 asn_create.create_asns()
-                logging.info("ASN Created Successfully")
+                logging.info("ASN Created Program Completed Successfully")
 
             elif (create_asn == 'Y' and inbound_delivery == 'Y' and self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed)
                 and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(run_all)):
 
                 # Calling the Create ASN function
+                logging.info("ASN Creation Program Started Successfully")
                 asn_create = ASN_Creation()
                 asn_create.create_asns()
-                logging.info("ASN Created Successfully")
+                logging.info("ASN Created Program Completed Successfully")
 
                 # Calling the inbound delivery function
+                logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
@@ -57,15 +60,19 @@ class inbound_master_step:
                 and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(run_all)):
 
                 # Calling the Create ASN function
+                logging.info("ASN Creation Program Started Successfully")
                 asn_create = ASN_Creation()
                 asn_create.create_asns()
+                logging.info("ASN Created Program Completed Successfully")
 
                 # Calling the inbound delivery function
+                logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
 
                 # Calling the goods holder announced function
+                logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Created Successfully")
@@ -74,16 +81,19 @@ class inbound_master_step:
                   and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(run_all)):
 
                 # Calling the Create ASN function
+                logging.info("ASN Creation Program Started Successfully")
                 asn_create = ASN_Creation()
                 asn_create.create_asns()
-                logging.info("ASN Created Successfully")
+                logging.info("ASN Created Program Completed Successfully")
 
                 # Calling the inbound delivery function
+                logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
 
                 # Calling the goods holder announced function
+                logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Created Successfully")
@@ -97,26 +107,31 @@ class inbound_master_step:
                     putaway_complete == 'Y' and self.is_no_or_empty(run_all)):
 
                 # Calling the Create ASN function
+                logging.info("ASN Creation Program Started Successfully")
                 asn_create = ASN_Creation()
                 asn_create.create_asns()
-                logging.info("ASN Created Successfully")
+                logging.info("ASN Created Program Completed Successfully")
 
                 # Calling the inbound delivery function
+                logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
 
                 # Calling the goods holder announced function
+                logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Created Successfully")
 
                 # Calling the goods holder measured function.
+                logging.info("Goods Holder Measured Program Started Successfully")
                 gh_measured = Goods_Holder_Measured()
                 gh_measured.send_goods_holder_measured()
-                logging.info("Goods Holder Measured Created Successfully")
+                logging.info("Goods Holder Measured Program Completed Successfully")
 
                 # Calling the Putaway Complete Function.
+                logging.info("Putaway Completed Program Started Successfully")
                 ptwy_complete = Putaway_Complete()
                 ptwy_complete.create_putaway_task_complete()
                 logging.info("Putaway Completed Successfully")
@@ -126,31 +141,37 @@ class inbound_master_step:
                 and self.is_no_or_empty(putaway_complete) and run_all == 'Y'):
 
                 # Calling the Create ASN function
+                logging.info("ASN Creation Program Started Successfully")
                 asn_create = ASN_Creation()
                 asn_create.create_asns()
-                logging.info("ASN Created Successfully")
+                logging.info("ASN Created Program Completed Successfully")
 
                 # Calling the inbound delivery function
+                logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
 
                 # Calling the goods holder announced function
+                logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Created Successfully")
 
                 # Calling the goods holder measured function.
+                logging.info("Goods Holder Measured Program Started Successfully")
                 gh_measured = Goods_Holder_Measured()
                 gh_measured.send_goods_holder_measured()
-                logging.info("Goods Holder Measured Created Successfully")
+                logging.info("Goods Holder Measured Program Completed Successfully")
 
                 # Calling the Putaway Complete Function.
+                logging.info("Putaway Completed Program Started Successfully")
                 ptwy_complete = Putaway_Complete()
                 ptwy_complete.create_putaway_task_complete()
                 logging.info("Putaway Completed Successfully")
 
                 # Calling the ASN Verification Function
+                logging.info("ASN Verification Started Successfully")
                 asn_verify = ASN_Verify()
                 asn_verify.send_asn_verify()
                 logging.info("ASN Verified Successfully")

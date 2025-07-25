@@ -127,5 +127,5 @@ class Inbound_Delivery:
                 logging.info("No Pre receipt is triggered as its flag is set to N or null")
 
 
-ib_delivery = Inbound_Delivery()
-ib_delivery.send_inbound_delivery()
+# ib_delivery = Inbound_Delivery()
+# ib_delivery.send_inbound_delivery()

@@ -82,5 +82,5 @@ class Goods_Holder_Measured:
                     f"--> FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
 
 
-gh_measured = Goods_Holder_Measured()
-gh_measured.create_goods_holder_measured()
+# gh_measured = Goods_Holder_Measured()
+# gh_measured.create_goods_holder_measured()

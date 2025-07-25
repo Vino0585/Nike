@@ -123,6 +123,6 @@ class ASN_Search:
 
         return response_data
 
-if __name__ == "__main__":
-    asn_search = ASN_Search()
-    response_data = asn_search.search_asn_sending()
+# if __name__ == "__main__":
+#     asn_search = ASN_Search()
+#     response_data = asn_search.search_asn_sending()

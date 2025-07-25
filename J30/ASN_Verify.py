@@ -53,5 +53,5 @@ class ASN_Verify:
                     logging.error(f"Response content: {http_err.response.text}")
 
 
-asn_verify = ASN_Verify()
-asn_verify.send_asn_verify()
+# asn_verify = ASN_Verify()
+# asn_verify.send_asn_verify()

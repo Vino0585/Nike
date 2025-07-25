@@ -84,5 +84,5 @@ class Goods_Holder_Announced:
                     f"--> FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
 
 
-gh_announced = Goods_Holder_Announced()
-gh_announced.send_goods_holder_announced()
+# gh_announced = Goods_Holder_Announced()
+# gh_announced.send_goods_holder_announced()

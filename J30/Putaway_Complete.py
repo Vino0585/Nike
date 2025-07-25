@@ -83,5 +83,5 @@ class Putaway_Complete:
         print(f"Total of {len(response_result)} payloads were sent successfully.")
 
 
-ptwy_complete = Putaway_Complete()
-ptwy_complete.create_putaway_task_complete()
+# ptwy_complete = Putaway_Complete()
+# ptwy_complete.create_putaway_task_complete()
