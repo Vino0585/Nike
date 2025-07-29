@@ -50,8 +50,12 @@ class inbound_master_step:
                 asn_create.create_asns()
                 logging.info("ASN Created Program Completed Successfully")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+
                 # Calling the inbound delivery function
-                logging.info("Inbound Delivery Program Started Successfully")
+                print("\n")
+                logging.info(f"Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
@@ -65,11 +69,19 @@ class inbound_master_step:
                 asn_create.create_asns()
                 logging.info("ASN Created Program Completed Successfully")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
+
                 # Calling the inbound delivery function
                 logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
+
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
 
                 # Calling the goods holder announced function
                 logging.info("Goods Holder Announced Program Started Successfully")
@@ -86,17 +98,29 @@ class inbound_master_step:
                 asn_create.create_asns()
                 logging.info("ASN Created Program Completed Successfully")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
+
                 # Calling the inbound delivery function
                 logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
+
                 # Calling the goods holder announced function
                 logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Created Successfully")
+
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
 
                 # Calling the goods holder measured function.
                 gh_measured = Goods_Holder_Measured()
@@ -107,28 +131,44 @@ class inbound_master_step:
                     putaway_complete == 'Y' and self.is_no_or_empty(run_all)):
 
                 # Calling the Create ASN function
-                logging.info("ASN Creation Program Started Successfully")
+                logging.info(f"ASN Creation Program Started Successfully")
                 asn_create = ASN_Creation()
                 asn_create.create_asns()
                 logging.info("ASN Created Program Completed Successfully")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
+
                 # Calling the inbound delivery function
-                logging.info("Inbound Delivery Program Started Successfully")
+                logging.info(f"Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
+
                 # Calling the goods holder announced function
-                logging.info("Goods Holder Announced Program Started Successfully")
+                logging.info(f"Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Created Successfully")
+
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
 
                 # Calling the goods holder measured function.
                 logging.info("Goods Holder Measured Program Started Successfully")
                 gh_measured = Goods_Holder_Measured()
                 gh_measured.send_goods_holder_measured()
                 logging.info("Goods Holder Measured Program Completed Successfully")
+
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
 
                 # Calling the Putaway Complete Function.
                 logging.info("Putaway Completed Program Started Successfully")
@@ -146,11 +186,19 @@ class inbound_master_step:
                 asn_create.create_asns()
                 logging.info("ASN Created Program Completed Successfully")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
+
                 # Calling the inbound delivery function
                 logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
+
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
 
                 # Calling the goods holder announced function
                 logging.info("Goods Holder Announced Program Started Successfully")
@@ -158,11 +206,19 @@ class inbound_master_step:
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Created Successfully")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
+
                 # Calling the goods holder measured function.
                 logging.info("Goods Holder Measured Program Started Successfully")
                 gh_measured = Goods_Holder_Measured()
                 gh_measured.send_goods_holder_measured()
                 logging.info("Goods Holder Measured Program Completed Successfully")
+
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
 
                 # Calling the Putaway Complete Function.
                 logging.info("Putaway Completed Program Started Successfully")
@@ -170,15 +226,21 @@ class inbound_master_step:
                 ptwy_complete.create_putaway_task_complete()
                 logging.info("Putaway Completed Successfully")
 
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+                print("\n")
+
                 # Calling the ASN Verification Function
                 logging.info("ASN Verification Started Successfully")
                 asn_verify = ASN_Verify()
                 asn_verify.send_asn_verify()
                 logging.info("ASN Verified Successfully")
+                print("\n")
+                logging.info("Run All Program Completed Successfully")
 
             else:
-                print("The combination provided doesnt match the requirement therefore the program didnt produce any "
-                      "output.")
+                logging.info(f"The combination provided doesnt match the requirement "
+                             f"therefore the program didnt produce any output.")
 
 
 inbound_master = inbound_master_step()

@@ -1,7 +1,4 @@
 import logging
-from importlib.metadata import requires
-from venv import create
-
 import pandas as pd
 from pathlib import Path
 
@@ -47,8 +44,8 @@ class Worksheet:
             df = pd.read_excel(self.excel_file_path,
                                sheet_name=input_sheet_name,
                                dtype=str)  # This is where you have to feed the program name in the future.
-            print(f"\nData from {input_sheet_name} sheet:")
-            print(df)
+            # print(f"\nData from {input_sheet_name} sheet:")
+            # print(df)
 
             if not df.empty:
                 data_dict_index = df.to_dict(orient='index')
@@ -84,15 +81,15 @@ class Worksheet:
             df = pd.read_excel(self.master_file_path,
                                sheet_name=input_sheet_name,
                                dtype=str)  # This is where you have to feed the program name in the future.
-            print(f"\nData from {input_sheet_name} sheet:")
-            print(df)
+            # print(f"\nData from {input_sheet_name} sheet:")
+            # print(df)
 
             if not df.empty:
                 data_dict_index = df.to_dict(orient='index')
                 for key, value in data_dict_index.items():
                     self.list_of_entry.append(value)
             else:
-                raise ValueError("Sheet 'CreateASN' is empty or no data found in the first row.")
+                logging.error("Sheet 'CreateASN' is empty or no data found in the first row.")
 
         except FileNotFoundError:
             logging.error(f"Error: The file '{self.master_file_path}' was not found.")
@@ -199,22 +196,22 @@ class Worksheet:
 
         # After checking all entries, if we found any errors, print them all.
         if validation_errors:
-            print("\nErrors found in 'ItemSearch' sheet. Please correct them:")
+            logging.error("Errors found in 'ItemSearch' sheet. Please correct them:")
             for error in validation_errors:
-                print(f"- {error}")
+                logging.error(f"{error}")
             return []  # Return an empty list to indicate failure
 
-        print("\nAll ItemSearch entries validated successfully.")
+        logging.info("All ItemSearch entries validated successfully.")
         return all_item_parameters
 
     def search_asn_extract_parameters(self):
 
         if not self._master_excel_open(input_sheet_name='SearchASN'):
-            # The open method already prints the error, so we just exit.
+            # The open method already logging.infos the error, so we just exit.
             return []
 
         if not self.list_of_entry:
-            print("No ItemSearch entries found to extract parameters.")
+            logging.info("No ItemSearch entries found to extract parameters.")
             return []
 
         # Define which columns are mandatory for each row.
@@ -255,7 +252,7 @@ class Worksheet:
             return []
 
         if not self.list_of_entry:
-            print("No ItemSearch entries found to extract parameters.")
+            logging.error("No ItemSearch entries found to extract parameters.")
             return []
 
             # Define which columns are mandatory for each row.
@@ -295,7 +292,7 @@ class Worksheet:
             return []
 
         if not self.list_of_entry:
-            print("No ItemSearch entries found to extract parameters.")
+            logging.error("No ItemSearch entries found to extract parameters.")
             return []
 
             # Define which columns are mandatory for each row.
@@ -335,7 +332,7 @@ class Worksheet:
             return []
 
         if not self.list_of_entry:
-            print("No ItemSearch entries found to extract parameters.")
+            logging.error("No Putaway entries found to extract parameters.")
             return []
 
             # Define which columns are mandatory for each row.
@@ -379,7 +376,7 @@ class Worksheet:
             return []
 
         if not self.list_of_entry:
-            print("No ASN for Inbound Delivery entries found to extract parameters.")
+            logging.error("No ASN for Inbound Delivery entries found to extract parameters.")
             return []
 
             # Define which columns are mandatory for each row.
@@ -418,7 +415,7 @@ class Worksheet:
             return []
 
         if not self.list_of_entry:
-            print("No ASN for ASN Verify entries found to extract parameters.")
+            logging.error("No ASN for ASN Verify entries found to extract parameters.")
             return []
 
             # Define which columns are mandatory for each row.

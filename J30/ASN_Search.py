@@ -1,10 +1,14 @@
 import requests
 import json
+import logging
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 from pathlib import Path
 import pandas as pd
 from Payload_generation.ASN_Search_Payload import ASN_Search_Payload
+
+# Setup basic logging to provide better feedback than print()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class ASN_Search:
 
@@ -21,7 +25,7 @@ class ASN_Search:
         asn_search_payload_init = ASN_Search_Payload()
         search_tasks = asn_search_payload_init.parse_asn_search_worksheet()
         if not search_tasks:
-            print("\nScript finished: No valid search tasks to process.")
+            logging.info("Script finished: No valid search tasks to process.")
             return
 
         all_results = []  # --- Collect all results here before writing to file ---
@@ -35,20 +39,20 @@ class ASN_Search:
             plant_id = task['plant']
             asn_ids = task['asn_ids']
 
-            print(f"\n{'='*20} Processing Task {i+1}/{len(search_tasks)}: Plant {plant_id} ({envn.upper()}) {'='*20}")
+            logging.info(f"Processing Task {i+1}/{len(search_tasks)}: Plant {plant_id} ({envn.upper()})")
 
             try:
                 # --- 1. Authentication ---
                 token_handler = Get_Token(env=envn.lower(), plant=plant_id)
                 bearer_token = token_handler.get_bearer()
-                print("Successfully retrieved token.")
+                logging.info("Successfully retrieved token.")
 
                 # --- 2. URL Setup ---
                 awm_env = AWM_Env()
                 awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
                 program_name = Path(__file__).stem
                 api_url = awm_env.get_program_url(program=program_name)
-                print(f"Target URL: {api_url}")
+                logging.info(f"Target URL: {api_url}")
 
                 # --- 3. Request Headers & Payload ---
                 headers = {
@@ -64,7 +68,7 @@ class ASN_Search:
                 query_string = f"AsnId in ('{query_values}')"
 
                 payload = {"Query": query_string}
-                print(f"Sending Payload: {json.dumps(payload)}")
+                # print(f"Sending Payload: {json.dumps(payload)}")
 
                 # --- 4. API Call ---
                 response = requests.post(api_url, json=payload, headers=headers, timeout=30)
@@ -75,30 +79,30 @@ class ASN_Search:
                 # --- 5. Process and Collect Response ---
                 extracted_data = asn_search_payload_init.parse_asn_response(response_data)
                 if extracted_data:
-                    print(f"-> Success: Found {len(extracted_data)} detail rows for this task.")
+                    logging.info(f"Success: Found {len(extracted_data)} detail rows for this task.")
                     all_results.extend(extracted_data) # Add results to the master list
 
             except requests.exceptions.HTTPError as http_err:
-                print(f"❌ HTTP error occurred: {http_err}")
+                logging.error(f"HTTP error occurred: {http_err}")
                 if http_err.response:
-                    print(f"Response content: {http_err.response.text}")
+                    logging.error(f"Response content: {http_err.response.text}")
             except requests.exceptions.RequestException as req_err:
-                print(f"❌ A request error occurred: {req_err}")
+                logging.error(f"A request error occurred: {req_err}")
             except Exception as e:
-                print(f"❌ An unexpected error occurred: {e}")
+                logging.error(f"An unexpected error occurred: {e}")
 
         # --- 6. Final Export ---
         # This block runs once after all tasks are completed.
         if not all_results:
-            print("\n--- Script finished, but no results were collected from any API calls. ---")
+            logging.info("Script finished, but no results were collected from any API calls")
             return
 
-        print(f"\n{'=' * 25} Consolidating and Exporting Results {'=' * 25}")
+        logging.info(f"Consolidating and Exporting Results")
         try:
             # Create the main DataFrame with the parsed results
             df_details = pd.DataFrame(all_results)
-            print("--- ASN Details ---")
-            print(df_details.to_string(index=False))
+            # print("--- ASN Details ---")
+            # print(df_details.to_string(index=False))
 
             # Use pd.ExcelWriter to save multiple sheets to the SAME file
             with pd.ExcelWriter(self.OUTPUT_FILENAME, engine='openpyxl') as writer:
@@ -114,12 +118,12 @@ class ASN_Search:
 
                         # Write the second sheet
                         df_raw.to_excel(writer, sheet_name="Raw_ASN_Payload", index=False)
-                        print("\n--- Raw Payload updated in Excel Sheet: Raw_ASN_Payload ---")
+                        logging.info("Raw Payload updated in Excel Sheet: Raw_ASN_Payload")
 
-            print(f"\n✅ Successfully exported {len(df_details)} total rows to '{self.OUTPUT_FILENAME}'")
+            logging.info(f"Successfully exported {len(df_details)} total rows to '{self.OUTPUT_FILENAME}'")
 
         except Exception as e:
-            print(f"\n❌ Error exporting final report to Excel: {e}")
+            logging.error(f" Error exporting final report to Excel: {e}")
 
         return response_data
 

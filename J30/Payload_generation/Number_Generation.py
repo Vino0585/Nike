@@ -62,11 +62,11 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         return self.bol_nbr, self.pro_nbr, self.trailer_nbr, self.seal_nbr
 
-# To execute this class to check on in the later stage.
-number_generation = NumberGeneration()
+# # To execute this class to check on in the later stage.
+# number_generation = NumberGeneration()
 # asn = number_generation.asn_number_generation(2, 'dev')
 # print(asn)
-lpn = number_generation.lpn_number_generation('dev')
-print(lpn)
-bol, pro, trailer, seal = number_generation.misc_nbr('dev')
-print(bol, pro, trailer, seal)
+# lpn = number_generation.lpn_number_generation('dev')
+# print(lpn)
+# bol, pro, trailer, seal = number_generation.misc_nbr('dev')
+# print(bol, pro, trailer, seal)

@@ -2,6 +2,10 @@ import uuid
 import datetime as dt
 import pandas as pd
 import json
+import logging
+
+# Setup basic logging to provide better feedback than print()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 from Payload_generation.Get_LPN_List_From_ASN import lpn_list_from_asn
 from Payload_generation.Worksheet_extract import Worksheet
@@ -13,15 +17,11 @@ class Payload_Complete_Payload:
         self.worksheet = Worksheet()
         self.all_putaway_complete_payload = []
 
-
     def create_putaway_complete_payloads(self) -> list:
-        """
-        Generates a list of GOODSHOLDER_ANNOUNCED payloads from worksheet data.
-        """
         putaway_complete_data = self.worksheet.putaway_task_complete()
 
         if not putaway_complete_data:
-            print("No valid item parameters found, cannot create any payloads for putaway complete task.")
+            logging.info("No valid item parameters found, cannot create any payloads for putaway complete task.")
             return []
 
         for entry in putaway_complete_data:
@@ -36,12 +36,12 @@ class Payload_Complete_Payload:
             asn_id = str(asn_id_raw) if pd.notna(asn_id_raw) and asn_id_raw != '' else None
 
             if not all([plant, envn, (asn_id or lpn_id_string)]):
-                print(f"Skipping entry due to missing data: {entry}")
+                logging.info(f"Skipping entry due to missing data: {entry}")
                 continue
 
             lpn_list = []
             if asn_id:
-                print(f"Found ASN(s) '{asn_id}'. Searching for associated LPNs...")
+                logging.info(f"Found ASN(s) '{asn_id}'. Searching for associated LPNs...")
                 search_tasks = []
                 for single_asn in asn_id.split(';'):
                     single_asn = single_asn.strip()
@@ -58,9 +58,8 @@ class Payload_Complete_Payload:
                     for lpn in lpn_list_from_asn_search:
                         lpn_list.extend(lpn)
 
-
             elif lpn_id_string:
-                print(f"Using LPNs from worksheet: '{lpn_id_string}'")
+                logging.info(f"Using LPNs from worksheet: '{lpn_id_string}'")
                 lpn_list = [lpn.strip() for lpn in lpn_id_string.split(';')]
 
             # --- CHANGE 2: Generate the current timestamp in UTC ---
@@ -155,9 +154,8 @@ class Payload_Complete_Payload:
 
                 self.all_putaway_complete_payload.append(ptwy_payload)
 
-
-
-            print(f"\nSuccessfully created {len(self.all_putaway_complete_payload)} payload generation(s) and sent to the program that called this function")
+            logging.info(f"Successfully created {len(self.all_putaway_complete_payload)} "
+                         f"payload generation(s) and sent to the program that called this function")
 
         return self.all_putaway_complete_payload
 

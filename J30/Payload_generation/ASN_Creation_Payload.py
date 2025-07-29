@@ -1,6 +1,9 @@
+import logging
 from Payload_generation.Worksheet_extract import Worksheet
 from Payload_generation.Number_Generation import NumberGeneration
 
+# Setup basic logging to provide better feedback than print()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Asn_Payload_Generator:
     def __init__(self):
@@ -16,7 +19,7 @@ class Asn_Payload_Generator:
         case_qtys_groups_str = str(data_row.get('Case qty', "")).split(';')
 
         if not (len(items_groups_str) == len(qtys_groups_str) == len(case_qtys_groups_str)):
-            print(f"--> WARNING: Mismatch in ';'-separated groups in row {row_num_in_sheet}. Skipping.")
+            logging.error(f"--> WARNING: Mismatch in ';'-separated groups in row {row_num_in_sheet}. Skipping.")
             return []
 
         lpn_definitions = []
@@ -30,7 +33,7 @@ class Asn_Payload_Generator:
                 case_qtys = [int(cq.strip()) for cq in case_qty_group.split('@') if cq.strip()]
 
                 if not (len(items) == len(qtys) == len(case_qtys)):
-                    print(
+                    logging.error(
                         f"--> WARNING: Mismatch in '@'-separated values for group '{item_group}' in row {row_num_in_sheet}. Skipping group.")
                     continue
 
@@ -40,7 +43,7 @@ class Asn_Payload_Generator:
                 if is_mixed:
                     for j in range(1, len(items)):
                         if case_qtys[j] == 0 or (qtys[j] // case_qtys[j]) != num_lpns_to_generate:
-                            print(
+                            logging.error(
                                 f"--> ERROR: Inconsistent Qty/CaseQty ratio for mixed LPN group '{item_group}' in row {row_num_in_sheet}. Skipping group.")
                             num_lpns_to_generate = 0
                             break
@@ -51,7 +54,7 @@ class Asn_Payload_Generator:
                         "num_lpns_to_generate": num_lpns_to_generate
                     })
             except (ValueError, ZeroDivisionError) as e:
-                print(f"--> ERROR: Invalid data in row {row_num_in_sheet} for group '{item_group}'. Details: {e}")
+                logging.error(f"--> ERROR: Invalid data in row {row_num_in_sheet} for group '{item_group}'. Details: {e}")
                 continue
 
         return lpn_definitions
@@ -69,7 +72,7 @@ class Asn_Payload_Generator:
             if total_lpns_for_def > 0:
                 item_desc = "@".join(lpn_def['items'])
                 lpn_type = "Mixed-Item" if lpn_def['is_mixed'] else "Single-Item"
-                print(f"    - {lpn_type} Group '{item_desc}': Generating {total_lpns_for_def} LPNs.")
+                logging.info(f"{lpn_type} Group '{item_desc}': Generating {total_lpns_for_def} LPNs.")
 
             for _ in range(total_lpns_for_def):
                 current_lpn_id = self.number_gen.lpn_number_generation(envn)
@@ -99,17 +102,13 @@ class Asn_Payload_Generator:
         try:
             list_of_datadict = self.worksheet.create_asn_extract_parameters()
             if list_of_datadict is None:
-                print("Error: Worksheet method returned None. Halting generation.")
+                logging.error("Error: Worksheet method returned None. Halting generation.")
                 return []
         except Exception as e:
-            print(f"An unexpected error occurred while extracting data from the worksheet: {e}")
+            logging.error(f"An unexpected error occurred while extracting data from the worksheet: {e}")
             return []
 
-        if not list_of_datadict:
-            print("No data rows found in the worksheet to process.")
-            return []
-
-        print(f"Successfully extracted {len(list_of_datadict)} data row(s) for processing.")
+        logging.info(f"Successfully extracted {len(list_of_datadict)} data row(s) for processing.")
 
         # **CRITICAL FIX**: Reset the list before each run.
         # This ensures that calling `generate_payloads` twice doesn't accumulate results.
@@ -118,7 +117,7 @@ class Asn_Payload_Generator:
         for i, data_row in enumerate(list_of_datadict):
             # Excel rows are 1-based and have a header, so the first data row is at index 0, but is row 2 in the sheet.
             row_num_in_sheet = i + 2
-            print(f"\n--- Processing Excel Row {row_num_in_sheet} ---")
+            logging.info(f"Processing Excel Row {row_num_in_sheet}")
 
             plant = data_row.get("Plant")
             num_of_asn = int(data_row.get('Number of ASN', 0))
@@ -129,16 +128,16 @@ class Asn_Payload_Generator:
 
             lpn_definitions = self._parse_lpn_definitions_from_row(data_row, row_num_in_sheet)
             if not lpn_definitions:
-                print(f"--> INFO: No valid LPNs to generate for row {row_num_in_sheet}. Skipping.")
+                logging.info(f"INFO: No valid LPNs to generate for row {row_num_in_sheet}. Skipping.")
                 continue
 
             asn_ids = self.number_gen.asn_number_generation(num_of_asn, envn, initial)
             if not asn_ids:
-                print(f"--> INFO: Skipping row {row_num_in_sheet} as 'Number of ASN' is 0.")
+                logging.error(f"INFO: Skipping row {row_num_in_sheet} as 'Number of ASN' is 0.")
                 continue
 
             for asn_index, current_asn_id in enumerate(asn_ids):
-                print(f"  ASN {current_asn_id}:")
+                logging.info(f"ASN {current_asn_id}:")
                 lpn_list = self._build_lpn_list_for_asn(lpn_definitions, num_of_asn, asn_index, current_asn_id, envn,
                                                         plant)
 
@@ -154,7 +153,7 @@ class Asn_Payload_Generator:
                     }
                     self.all_asn_payloads.append({'payload': asn_payload, 'environment': envn})
 
-        print(f"\n--- Generation Complete. Total Payloads Created: {len(self.all_asn_payloads)} ---")
+        logging.info(f"Generation Complete. Total Payloads Created: {len(self.all_asn_payloads)}")
         return self.all_asn_payloads
 
 
@@ -167,5 +166,5 @@ class Asn_Payload_Generator:
 #         import json
 #         for i, payloads in enumerate(final_payloads):
 #             num = i+1
-#             print(f"\n--- No {num} Generated Payload ---")
+#             logging.info(f"\n--- No {num} Generated Payload ---")
 #             print(json.dumps(payloads, indent=2))
