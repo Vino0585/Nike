@@ -182,7 +182,6 @@ class ASN_Creation:
 
         else:
             logging.info("No data was successfully processed to generate an input sheet.")
-
 #
 # asn_create = ASN_Creation()
 # asn_create.create_asns()
