@@ -87,7 +87,7 @@ class inbound_master_step:
                 logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
-                logging.info("Goods Holder Announced Created Successfully")
+                logging.info("Goods Holder Announced Completed Successfully")
 
             elif (create_asn == 'Y' and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and goods_holder_weighed == 'Y'
                   and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(run_all)):
@@ -116,7 +116,7 @@ class inbound_master_step:
                 logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
-                logging.info("Goods Holder Announced Created Successfully")
+                logging.info("Goods Holder Announced Completed Successfully")
 
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
@@ -154,7 +154,7 @@ class inbound_master_step:
                 logging.info(f"Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
-                logging.info("Goods Holder Announced Created Successfully")
+                logging.info("Goods Holder Announced Completed Successfully")
 
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
@@ -204,7 +204,7 @@ class inbound_master_step:
                 logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
-                logging.info("Goods Holder Announced Created Successfully")
+                logging.info("Goods Holder Announced Completed Successfully")
 
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
