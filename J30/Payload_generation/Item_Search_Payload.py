@@ -1,3 +1,5 @@
+import random
+
 from Payload_generation.Worksheet_extract import Worksheet
 import pandas as pd
 
@@ -42,7 +44,8 @@ class ItemPayload():
                 payload = {
                     "Query": query_string,
                     "Template": template_structure,
-                    "Size": int(num_of_items or 1)
+                    "Size": int(num_of_items or 1),
+                    "Page": random.randint(1, 9)
                 }
                 return {
                     "envn": params.get("environment"),

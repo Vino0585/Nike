@@ -84,7 +84,7 @@ class Payload_Complete_Payload:
                             "taskId": f"IBPW0000000351",
                             "goodsholderId": f"{lpn}",
                             "putawayTaskCompleted": {
-                                "storedAtLogicalStorageLocationId": f"2401000001",
+                                "storedAtLogicalStorageLocationId": f"2401000000",
                                 "substitutionlockActivated": "false",
                                 "confirmedByDeviceId": "12345678"
                             },
