@@ -14,11 +14,53 @@ class Order_Creation_Payload:
         self.number_gen = NumberGeneration()
         self.all_order_payloads = []
 
-    def _parse_order_line_item(self, item, qty, vas_code_service_id, vas_code_service_uom) -> list:
+    def _parse_order_line_item(self, item, qty, vas_code_service_id, vas_code_service_uom, row_num_in_sheet) -> list:
         item_grp = item.split(';')
         qty_grp = qty.split(';')
+        vas_code_service_id_grp = vas_code_service_id.split(';')
+        vas_code_service_uom_grp = vas_code_service_uom.split(';')
+        row_num_in_sheet = row_num_in_sheet
 
+        if not (len(item_grp) == len(qty_grp)):
+            logging.error(f"WARNING: Mismatch in ';' -separated groups in row {row_num_in_sheet} Skipping the execution")
+            return []
 
+        order_line_list = []
+        for item, qty, vas_code_service_id, vas_code_service_uom in zip(item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp):
+            order_line_id = 1
+
+            extended = {
+                "PurchaseOrderNumber": "TOC65312052", "DivisionCode": "20", "AlwaysAvailableIndicator": 'false',
+                "ProductLifeCycleCode": "ACT", "LaunchCode": "N", "PromotionalIndicator": 'false',
+                "MaterialAvailableDate": "2025-04-05T13:28:11", "PurchaseOrderLineNumber": "1",
+                "SalesOrderLineNumber": "1", "BatchNumber": "065312052"
+                }
+
+            original_order_line_requested_service = [
+                {
+                    "ServiceTypeId": 'VAS',
+                    "ProvidedServiceId": vas_code_service_id,
+                    "Sequence": "1",
+                    "ServiceUomId": vas_code_service_uom
+                }
+                ]
+
+            order_line = {
+                             "OriginalOrderLineId": order_line_id,
+                             "ItemId": item,
+                             "OrderedQuantity": qty,
+                             "QuantityUomId": "Unit",
+                             "ItemAttribute1": "01000",
+                             "UnitPrice": "32.5",
+                             "CountryOfOriginId": "ID",
+                             "Extended": extended,
+                             "OriginalOrderLineRequestedService": original_order_line_requested_service
+                         }
+
+            order_line_list.append(order_line)
+            order_line_id += 1
+
+        return order_line_list
 
     @property
     def generate_payloads(self) -> list[Any] | None:
@@ -101,19 +143,19 @@ class Order_Creation_Payload:
                     "DeliveryStartDateTime": future_iso, "PackSlipRequired": "N", "ReturnsLabelRequired": "N"
                 }
 
-                order_line_info = self._parse_order_line_item(item, qty, vas_code_service_id, vas_code_service_uom)
+                order_line_info = self._parse_order_line_item(item, qty, vas_code_service_id, vas_code_service_uom, row_num_in_sheet)
 
                 order_payload = {
                     "OrderType": order_type, "OriginFacilityId": plant, "OriginalOrderId": current_order_id,
-                    "IncotermId": "DDP", "ResidentialDestination": 'true', "MaximumStatus": "0500",
-                    "MinimumStatus": "0500", "PickupEndDateTime": now_iso,
-                    "PickupStartDateTime": now_iso, "DeliveryEndDateTime": future_iso,
-                    "DeliveryStartDateTime": future_iso, "DestinationFacilityId": d_facility,
-                    "DestinationAddress":  dest_address,
-                    "BillToFacilityId": "300597",
-                    "BillToName": "CHOCOLADE ECLAIRTJE",
-                    "BillToAddress": dest_address,
+                    "IncotermId": "DDP", "ResidentialDestination": 'true',
+                    "MaximumStatus": "0500", "MinimumStatus": "0500",
+                    "PickupEndDateTime": now_iso, "PickupStartDateTime": now_iso,
+                    "DeliveryEndDateTime": future_iso, "DeliveryStartDateTime": future_iso,
+                    "DestinationFacilityId": d_facility, "DestinationAddress":  dest_address,
+                    "BillToFacilityId": d_facility, "BillToName": "CHOCOLADE ECLAIRTJE", "BillToAddress": dest_address,
                     "Extended": extended,
                     "OriginalOrderLine": order_line_info
                 }
+                self.all_order_payloads.append({'payload': order_payload, 'environment': envn, 'plant': plant})
 
+            return self.all_order_payloads
