@@ -62,6 +62,22 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         return self.bol_nbr, self.pro_nbr, self.trailer_nbr, self.seal_nbr
 
+    def order_number_generation(self, num_of_order_to_generate: int, envn: str, initial: str):
+        if not isinstance(num_of_order_to_generate, int) or num_of_order_to_generate <= 0:
+            print("Warning: Number of ASN is zero or invalid. No ASN IDs will be generated for this data row.")
+            return []
+
+        # Clear previous results for new generation batch
+        self.generated_order_ids = []
+        timestamp = datetime.now().strftime('%m%d')
+        for i in range(num_of_order_to_generate):
+            # Using a wider random range and the loop index for better uniqueness
+            unique_part = f"{random.randint(100, 999)}{i}"
+            id_ = f"{initial}ORD{timestamp}{envn.upper()}{unique_part}"
+            self.generated_order_ids.append(id_)
+        return self.generated_order_ids
+
+
 # # To execute this class to check on in the later stage.
 # number_generation = NumberGeneration()
 # asn = number_generation.asn_number_generation(2, 'dev')
@@ -70,3 +86,5 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 # print(lpn)
 # bol, pro, trailer, seal = number_generation.misc_nbr('dev')
 # print(bol, pro, trailer, seal)
+# order = number_generation.order_number_generation(2, 'QA', 'VG')
+# print(order)

@@ -97,7 +97,7 @@ class Outbound_Worksheet:
                 "order_Type": order_type,
                 "item": item,
                 "qty": qty,
-                "d_Facility": d_facility,
+                "d_facility": d_facility,
                 "pre_pack_Code": pre_pack_code,
                 "vas_code_service_id": vas_code_service_id,
                 "vas_code_service_uom": vas_code_service_uom,
@@ -113,10 +113,10 @@ class Outbound_Worksheet:
             self.all_order_create_parameters.append(order_params)  # Add to our new list
 
         return self.all_order_create_parameters
-
-Work = Outbound_Worksheet()
-payload = Work.create_order_extract_parameters()
-print(payload)
+#
+# Work = Outbound_Worksheet()
+# payload = Work.create_order_extract_parameters()
+# print(payload)
 
 
 

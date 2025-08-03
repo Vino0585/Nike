@@ -94,10 +94,9 @@ class Order_Creation_Payload:
             country = data_row.get("country")
             first_name = data_row.get("first_name")
             email = data_row.get("email")
-            plant = data_row.get("plant")
             item = data_row.get("item")
-            qty = data_row.get("qty")
-            d_facility = data_row.get("d_facility")
+            qty = str(data_row.get("qty"))
+            d_facility = str(data_row.get("d_facility"))
             pre_pack_code = data_row.get("pre_pack_code")
             vas_code_service_id = data_row.get("vas_code_service_id")
             vas_code_service_uom = data_row.get("vas_code_service_uom")
@@ -159,3 +158,16 @@ class Order_Creation_Payload:
                 self.all_order_payloads.append({'payload': order_payload, 'environment': envn, 'plant': plant})
 
             return self.all_order_payloads
+
+
+# This block is excellent for testing your class in isolation.
+if __name__ == "__main__":
+    order_generation = Order_Creation_Payload()
+    final_payloads = order_generation.generate_payloads
+    # Optional: Pretty-print the first payload for verification
+    if final_payloads:
+        import json
+        for i, payloads in enumerate(final_payloads):
+            num = i+1
+            logging.info(f"\n--- No {num} Generated Payload ---")
+            print(json.dumps(payloads, indent=2))
