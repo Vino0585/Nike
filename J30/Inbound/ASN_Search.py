@@ -15,7 +15,7 @@ class ASN_Search:
     def __init__(self):
         # --- Configuration ---
         # Centralize configuration variables for easy changes.
-        self.output_dir = Path("Output_files")
+        self.output_dir = Path("../Output_files")
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.OUTPUT_FILENAME = self.output_dir / "ASN_Search_Results.xlsx"
 

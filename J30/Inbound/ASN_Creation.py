@@ -139,7 +139,7 @@ class ASN_Creation:
                 report_df = pd.DataFrame(extracted_report_data)
 
                 # Define the Output path.
-                output_dir = Path("Output_files")
+                output_dir = Path("../Output_files")
                 output_dir.mkdir(parents=True, exist_ok=True)  # Just safe guaring.
                 output_filepath = output_dir / "ASN_Creation_Report.xlsx"
 
@@ -156,7 +156,7 @@ class ASN_Creation:
 
                 report_df = pd.DataFrame(output_file, index=[0])
 
-                output_dir = Path("Input_files")
+                output_dir = Path("../Input_files")
                 output_dir.mkdir(parents=True, exist_ok=True)
                 output_filepath = output_dir / "WorkSheet1.xlsx"
 

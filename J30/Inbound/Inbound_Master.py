@@ -10,6 +10,7 @@ from Goods_Holder_Measured import Goods_Holder_Measured
 from Putaway_Complete import Putaway_Complete
 from ASN_Verify import ASN_Verify
 
+
 class inbound_master_step:
 
     def is_no_or_empty(self, value):

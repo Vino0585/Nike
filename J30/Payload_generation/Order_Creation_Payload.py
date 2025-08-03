@@ -41,8 +41,8 @@ class Order_Creation_Payload:
         order_line_id = 1  # Initialize the line ID *before* the loop.
         for item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp in zip(item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp):
             extended = {
-                "PurchaseOrderNumber": "TOC65312052", "DivisionCode": "20", "AlwaysAvailableIndicator": 'false',
-                "ProductLifeCycleCode": "ACT", "LaunchCode": "N", "PromotionalIndicator": 'false',
+                "PurchaseOrderNumber": "TOC65312052", "DivisionCode": "20", "AlwaysAvailableIndicator": False,
+                "ProductLifeCycleCode": "ACT", "LaunchCode": "N", "PromotionalIndicator": False,
                 "MaterialAvailableDate": "2025-04-05T13:28:11", "PurchaseOrderLineNumber": "1",
                 "SalesOrderLineNumber": "1", "BatchNumber": "065312052"
                 }
@@ -134,10 +134,10 @@ class Order_Creation_Payload:
                 extended = {
                     "FulfillmentRequestType": "ZLF", "ServiceLevelCode": service_level, "ShippingPointCode": plant,
                     "RouteNumber": "103002", "TransitTime": "01", "SalesOrganisationCode": "2000",
-                    "ExportIndicator": 'false',
-                    "ShipToAddressOverrideIndicator": 'false', "CustomerDocumentRequiredIndicator": 'false',
-                    "AppointmentSchedulingIndicator": 'true', "SalesDeliveryPriority": "2", "TotalVasTime": "0.0",
-                    "ConsolFlag": 'false', "CarrierServiceCode": "ZTRA", "ScheduledDeliveryEndDate": future_iso,
+                    "ExportIndicator": False,
+                    "ShipToAddressOverrideIndicator": False, "CustomerDocumentRequiredIndicator": False,
+                    "AppointmentSchedulingIndicator": True, "SalesDeliveryPriority": "2", "TotalVasTime": "0.0",
+                    "ConsolFlag": False, "CarrierServiceCode": "ZTRA", "ScheduledDeliveryEndDate": future_iso,
                     "DeliveryByTheHour": "00000000", "CustomerRequestedTimestamp": future_iso,
                     "SoldToFacilityId": "8000035",
                     "SoldToBillingAccountNumber": "300597", "MarkForCustomerId": "314896",
@@ -145,7 +145,7 @@ class Order_Creation_Payload:
                     "MarkForCustomerName": "CHOCOLADE ECLAIRTJE", "DestinationContactName": "",
                     "CarrierHubCode": "H590",
                     "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": "EO8365566199",
-                    "PoRequiredIndicator": 'false',
+                    "PoRequiredIndicator": False,
                     "CustomerBusinessTypeCode": "4", "CustomerAccountType": "9", "ChannelClassCode": "28",
                     "DeliveryEndDateTime": future_iso,
                     "Priority": 10, "CarrierCode": "UPSY", "ShipToPartyIdentifierType": "DIGITAL",
@@ -157,7 +157,7 @@ class Order_Creation_Payload:
 
                 order_payload = {
                     "OrderType": order_type, "OriginFacilityId": plant, "OriginalOrderId": current_order_id,
-                    "IncotermId": "DDP", "ResidentialDestination": 'true',
+                    "IncotermId": "DDP", "ResidentialDestination": True,
                     "MaximumStatus": "0500", "MinimumStatus": "0500",
                     "PickupEndDateTime": now_iso, "PickupStartDateTime": now_iso,
                     "DeliveryEndDateTime": future_iso, "DeliveryStartDateTime": future_iso,
@@ -170,14 +170,14 @@ class Order_Creation_Payload:
         # This return must be outside the main for-loop to process all rows from the sheet.
         return self.all_order_payloads
 
-# This block is excellent for testing your class in isolation.
-if __name__ == "__main__":
-    order_generation = Order_Creation_Payload()
-    final_payloads = order_generation.generate_payloads
-    # Optional: Pretty-print the first payload for verification
-    if final_payloads:
-        import json
-        for i, payloads in enumerate(final_payloads):
-            num = i+1
-            logging.info(f"\n--- No {num} Generated Payload ---")
-            print(json.dumps(payloads, indent=2))
+# # This block is excellent for testing your class in isolation.
+# if __name__ == "__main__":
+#     order_generation = Order_Creation_Payload()
+#     final_payloads = order_generation.generate_payloads
+#     # Optional: Pretty-print the first payload for verification
+#     if final_payloads:
+#         import json
+#         for i, payloads in enumerate(final_payloads):
+#             num = i+1
+#             logging.info(f"No {num} Generated Payload")
+#             print(json.dumps(payloads, indent=2))

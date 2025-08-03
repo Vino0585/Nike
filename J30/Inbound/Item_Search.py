@@ -137,7 +137,7 @@ def item_search():
 
         # 2. Export the DataFrame to an Excel file (Improved Path Handling)
         # Create a Path object for the output directory.
-        output_dir = Path("Output_files")
+        output_dir = Path("../Output_files")
         # Check if directory exist.
         output_dir.mkdir(parents=True, exist_ok=True)
         # Define the full path to the output file.
