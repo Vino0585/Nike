@@ -19,16 +19,27 @@ class Order_Creation_Payload:
         qty_grp = qty.split(';')
         vas_code_service_id_grp = vas_code_service_id.split(';')
         vas_code_service_uom_grp = vas_code_service_uom.split(';')
-        row_num_in_sheet = row_num_in_sheet
 
-        if not (len(item_grp) == len(qty_grp)):
-            logging.error(f"WARNING: Mismatch in ';' -separated groups in row {row_num_in_sheet} Skipping the execution")
+        # If a single VAS code/UOM is provided for multiple items, duplicate it to match the item count.
+        # This prevents zip() from truncating the loop prematurely.
+        num_items = len(item_grp)
+        if len(vas_code_service_id_grp) == 1 and num_items > 1:
+            vas_code_service_id_grp = vas_code_service_id_grp * num_items
+        if len(vas_code_service_uom_grp) == 1 and num_items > 1:
+            vas_code_service_uom_grp = vas_code_service_uom_grp * num_items
+
+        # A more robust check to ensure all lists have the same length before zipping.
+        if not (len(item_grp) == len(qty_grp) == len(vas_code_service_id_grp) == len(vas_code_service_uom_grp)):
+            logging.error(
+                f"WARNING: Mismatch in ';' -separated groups in row {row_num_in_sheet}. "
+                f"Items: {len(item_grp)}, Qtys: {len(qty_grp)}, VAS IDs: {len(vas_code_service_id_grp)}, "
+                f"VAS UOMs: {len(vas_code_service_uom_grp)}. Skipping this row's order lines."
+            )
             return []
 
         order_line_list = []
-        for item, qty, vas_code_service_id, vas_code_service_uom in zip(item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp):
-            order_line_id = 1
-
+        order_line_id = 1  # Initialize the line ID *before* the loop.
+        for item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp in zip(item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp):
             extended = {
                 "PurchaseOrderNumber": "TOC65312052", "DivisionCode": "20", "AlwaysAvailableIndicator": 'false',
                 "ProductLifeCycleCode": "ACT", "LaunchCode": "N", "PromotionalIndicator": 'false',
@@ -39,22 +50,22 @@ class Order_Creation_Payload:
             original_order_line_requested_service = [
                 {
                     "ServiceTypeId": 'VAS',
-                    "ProvidedServiceId": vas_code_service_id,
+                    "ProvidedServiceId": vas_code_service_id_grp,
                     "Sequence": "1",
-                    "ServiceUomId": vas_code_service_uom
+                    "ServiceUomId": vas_code_service_uom_grp
                 }
                 ]
 
             order_line = {
-                             "OriginalOrderLineId": order_line_id,
-                             "ItemId": item,
-                             "OrderedQuantity": qty,
-                             "QuantityUomId": "Unit",
-                             "ItemAttribute1": "01000",
-                             "UnitPrice": "32.5",
-                             "CountryOfOriginId": "ID",
-                             "Extended": extended,
-                             "OriginalOrderLineRequestedService": original_order_line_requested_service
+                     "OriginalOrderLineId": order_line_id,
+                     "ItemId": item_grp,
+                     "OrderedQuantity": qty_grp,
+                     "QuantityUomId": "Unit",
+                     "ItemAttribute1": "01000",
+                     "UnitPrice": "32.5",
+                     "CountryOfOriginId": "ID",
+                     "Extended": extended,
+                     "OriginalOrderLineRequestedService": original_order_line_requested_service
                          }
 
             order_line_list.append(order_line)
@@ -63,12 +74,12 @@ class Order_Creation_Payload:
         return order_line_list
 
     @property
-    def generate_payloads(self) -> list[Any] | None:
+    def generate_payloads(self) -> list[Any]:
         try:
             list_of_datadict = self.worksheet.create_order_extract_parameters()
             if list_of_datadict is None:
                 logging.error("Error: Outbound Worksheet Extract method returned None. Halting generation.")
-                return []
+                return []  # Return empty list on failure
         except Exception as e:
             logging.error(f"Error: {e}")
             return []
@@ -98,8 +109,8 @@ class Order_Creation_Payload:
             qty = str(data_row.get("qty"))
             d_facility = str(data_row.get("d_facility"))
             pre_pack_code = data_row.get("pre_pack_code")
-            vas_code_service_id = data_row.get("vas_code_service_id")
-            vas_code_service_uom = data_row.get("vas_code_service_uom")
+            vas_code_service_id = data_row.get("vas_code_service_id", 'BOX')
+            vas_code_service_uom = data_row.get("vas_code_service_uom", 'oLPN')
 
             now = datetime.now()
             now_iso = now.isoformat(timespec='seconds')
@@ -156,9 +167,8 @@ class Order_Creation_Payload:
                     "OriginalOrderLine": order_line_info
                 }
                 self.all_order_payloads.append({'payload': order_payload, 'environment': envn, 'plant': plant})
-
-            return self.all_order_payloads
-
+        # This return must be outside the main for-loop to process all rows from the sheet.
+        return self.all_order_payloads
 
 # This block is excellent for testing your class in isolation.
 if __name__ == "__main__":
