@@ -20,15 +20,6 @@ class Order_Creation_Payload:
         vas_code_service_id_grp = vas_code_service_id.split(';')
         vas_code_service_uom_grp = vas_code_service_uom.split(';')
 
-        # If a single VAS code/UOM is provided for multiple items, duplicate it to match the item count.
-        # This prevents zip() from truncating the loop prematurely.
-        num_items = len(item_grp)
-        if len(vas_code_service_id_grp) == 1 and num_items > 1:
-            vas_code_service_id_grp = vas_code_service_id_grp * num_items
-        if len(vas_code_service_uom_grp) == 1 and num_items > 1:
-            vas_code_service_uom_grp = vas_code_service_uom_grp * num_items
-
-        # A more robust check to ensure all lists have the same length before zipping.
         if not (len(item_grp) == len(qty_grp) == len(vas_code_service_id_grp) == len(vas_code_service_uom_grp)):
             logging.error(
                 f"WARNING: Mismatch in ';' -separated groups in row {row_num_in_sheet}. "
@@ -49,10 +40,8 @@ class Order_Creation_Payload:
 
             original_order_line_requested_service = [
                 {
-                    "ServiceTypeId": 'VAS',
-                    "ProvidedServiceId": vas_code_service_id_grp,
-                    "Sequence": "1",
-                    "ServiceUomId": vas_code_service_uom_grp
+                    "ServiceTypeId": 'VAS', "ProvidedServiceId": vas_code_service_id_grp,
+                    "Sequence": "1", "ServiceUomId": vas_code_service_uom_grp
                 }
                 ]
 
@@ -60,12 +49,8 @@ class Order_Creation_Payload:
                      "OriginalOrderLineId": order_line_id,
                      "ItemId": item_grp,
                      "OrderedQuantity": qty_grp,
-                     "QuantityUomId": "Unit",
-                     "ItemAttribute1": "01000",
-                     "UnitPrice": "32.5",
-                     "CountryOfOriginId": "ID",
-                     "Extended": extended,
-                     "OriginalOrderLineRequestedService": original_order_line_requested_service
+                     "QuantityUomId": "Unit", "ItemAttribute1": "01000", "UnitPrice": "32.5", "CountryOfOriginId": "ID",
+                     "Extended": extended, "OriginalOrderLineRequestedService": original_order_line_requested_service
                          }
 
             order_line_list.append(order_line)
@@ -134,22 +119,19 @@ class Order_Creation_Payload:
                 extended = {
                     "FulfillmentRequestType": "ZLF", "ServiceLevelCode": service_level, "ShippingPointCode": plant,
                     "RouteNumber": "103002", "TransitTime": "01", "SalesOrganisationCode": "2000",
-                    "ExportIndicator": False,
-                    "ShipToAddressOverrideIndicator": False, "CustomerDocumentRequiredIndicator": False,
+                    "ExportIndicator": False, "ShipToAddressOverrideIndicator": False,
+                    "CustomerDocumentRequiredIndicator": False, "PoRequiredIndicator": False,
                     "AppointmentSchedulingIndicator": True, "SalesDeliveryPriority": "2", "TotalVasTime": "0.0",
                     "ConsolFlag": False, "CarrierServiceCode": "ZTRA", "ScheduledDeliveryEndDate": future_iso,
                     "DeliveryByTheHour": "00000000", "CustomerRequestedTimestamp": future_iso,
-                    "SoldToFacilityId": "8000035",
+                    "SoldToFacilityId": "8000035", "CarrierHubCode": "H590",
                     "SoldToBillingAccountNumber": "300597", "MarkForCustomerId": "314896",
                     "DestinationFacilityName": "CHOCOLADE ECLAIRTJE",
                     "MarkForCustomerName": "CHOCOLADE ECLAIRTJE", "DestinationContactName": "",
-                    "CarrierHubCode": "H590",
                     "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": "EO8365566199",
-                    "PoRequiredIndicator": False,
                     "CustomerBusinessTypeCode": "4", "CustomerAccountType": "9", "ChannelClassCode": "28",
-                    "DeliveryEndDateTime": future_iso,
-                    "Priority": 10, "CarrierCode": "UPSY", "ShipToPartyIdentifierType": "DIGITAL",
-                    "LastShipmentTimestamp": future_iso,
+                    "DeliveryEndDateTime": future_iso, "Priority": 10, "CarrierCode": "UPSY",
+                    "ShipToPartyIdentifierType": "DIGITAL", "LastShipmentTimestamp": future_iso,
                     "DeliveryStartDateTime": future_iso, "PackSlipRequired": "N", "ReturnsLabelRequired": "N"
                 }
 
@@ -170,14 +152,14 @@ class Order_Creation_Payload:
         # This return must be outside the main for-loop to process all rows from the sheet.
         return self.all_order_payloads
 
-# # This block is excellent for testing your class in isolation.
-# if __name__ == "__main__":
-#     order_generation = Order_Creation_Payload()
-#     final_payloads = order_generation.generate_payloads
-#     # Optional: Pretty-print the first payload for verification
-#     if final_payloads:
-#         import json
-#         for i, payloads in enumerate(final_payloads):
-#             num = i+1
-#             logging.info(f"No {num} Generated Payload")
-#             print(json.dumps(payloads, indent=2))
+# This block is excellent for testing your class in isolation.
+if __name__ == "__main__":
+    order_generation = Order_Creation_Payload()
+    final_payloads = order_generation.generate_payloads
+    # Optional: Pretty-print the first payload for verification
+    if final_payloads:
+        import json
+        for i, payloads in enumerate(final_payloads):
+            num = i+1
+            logging.info(f"No {num} Generated Payload")
+            print(json.dumps(payloads, indent=2))
