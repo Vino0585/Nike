@@ -1,5 +1,6 @@
 import logging
 from typing import Any
+from datetime import datetime, timedelta
 
 from Payload_generation.Outbound_Worksheet_Extract import Outbound_Worksheet
 from Payload_generation.Number_Generation import NumberGeneration
@@ -12,6 +13,12 @@ class Order_Creation_Payload:
         self.worksheet = Outbound_Worksheet()
         self.number_gen = NumberGeneration()
         self.all_order_payloads = []
+
+    def _parse_order_line_item(self, item, qty, vas_code_service_id, vas_code_service_uom) -> list:
+        item_grp = item.split(';')
+        qty_grp = qty.split(';')
+
+
 
     @property
     def generate_payloads(self) -> list[Any] | None:
@@ -37,12 +44,6 @@ class Order_Creation_Payload:
             user_initial = data_row.get("initial")
             num_of_order = data_row.get("number_of_Orders")
             order_type = data_row.get("order_Type")
-            item = data_row.get("item")
-            qty = data_row.get("qty")
-            d_facility = data_row.get("d_facility")
-            pre_pack_code = data_row.get("pre_pack_code")
-            vas_code_service_id = data_row.get("vas_code_service_id")
-            vas_code_service_uom = data_row.get("vas_code_service_uom")
             service_level = data_row.get("service_level")
             address_1 = data_row.get("address_1")
             city = data_row.get("city")
@@ -51,28 +52,68 @@ class Order_Creation_Payload:
             country = data_row.get("country")
             first_name = data_row.get("first_name")
             email = data_row.get("email")
+            plant = data_row.get("plant")
+            item = data_row.get("item")
+            qty = data_row.get("qty")
+            d_facility = data_row.get("d_facility")
+            pre_pack_code = data_row.get("pre_pack_code")
+            vas_code_service_id = data_row.get("vas_code_service_id")
+            vas_code_service_uom = data_row.get("vas_code_service_uom")
+
+            now = datetime.now()
+            now_iso = now.isoformat(timespec='seconds')
+            future = now + timedelta(days=5)
+            future_iso = future.isoformat(timespec='seconds')
 
             order_ids = self.number_gen.order_number_generation(num_of_order, envn, user_initial)
+
             if not order_ids:
                 logging.error(f"INFO: Skipping row {row_num_in_sheet} as 'Number of Orders' is 0 or invalid entry is given")
                 continue
 
             for order_index, current_order_id in enumerate(order_ids):
                 logging.info(f"Order {current_order_id}:")
-                order_line_list = self.build_order_line_list_for_order(
 
-            order_payload = {
-                "OrderType": order_type,
-                "OriginFacilityId": plant,
-                "OriginalOrderId": "CFVAS3386734",
-                "IncotermId": "DDP",
-                "ResidentialDestination": true,
-                "MaximumStatus": "0500",
-                "MinimumStatus": "0500",
-                "PickupEndDateTime": "2025-04-07T13:28:11",
-                "PickupStartDateTime": "2025-04-04T13:28:11",
-                "DeliveryEndDateTime": "2025-04-14T13:28:11",
-                "DeliveryStartDateTime": "2025-04-05T13:28:11",
-                "DestinationFacilityId": "0000314896",
-            }
+                dest_address = {
+                    "Address1": address_1, "City": city, "State": state, "PostalCode": postal_code,
+                    "Country": country, "FirstName": first_name, "Email": email
+                }
+
+                extended = {
+                    "FulfillmentRequestType": "ZLF", "ServiceLevelCode": service_level, "ShippingPointCode": plant,
+                    "RouteNumber": "103002", "TransitTime": "01", "SalesOrganisationCode": "2000",
+                    "ExportIndicator": 'false',
+                    "ShipToAddressOverrideIndicator": 'false', "CustomerDocumentRequiredIndicator": 'false',
+                    "AppointmentSchedulingIndicator": 'true', "SalesDeliveryPriority": "2", "TotalVasTime": "0.0",
+                    "ConsolFlag": 'false', "CarrierServiceCode": "ZTRA", "ScheduledDeliveryEndDate": future_iso,
+                    "DeliveryByTheHour": "00000000", "CustomerRequestedTimestamp": future_iso,
+                    "SoldToFacilityId": "8000035",
+                    "SoldToBillingAccountNumber": "300597", "MarkForCustomerId": "314896",
+                    "DestinationFacilityName": "CHOCOLADE ECLAIRTJE",
+                    "MarkForCustomerName": "CHOCOLADE ECLAIRTJE", "DestinationContactName": "",
+                    "CarrierHubCode": "H590",
+                    "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": "EO8365566199",
+                    "PoRequiredIndicator": 'false',
+                    "CustomerBusinessTypeCode": "4", "CustomerAccountType": "9", "ChannelClassCode": "28",
+                    "DeliveryEndDateTime": future_iso,
+                    "Priority": 10, "CarrierCode": "UPSY", "ShipToPartyIdentifierType": "DIGITAL",
+                    "LastShipmentTimestamp": future_iso,
+                    "DeliveryStartDateTime": future_iso, "PackSlipRequired": "N", "ReturnsLabelRequired": "N"
+                }
+
+                order_line_info = self._parse_order_line_item(item, qty, vas_code_service_id, vas_code_service_uom)
+
+                order_payload = {
+                    "OrderType": order_type, "OriginFacilityId": plant, "OriginalOrderId": current_order_id,
+                    "IncotermId": "DDP", "ResidentialDestination": 'true', "MaximumStatus": "0500",
+                    "MinimumStatus": "0500", "PickupEndDateTime": now_iso,
+                    "PickupStartDateTime": now_iso, "DeliveryEndDateTime": future_iso,
+                    "DeliveryStartDateTime": future_iso, "DestinationFacilityId": d_facility,
+                    "DestinationAddress":  dest_address,
+                    "BillToFacilityId": "300597",
+                    "BillToName": "CHOCOLADE ECLAIRTJE",
+                    "BillToAddress": dest_address,
+                    "Extended": extended,
+                    "OriginalOrderLine": order_line_info
+                }
 
