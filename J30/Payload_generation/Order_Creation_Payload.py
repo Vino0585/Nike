@@ -30,7 +30,7 @@ class Order_Creation_Payload:
 
         order_line_list = []
         order_line_id = 1  # Initialize the line ID *before* the loop.
-        for item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp in zip(item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp):
+        for current_item, current_qty, current_vas_id_group, current_vas_uom_group in zip(item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp):
             extended = {
                 "PurchaseOrderNumber": "TOC65312052", "DivisionCode": "20", "AlwaysAvailableIndicator": False,
                 "ProductLifeCycleCode": "ACT", "LaunchCode": "N", "PromotionalIndicator": False,
@@ -38,19 +38,28 @@ class Order_Creation_Payload:
                 "SalesOrderLineNumber": "1", "BatchNumber": "065312052"
                 }
 
-            original_order_line_requested_service = [
-                {
-                    "ServiceTypeId": 'VAS', "ProvidedServiceId": vas_code_service_id_grp,
-                    "Sequence": "1", "ServiceUomId": vas_code_service_uom_grp
-                }
-                ]
+            vas_code_service_ids = [vas_id.strip() for vas_id in current_vas_id_group.split('@') if vas_id.strip()]
+            vas_code_service_uoms = [vas_uom.strip() for vas_uom in current_vas_uom_group.split('@') if vas_uom.strip()]
+
+            if not (len(vas_code_service_ids) == len(vas_code_service_uoms)):
+                logging.error(f"Mismatch in '@' in vase code service id and service uom in row {row_num_in_sheet}. Skipping this row's order lines.")
+                return []
+
+            vas_detail = []
+            for vas_code_service_id, vas_code_service_uom in zip(vas_code_service_ids, vas_code_service_uoms):
+
+                original_order_line_requested_service =  {
+                        "ServiceTypeId": 'VAS', "ProvidedServiceId": vas_code_service_id,
+                        "Sequence": "1", "ServiceUomId": vas_code_service_uom
+                    }
+                vas_detail.append(original_order_line_requested_service)
 
             order_line = {
                      "OriginalOrderLineId": order_line_id,
-                     "ItemId": item_grp,
-                     "OrderedQuantity": qty_grp,
+                     "ItemId": current_item,
+                     "OrderedQuantity": current_qty,
                      "QuantityUomId": "Unit", "ItemAttribute1": "01000", "UnitPrice": "32.5", "CountryOfOriginId": "ID",
-                     "Extended": extended, "OriginalOrderLineRequestedService": original_order_line_requested_service
+                     "Extended": extended, "OriginalOrderLineRequestedService": vas_detail
                          }
 
             order_line_list.append(order_line)
