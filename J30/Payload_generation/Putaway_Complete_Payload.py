@@ -21,7 +21,7 @@ class Payload_Complete_Payload:
         putaway_complete_data = self.worksheet.putaway_task_complete()
 
         if not putaway_complete_data:
-            logging.info("No valid item parameters found, cannot create any payloads for putaway complete task.")
+            logging.info("No valid Putaway Complete parameters found, cannot create any payloads for putaway complete task.")
             return []
 
         for entry in putaway_complete_data:

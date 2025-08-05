@@ -27,6 +27,7 @@ class Worksheet:
         self.all_inbound_delivery_extract_param = []
         self.all_verify_asn_extract_param = []
         self.all_master_sheet_extract_param = []
+        self.all_msg_type_parameters = []
 
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
@@ -484,6 +485,44 @@ class Worksheet:
 
         return self.all_master_sheet_extract_param
 
+    def extract_mhe_journal_info(self):
+        if not self._master_excel_open(input_sheet_name='MHEJournal'):
+            logging.error("No Master worksheet found to extract parameters.")
+            return None
+
+        if not self.list_of_entry:
+            logging.error("No Inbound Master entries found to extract parameters.")
+            return None
+
+        required_fields = ["Plant", "Environment", "ASNID", "LPNID"]
+        validation_errors = []
+
+        for i, entry in enumerate(self.list_of_entry):
+            excel_row_num = i + 1
+
+            missing_fields = [field for field in required_fields if not entry.get(field)]
+
+            if missing_fields:
+                error_message = (f"Row {excel_row_num}: Validation failed. "
+                                 f"Required field(s) are empty: {', '.join(missing_fields)}")
+                validation_errors.append(error_message)
+                continue
+
+            plant = entry.get("Plant")
+            envn = entry.get("Environment")
+            asn_id = entry.get("ASNID")
+            lpn_id = entry.get("LPNID")
+
+            goods_holder_weighed_params = {
+                "Plant": plant,
+                "Environment": envn,
+                "ASN_ID": asn_id,
+                "LPN_ID": lpn_id
+            }
+            self.all_msg_type_parameters.append(goods_holder_weighed_params)
+
+        return self.all_msg_type_parameters
+#
 # Work = Worksheet()
 # # # payload = Work.create_asn_extract_parameters()
 # # # print(payload)
@@ -499,6 +538,8 @@ class Worksheet:
 # # print(payload)
 # # payload = Work.verify_asn_worksheet_extract()
 # # print(payload)
+# payload = Work.extract_mhe_journal_info()
+# print(payload)
 # payload = Work.extract_master_sheet_from_worksheet()
 # print(payload)
 

@@ -33,6 +33,8 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/view/action/com-manh-cp-receiving/Shipment/PreAllocateShipment?"
         elif program == "ASN_Verify":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/receiving/ui/asn/verify"
+        elif program == "Message_Journal_Inbound":
+            self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/entity/search"
         else:
             self.url = None  # Set to None if no match
 

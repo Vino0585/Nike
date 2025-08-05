@@ -174,6 +174,7 @@ class ASN_Creation:
                     asn_df.to_excel(writer, sheet_name='GoodsHolderWeighed', index=False)
                     asn_df.to_excel(writer, sheet_name='PutawayTaskComplete', index=False)
                     asn_df.to_excel(writer, sheet_name='ASNVerify', index=False)
+                    asn_df.to_excel(writer, sheet_name='MHEJournal', index=False)
 
                 logging.info(f"Successfully created multi-sheet report: {output_filepath}")
 

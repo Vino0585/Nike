@@ -9,6 +9,7 @@ from Good_Holder_Announced import Goods_Holder_Announced
 from Goods_Holder_Measured import Goods_Holder_Measured
 from Putaway_Complete import Putaway_Complete
 from ASN_Verify import ASN_Verify
+from MHE_Jounal_IB import MHE_Journal_Inbound
 
 
 class inbound_master_step:
@@ -42,6 +43,10 @@ class inbound_master_step:
                 asn_create.create_asns()
                 logging.info("ASN Created Program Completed Successfully")
 
+                time.sleep(1)
+                print("\n")
+                logging.info("Program Completed Successfully")
+
             elif (create_asn == 'Y' and inbound_delivery == 'Y' and self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed)
                 and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(run_all)):
 
@@ -60,6 +65,10 @@ class inbound_master_step:
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
+
+                time.sleep(1)
+                print("\n")
+                logging.info("Program Completed Successfully")
 
             elif (create_asn == 'Y' and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and self.is_no_or_empty(goods_holder_weighed)
                 and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(run_all)):
@@ -89,6 +98,18 @@ class inbound_master_step:
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Completed Successfully")
+
+                time.sleep(30)
+
+                print("\n")
+                logging.info("Message Journal Program Started Successfully")
+                mhe_journal_inbound = MHE_Journal_Inbound()
+                mhe_journal_inbound.create_mhe_journal_inbound()
+                logging.info("Message Journal Program Completed Successfully")
+
+                time.sleep(1)
+                print("\n")
+                logging.info("Program Completed Successfully")
 
             elif (create_asn == 'Y' and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and goods_holder_weighed == 'Y'
                   and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(run_all)):
@@ -126,6 +147,18 @@ class inbound_master_step:
                 # Calling the goods holder measured function.
                 gh_measured = Goods_Holder_Measured()
                 gh_measured.send_goods_holder_measured()
+
+                time.sleep(30)
+
+                print("\n")
+                logging.info("Message Journal Program Started Successfully")
+                mhe_journal_inbound = MHE_Journal_Inbound()
+                mhe_journal_inbound.create_mhe_journal_inbound()
+                logging.info("Message Journal Program Completed Successfully")
+
+                time.sleep(1)
+                print("\n")
+                logging.info("Program Completed Successfully")
 
 
             elif (create_asn == 'Y' and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and goods_holder_weighed == 'Y' and
@@ -176,6 +209,19 @@ class inbound_master_step:
                 ptwy_complete = Putaway_Complete()
                 ptwy_complete.create_putaway_task_complete()
                 logging.info("Putaway Completed Successfully")
+
+                time.sleep(30)
+
+                print("\n")
+                logging.info("Message Journal Program Started Successfully")
+                mhe_journal_inbound = MHE_Journal_Inbound()
+                mhe_journal_inbound.create_mhe_journal_inbound()
+                logging.info("Message Journal Program Completed Successfully")
+
+                time.sleep(1)
+                print("\n")
+                logging.info("Program Completed Successfully")
+
 
             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery)
                 and self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed)
@@ -236,6 +282,14 @@ class inbound_master_step:
                 asn_verify = ASN_Verify()
                 asn_verify.send_asn_verify()
                 logging.info("ASN Verified Successfully")
+
+                time.sleep(30)
+
+                print("\n")
+                logging.info("Message Journal Program Started Successfully")
+                mhe_journal_inbound = MHE_Journal_Inbound()
+                mhe_journal_inbound.create_mhe_journal_inbound()
+                logging.info("Message Journal Program Completed Successfully")
 
                 time.sleep(1)
                 print("\n")
