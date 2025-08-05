@@ -99,7 +99,7 @@ class inbound_master_step:
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Completed Successfully")
 
-                time.sleep(30)
+                time.sleep(40)
 
                 print("\n")
                 logging.info("Message Journal Program Started Successfully")
@@ -148,7 +148,7 @@ class inbound_master_step:
                 gh_measured = Goods_Holder_Measured()
                 gh_measured.send_goods_holder_measured()
 
-                time.sleep(30)
+                time.sleep(35)
 
                 print("\n")
                 logging.info("Message Journal Program Started Successfully")
@@ -232,67 +232,66 @@ class inbound_master_step:
                 asn_create = ASN_Creation()
                 asn_create.create_asns()
                 logging.info("ASN Created Program Completed Successfully")
-
+                print("\n")
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
                 # Calling the inbound delivery function
-                print("\n")
                 logging.info("Inbound Delivery Program Started Successfully")
                 ib_delivery = Inbound_Delivery()
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
+                print("\n")
 
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
                 # Calling the goods holder announced function
-                print("\n")
                 logging.info("Goods Holder Announced Program Started Successfully")
                 gh_announced = Goods_Holder_Announced()
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Completed Successfully")
+                print("\n")
 
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
                 # Calling the goods holder measured function.
-                print("\n")
                 logging.info("Goods Holder Measured Program Started Successfully")
                 gh_measured = Goods_Holder_Measured()
                 gh_measured.send_goods_holder_measured()
                 logging.info("Goods Holder Measured Program Completed Successfully")
+                print("\n")
 
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
                 # Calling the Putaway Complete Function.
-                print("\n")
                 logging.info("Putaway Completed Program Started Successfully")
                 ptwy_complete = Putaway_Complete()
                 ptwy_complete.create_putaway_task_complete()
                 logging.info("Putaway Completed Successfully")
+                print("\n")
 
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
                 # Calling the ASN Verification Function
-                print("\n")
                 logging.info("ASN Verification Started Successfully")
                 asn_verify = ASN_Verify()
                 asn_verify.send_asn_verify()
                 logging.info("ASN Verified Successfully")
+                print("\n")
 
                 time.sleep(30)
 
-                print("\n")
                 logging.info("Message Journal Program Started Successfully")
                 mhe_journal_inbound = MHE_Journal_Inbound()
                 mhe_journal_inbound.create_mhe_journal_inbound()
                 logging.info("Message Journal Program Completed Successfully")
+                print("\n")
 
                 time.sleep(1)
-                print("\n")
                 logging.info("Run All Program Completed Successfully")
 
             else:

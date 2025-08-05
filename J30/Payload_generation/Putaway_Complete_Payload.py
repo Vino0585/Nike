@@ -67,8 +67,8 @@ class Payload_Complete_Payload:
                 aware_timestamp = dt.datetime.now(dt.timezone.utc)
                 iso_timestamp_str = aware_timestamp.isoformat()
                 event_id = str(uuid.uuid4())
-
-                if failed_flag == 'N' or failed_flag is None and cancelled_flag == 'N' or cancelled_flag is None:
+                putaway_each_payload = {}
+                if (failed_flag == 'N' or failed_flag is None or pd.isna(failed_flag)) and (cancelled_flag == 'N' or cancelled_flag is None):
                     putaway_each_payload = {
                         "event": {
                             "type": "PUTAWAY_TASK_COMPLETED",
@@ -91,7 +91,7 @@ class Payload_Complete_Payload:
                             "executionTmst": iso_timestamp_str
                         }
                     }
-                elif failed_flag == 'Y' and cancelled_flag == 'N' or cancelled_flag is None:
+                elif failed_flag == 'Y' and (cancelled_flag == 'N' or cancelled_flag is None or pd.isna(cancelled_flag)):
                     putaway_each_payload = {
                         "event": {
                             "type": "PUTAWAY_TASK_FAILED",
@@ -118,7 +118,7 @@ class Payload_Complete_Payload:
                             "executionTmst": iso_timestamp_str
                         }
                     }
-                elif cancelled_flag == 'Y' or cancelled_flag is not None or cancelled_flag != 'N':
+                elif cancelled_flag == 'Y' and (failed_flag == 'N' or failed_flag is None or pd.isna(failed_flag)):
                     putaway_each_payload = {
                         "event": {
                             "type": "PUTAWAY_TASK_CANCELLED",

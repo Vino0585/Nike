@@ -125,7 +125,8 @@ class ASN_Creation:
                         "ENVN": environment,
                         "ASN_ID": formatted_asn,
                         "LPN_ID": formatted_lpn,
-                        "Pre_Allocate": "Y"
+                        "Pre_Allocate": "Y",
+                        "Failed": "N"
                     }
                     output_data.append(output_file)
 
