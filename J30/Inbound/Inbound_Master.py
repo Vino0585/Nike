@@ -242,7 +242,6 @@ class inbound_master_step:
                 ib_delivery.send_inbound_delivery()
                 logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
                 print("\n")
-
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
@@ -252,7 +251,6 @@ class inbound_master_step:
                 gh_announced.send_goods_holder_announced()
                 logging.info("Goods Holder Announced Completed Successfully")
                 print("\n")
-
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
@@ -262,7 +260,6 @@ class inbound_master_step:
                 gh_measured.send_goods_holder_measured()
                 logging.info("Goods Holder Measured Program Completed Successfully")
                 print("\n")
-
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
@@ -272,7 +269,6 @@ class inbound_master_step:
                 ptwy_complete.create_putaway_task_complete()
                 logging.info("Putaway Completed Successfully")
                 print("\n")
-
                 # Deliberately creating delay of 5 seconds for each function execution
                 time.sleep(5)
 
@@ -282,7 +278,6 @@ class inbound_master_step:
                 asn_verify.send_asn_verify()
                 logging.info("ASN Verified Successfully")
                 print("\n")
-
                 time.sleep(30)
 
                 logging.info("Message Journal Program Started Successfully")
@@ -290,8 +285,8 @@ class inbound_master_step:
                 mhe_journal_inbound.create_mhe_journal_inbound()
                 logging.info("Message Journal Program Completed Successfully")
                 print("\n")
-
                 time.sleep(1)
+
                 logging.info("Run All Program Completed Successfully")
 
             else:
