@@ -165,26 +165,6 @@ class ASN_Creation:
 
                     asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
 
-                # # Use ExcelWriter to write to multiple sheets in the same file
-                # with pd.ExcelWriter(output_filepath, engine='openpyxl') as writer:
-                #     # Rename columns to match the expected format for each sheet
-                #     # This is a crucial step for making the output file usable by other processes
-                #
-                #     # For SearchASN, InboundDelivery, ASNVerify
-                #     asn_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ASN_ID": "ASNID",
-                #                                        "LPN_ID": "LPNID", "Pre_Allocate": 'Pre_Allocate',
-                #                                        "Failed": "Failed"})
-                #     asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
-                #     #
-                #     # asn_df.to_excel(writer, sheet_name='SearchASN', index=False)
-                #     # asn_df.to_excel(writer, sheet_name='InboundDelivery', index=False)
-                #     # asn_df.to_excel(writer, sheet_name='ASNVerify', index=False)
-                #     # asn_df.to_excel(writer, sheet_name='GoodsHolderAnnounced', index=False)
-                #     # asn_df.to_excel(writer, sheet_name='GoodsHolderWeighed', index=False)
-                #     # asn_df.to_excel(writer, sheet_name='PutawayTaskComplete', index=False)
-                #     # asn_df.to_excel(writer, sheet_name='ASNVerify', index=False)
-                #     # asn_df.to_excel(writer, sheet_name='MHEJournal', index=False)
-
                 logging.info(f"Successfully created multi-sheet report: {output_filepath}")
 
             except Exception as e:
