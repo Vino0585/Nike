@@ -4,6 +4,8 @@ import pandas as pd
 from collections import defaultdict
 import logging
 
+from numpy.ma.core import append
+
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 from Payload_generation.ASN_Creation_Payload import Asn_Payload_Generator
@@ -31,10 +33,7 @@ class ASN_Creation:
 
         # This list will collect data for the final report from ALL successful payloads
         extracted_report_data = []
-        output_data = []
-        collected_lpn = []
-        collected_asn = []
-        output_file = {}
+        output_data = [] # This will hold one dictionary per successful payload
 
         for environment, payloads in payloads_by_env.items():
             logging.info(f"Processing {len(payloads)} Payloads for Environment: {environment.upper()}")
@@ -77,37 +76,46 @@ class ASN_Creation:
                         response_data = response.json()
                         logging.info(f"Success: {response_data.get('success', 'N/A')}")
 
-                        # REPORT LOGIC
-                        try:
-                            # Use .get() for safe access from the payload that was just sent
-                            asn_id = payload_to_send.get('AsnId')
-                            origin_facility = payload_to_send.get('OriginFacilityId')
-                            lpn_list = payload_to_send.get('Lpn', [])  # Default to empty list
-                            carrier_id = payload_to_send.get('CarrierId')
-                            collected_asn.append(asn_id)
+                        # --- DATA COLLECTION FOR OUTPUT FILES ---
+                        # This logic now runs only after a successful API call.
+                        asn_id = payload_to_send.get('AsnId')
+                        origin_facility = payload_to_send.get('OriginFacilityId')
+                        lpn_list = payload_to_send.get('Lpn', [])
+                        carrier_id = payload_to_send.get('CarrierId')
 
-                            for lpn in lpn_list:
-                                lpn_id = lpn.get('LpnId')
-                                collected_lpn.append(lpn_id)
-                                if lpn.get('LpnDetail'):
-                                    item_id = lpn['LpnDetail'][0].get('ItemId')
-                                    quantity = lpn['LpnDetail'][0].get('ShippedQuantity')
+                        # 1. Data for the detailed report (ASN_Creation_Report.xlsx)
+                        for lpn in lpn_list:
+                            lpn_id = lpn.get('LpnId')
+                            if lpn.get('LpnDetail'):
+                                item_id = lpn['LpnDetail'][0].get('ItemId')
+                                quantity = lpn['LpnDetail'][0].get('ShippedQuantity')
 
-                                    report_entry = {
-                                        "PLANT": plant_id,
-                                        "ENVN": environment,
-                                        "ASN_ID": asn_id,
-                                        "LPN_ID": lpn_id,
-                                        "ITEM_ID": item_id,
-                                        "QTY": quantity,
-                                        "O_FACILITY": origin_facility,
-                                        "CARRIER": carrier_id
-                                    }
-                                    extracted_report_data.append(report_entry)
+                                report_entry = {
+                                    "PLANT": plant_id,
+                                    "ENVN": environment,
+                                    "ASN_ID": asn_id,
+                                    "LPN_ID": lpn_id,
+                                    "ITEM_ID": item_id,
+                                    "QTY": quantity,
+                                    "O_FACILITY": origin_facility,
+                                    "CARRIER": carrier_id
+                                }
+                                extracted_report_data.append(report_entry)
 
-                        except (TypeError, ValueError, KeyError) as e:
-                            logging.error(
-                                f"Could not parse report data from successful payload. Malformed data? Error: {e}")
+                        # 2. Data for the input sheet (WorkSheet.xlsx)
+                        # This creates one row per successful payload.
+                        current_lpns = [lpn.get('LpnId') for lpn in lpn_list if lpn.get('LpnId')]
+                        formatted_lpn = ';'.join(current_lpns)
+
+                        output_row = {
+                            "PLANT": plant_id,
+                            "ENVN": environment,
+                            "ASN_ID": asn_id,
+                            "LPN_ID": formatted_lpn,
+                            "Pre_Allocate": "Y",
+                            "Failed": "N"
+                        }
+                        output_data.append(output_row)
 
                     except KeyError as e:
                         logging.error(f"ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
@@ -117,18 +125,6 @@ class ASN_Creation:
                             logging.error(f"Status Code: {e.response.status_code}, Response: {e.response.text}")
                     except Exception as e:
                         logging.error(f"ERROR: An unexpected error occurred for payload {i + 1}: {e}")
-
-                    formatted_lpn = ';'.join(collected_lpn)
-                    formatted_asn = ';'.join(collected_asn)
-                    output_file = {
-                        "PLANT": plant_id,
-                        "ENVN": environment,
-                        "ASN_ID": formatted_asn,
-                        "LPN_ID": formatted_lpn,
-                        "Pre_Allocate": "Y",
-                        "Failed": "N"
-                    }
-                    output_data.append(output_file)
 
             except Exception as e:
                 logging.error(f"FATAL ERROR: Could not process batch for environment {environment.upper()}. Error: {e}")
@@ -155,27 +151,39 @@ class ASN_Creation:
             logging.info("Generating input sheet from the create ASN output")
             try:
 
-                report_df = pd.DataFrame(output_file, index=[0])
+                report_df = pd.DataFrame(output_data)
 
                 output_dir = Path("../Input_files")
                 output_dir.mkdir(parents=True, exist_ok=True)
-                output_filepath = output_dir / "WorkSheet1.xlsx"
+                output_filepath = output_dir / "WorkSheet.xlsx"
 
-                # Use ExcelWriter to write to multiple sheets in the same file
-                with pd.ExcelWriter(output_filepath, engine='openpyxl') as writer:
-                    # Rename columns to match the expected format for each sheet
-                    # This is a crucial step for making the output file usable by other processes
+                with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
 
-                    # For SearchASN, InboundDelivery, ASNVerify
-                    asn_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ASN_ID": "ASNID", "LPN_ID": "LPNID", "Pre_Allocate": 'Pre_Allocate'})
-                    asn_df.to_excel(writer, sheet_name='SearchASN', index=False)
-                    asn_df.to_excel(writer, sheet_name='InboundDelivery', index=False)
-                    asn_df.to_excel(writer, sheet_name='ASNVerify', index=False)
-                    asn_df.to_excel(writer, sheet_name='GoodsHolderAnnounced', index=False)
-                    asn_df.to_excel(writer, sheet_name='GoodsHolderWeighed', index=False)
-                    asn_df.to_excel(writer, sheet_name='PutawayTaskComplete', index=False)
-                    asn_df.to_excel(writer, sheet_name='ASNVerify', index=False)
-                    asn_df.to_excel(writer, sheet_name='MHEJournal', index=False)
+                    asn_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ASN_ID": "ASNID",
+                                                   "LPN_ID": "LPNID", "Pre_Allocate": 'Pre_Allocate',
+                                                   "Failed": "Failed"})
+
+                    asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
+
+                # # Use ExcelWriter to write to multiple sheets in the same file
+                # with pd.ExcelWriter(output_filepath, engine='openpyxl') as writer:
+                #     # Rename columns to match the expected format for each sheet
+                #     # This is a crucial step for making the output file usable by other processes
+                #
+                #     # For SearchASN, InboundDelivery, ASNVerify
+                #     asn_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ASN_ID": "ASNID",
+                #                                        "LPN_ID": "LPNID", "Pre_Allocate": 'Pre_Allocate',
+                #                                        "Failed": "Failed"})
+                #     asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
+                #     #
+                #     # asn_df.to_excel(writer, sheet_name='SearchASN', index=False)
+                #     # asn_df.to_excel(writer, sheet_name='InboundDelivery', index=False)
+                #     # asn_df.to_excel(writer, sheet_name='ASNVerify', index=False)
+                #     # asn_df.to_excel(writer, sheet_name='GoodsHolderAnnounced', index=False)
+                #     # asn_df.to_excel(writer, sheet_name='GoodsHolderWeighed', index=False)
+                #     # asn_df.to_excel(writer, sheet_name='PutawayTaskComplete', index=False)
+                #     # asn_df.to_excel(writer, sheet_name='ASNVerify', index=False)
+                #     # asn_df.to_excel(writer, sheet_name='MHEJournal', index=False)
 
                 logging.info(f"Successfully created multi-sheet report: {output_filepath}")
 
@@ -185,5 +193,5 @@ class ASN_Creation:
         else:
             logging.info("No data was successfully processed to generate an input sheet.")
 
-# asn_create = ASN_Creation()
-# asn_create.create_asns()
+asn_create = ASN_Creation()
+asn_create.create_asns()

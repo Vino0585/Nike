@@ -11,7 +11,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 # 3. Construct the full, robust path to the Excel file.
 DEFAULT_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Worksheet.xlsx'
-MASTER_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Worksheet1.xlsx'
+MASTER_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Worksheet.xlsx'
 
 
 class Worksheet:
@@ -248,7 +248,7 @@ class Worksheet:
 
     def goods_holder_announced(self):
 
-        if not self._master_excel_open(input_sheet_name='GoodsHolderAnnounced'):
+        if not self._master_excel_open(input_sheet_name='MasterInput'):
             # The open method already prints the error, so we just exit.
             return []
 
@@ -288,7 +288,7 @@ class Worksheet:
 
     def goods_holder_weighed(self):
 
-        if not self._master_excel_open(input_sheet_name='GoodsHolderWeighed'):
+        if not self._master_excel_open(input_sheet_name='MasterInput'):
             # The open method already prints the error, so we just exit.
             return []
 
@@ -328,7 +328,7 @@ class Worksheet:
 
     def putaway_task_complete(self):
 
-        if not self._master_excel_open(input_sheet_name='PutawayTaskComplete'):
+        if not self._master_excel_open(input_sheet_name='MasterInput'):
             # The open method already prints the error, so we just exit.
             return []
 
@@ -372,7 +372,7 @@ class Worksheet:
 
     def inbound_delivery_worksheet_extract(self):
 
-        if not self._master_excel_open(input_sheet_name='InboundDelivery'):
+        if not self._master_excel_open(input_sheet_name='MasterInput'):
             # The open method already prints the error, so we just exit.
             return []
 
@@ -411,7 +411,7 @@ class Worksheet:
         return self.all_inbound_delivery_extract_param
 
     def verify_asn_worksheet_extract(self):
-        if not self._master_excel_open(input_sheet_name='ASNVerify'):
+        if not self._master_excel_open(input_sheet_name='MasterInput'):
             # The open method already prints the error, so we just exit.
             return []
 
@@ -486,7 +486,7 @@ class Worksheet:
         return self.all_master_sheet_extract_param
 
     def extract_mhe_journal_info(self):
-        if not self._master_excel_open(input_sheet_name='MHEJournal'):
+        if not self._master_excel_open(input_sheet_name='MasterInput'):
             logging.error("No Master worksheet found to extract parameters.")
             return None
 

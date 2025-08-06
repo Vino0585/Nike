@@ -46,13 +46,14 @@ class Order_Creation_Payload:
                 return []
 
             vas_detail = []
+            sequence_nbr = 1
             for vas_code_service_id, vas_code_service_uom in zip(vas_code_service_ids, vas_code_service_uoms):
-
                 original_order_line_requested_service =  {
                         "ServiceTypeId": 'VAS', "ProvidedServiceId": vas_code_service_id,
-                        "Sequence": "1", "ServiceUomId": vas_code_service_uom
+                        "Sequence": sequence_nbr, "ServiceUomId": vas_code_service_uom
                     }
                 vas_detail.append(original_order_line_requested_service)
+                sequence_nbr += 1
 
             order_line = {
                      "OriginalOrderLineId": order_line_id,
