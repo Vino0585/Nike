@@ -38,8 +38,8 @@ class Inbound_Delivery:
 
             response = requests.post(api_url, json=payload_data, headers=headers, timeout=30)
             response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
-
-            logging.info(f"Successfully added ASN for {plant_id}. Response: {response.json()}")
+            response_data = response.json()
+            logging.info(f"Successfully added ASN for {plant_id}. Response: {response_data.get('success', 'N/A')}")
 
         except requests.exceptions.HTTPError as http_err:
             logging.error(f"HTTP error occurred for {plant_id}: {http_err}")
@@ -83,7 +83,8 @@ class Inbound_Delivery:
             response = requests.post(url=api_url, headers=headers, json=body, timeout=30)
             response.raise_for_status()
             response_data = response.json()
-            logging.info(f"Successfully pre-allocated {shipment_id} for {plant_id}. Response: {response_data}")
+            logging.info(f"Successfully pre-allocated {shipment_id} for {plant_id}. "
+                         f"Response: {response_data.get('success', 'N/A')}")
 
             messages_obj = response_data.get('messages', {})
             message_list = messages_obj.get('Message', [])

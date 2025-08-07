@@ -1,11 +1,9 @@
-from pathlib import Path
 import requests
 import pandas as pd
-from collections import defaultdict
 import logging
 
-from numpy.ma.core import append
-
+from collections import defaultdict
+from pathlib import Path
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 from Payload_generation.ASN_Creation_Payload import Asn_Payload_Generator
@@ -150,19 +148,15 @@ class ASN_Creation:
         if output_data:
             logging.info("Generating input sheet from the create ASN output")
             try:
-
                 report_df = pd.DataFrame(output_data)
-
                 output_dir = Path("../Input_files")
                 output_dir.mkdir(parents=True, exist_ok=True)
                 output_filepath = output_dir / "WorkSheet.xlsx"
 
                 with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-
                     asn_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ASN_ID": "ASNID",
                                                    "LPN_ID": "LPNID", "Pre_Allocate": 'Pre_Allocate',
                                                    "Failed": "Failed"})
-
                     asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
 
                 logging.info(f"Successfully created multi-sheet report: {output_filepath}")
@@ -173,5 +167,5 @@ class ASN_Creation:
         else:
             logging.info("No data was successfully processed to generate an input sheet.")
 
-asn_create = ASN_Creation()
-asn_create.create_asns()
+# asn_create = ASN_Creation()
+# asn_create.create_asns()
