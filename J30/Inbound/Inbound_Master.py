@@ -161,7 +161,6 @@ class inbound_master_step:
                 print("\n")
                 logging.info("Program Completed Successfully")
 
-
             elif (create_asn == 'Y' and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and goods_holder_weighed == 'Y' and
                     putaway_complete == 'Y' and self.is_no_or_empty(asn_verify) and self.is_no_or_empty(run_all)):
 
@@ -223,7 +222,6 @@ class inbound_master_step:
                 print("\n")
                 logging.info("Program Completed Successfully")
 
-
             elif (self.is_no_or_empty(create_asn) and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and goods_holder_weighed == 'Y' and
                     putaway_complete == 'Y' and asn_verify == 'Y' and self.is_no_or_empty(run_all)):
 
@@ -271,6 +269,106 @@ class inbound_master_step:
                 print("\n")
                 time.sleep(30)
 
+            elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and goods_holder_announced == 'Y' and goods_holder_weighed == 'Y' and
+                    putaway_complete == 'Y' and asn_verify == 'Y' and self.is_no_or_empty(run_all)):
+
+                # Calling the goods holder announced function
+                logging.info("Goods Holder Announced Program Started Successfully")
+                gh_announced = Goods_Holder_Announced()
+                gh_announced.send_goods_holder_announced()
+                logging.info("Goods Holder Announced Completed Successfully")
+                print("\n")
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+
+                # Calling the goods holder measured function.
+                logging.info("Goods Holder Measured Program Started Successfully")
+                gh_measured = Goods_Holder_Measured()
+                gh_measured.send_goods_holder_measured()
+                logging.info("Goods Holder Measured Program Completed Successfully")
+                print("\n")
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+
+                # Calling the Putaway Complete Function.
+                logging.info("Putaway Completed Program Started Successfully")
+                ptwy_complete = Putaway_Complete()
+                ptwy_complete.create_putaway_task_complete()
+                logging.info("Putaway Completed Successfully")
+                print("\n")
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+
+                # Calling the ASN Verification Function
+                logging.info("ASN Verification Started Successfully")
+                asn_verify = ASN_Verify()
+                asn_verify.send_asn_verify()
+                logging.info("ASN Verified Successfully")
+                print("\n")
+                time.sleep(30)
+
+            elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
+                  self.is_no_or_empty(goods_holder_announced) and goods_holder_weighed == 'Y' and
+                  putaway_complete == 'Y' and asn_verify == 'Y' and self.is_no_or_empty(run_all)):
+
+                # Calling the goods holder measured function.
+                logging.info("Goods Holder Measured Program Started Successfully")
+                gh_measured = Goods_Holder_Measured()
+                gh_measured.send_goods_holder_measured()
+                logging.info("Goods Holder Measured Program Completed Successfully")
+                print("\n")
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+
+                # Calling the Putaway Complete Function.
+                logging.info("Putaway Completed Program Started Successfully")
+                ptwy_complete = Putaway_Complete()
+                ptwy_complete.create_putaway_task_complete()
+                logging.info("Putaway Completed Successfully")
+                print("\n")
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+
+                # Calling the ASN Verification Function
+                logging.info("ASN Verification Started Successfully")
+                asn_verify = ASN_Verify()
+                asn_verify.send_asn_verify()
+                logging.info("ASN Verified Successfully")
+                print("\n")
+                time.sleep(30)
+
+            elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
+                  self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed) and
+                  putaway_complete == 'Y' and asn_verify == 'Y' and self.is_no_or_empty(run_all)):
+
+                # Calling the Putaway Complete Function.
+                logging.info("Putaway Completed Program Started Successfully")
+                ptwy_complete = Putaway_Complete()
+                ptwy_complete.create_putaway_task_complete()
+                logging.info("Putaway Completed Successfully")
+                print("\n")
+                # Deliberately creating delay of 5 seconds for each function execution
+                time.sleep(5)
+
+                # Calling the ASN Verification Function
+                logging.info("ASN Verification Started Successfully")
+                asn_verify = ASN_Verify()
+                asn_verify.send_asn_verify()
+                logging.info("ASN Verified Successfully")
+                print("\n")
+                time.sleep(30)
+
+            elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
+                  self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed) and
+                  self.is_no_or_empty(putaway_complete) and asn_verify == 'Y' and self.is_no_or_empty(run_all)):
+
+                # Calling the ASN Verification Function
+                logging.info("ASN Verification Started Successfully")
+                asn_verify = ASN_Verify()
+                asn_verify.send_asn_verify()
+                logging.info("ASN Verified Successfully")
+                print("\n")
+                time.sleep(30)
 
             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery)
                 and self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed)
