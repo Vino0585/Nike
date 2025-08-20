@@ -157,14 +157,14 @@ class Asn_Payload_Generator:
         return self.all_asn_payloads
 
 
-# # This block is excellent for testing your class in isolation.
-# if __name__ == "__main__":
-#     asn_generator = Asn_Payload_Generator()
-#     final_payloads = asn_generator.generate_payloads
-#     # Optional: Pretty-print the first payload for verification
-#     if final_payloads:
-#         import json
-#         for i, payloads in enumerate(final_payloads):
-#             num = i+1
-#             logging.info(f"\n--- No {num} Generated Payload ---")
-#             print(json.dumps(payloads, indent=2))
+# This block is excellent for testing your class in isolation.
+if __name__ == "__main__":
+    asn_generator = Asn_Payload_Generator()
+    final_payloads = asn_generator.generate_payloads
+    # Optional: Pretty-print the first payload for verification
+    if final_payloads:
+        import json
+        for i, payloads in enumerate(final_payloads):
+            num = i+1
+            logging.info(f"\n--- No {num} Generated Payload ---")
+            print(json.dumps(payloads, indent=2))

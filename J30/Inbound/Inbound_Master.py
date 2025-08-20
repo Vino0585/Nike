@@ -354,5 +354,6 @@ class inbound_master_step:
                 logging.info(f"The combination provided doesnt match the requirement "
                              f"therefore the program didnt produce any output.")
 
+
 inbound_master = inbound_master_step()
 inbound_master.get_inbound_master_worksheet_extract()
