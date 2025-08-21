@@ -37,7 +37,7 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         # Generate the LPN and then increment the counter for the next call
         self.generated_lpn_ids = (
             f'00V{datetime.today().strftime('%m%d%Y')}{envn.upper()}'
-            f'{random.randint(100, 999)}{self.lpn_unique_counter:01d}'
+            f'{random.randint(100, 999)}{self.lpn_unique_counter:02d}'
         )
         self.lpn_unique_counter += 1
         return self.generated_lpn_ids

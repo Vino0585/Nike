@@ -322,6 +322,11 @@ class inbound_master_step:
                 # Calling the goods holder announced function
                 self.call_goods_holder_announced_program()
                 logging.info("Program Completed Successfully")
+                time.sleep(30)
+
+                # Calling the MHE Journal function.
+                self.call_mhe_journal_inbound_program()
+                logging.info("Run All Program Completed Successfully")
 
             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
                   self.is_no_or_empty(goods_holder_announced) and  goods_holder_weighed == 'Y' and
@@ -331,6 +336,11 @@ class inbound_master_step:
                 # Calling the goods holder measured function.
                 self.call_goods_holder_measured_program()
                 logging.info("Program Completed Successfully")
+                time.sleep(30)
+
+                # Calling the MHE Journal function.
+                self.call_mhe_journal_inbound_program()
+                logging.info("Run All Program Completed Successfully")
 
             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
                   self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed) and
@@ -340,6 +350,11 @@ class inbound_master_step:
                 # Calling the Putaway Complete Function.
                 self.call_putaway_complete_program()
                 logging.info("Program Completed Successfully")
+                time.sleep(30)
+
+                # Calling the MHE Journal function.
+                self.call_mhe_journal_inbound_program()
+                logging.info("Run All Program Completed Successfully")
 
             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
                   self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed) and
