@@ -126,7 +126,79 @@ class ASN_Search:
             logging.error(f" Error exporting final report to Excel: {e}")
 
         return response_data
-#
-# if __name__ == "__main__":
-#     asn_search = ASN_Search()
-#     response_data = asn_search.search_asn_sending()
+
+
+    def search_asn_get_ib_delivery(self):
+
+        asn_search_payload_init = ASN_Search_Payload()
+        search_tasks = asn_search_payload_init.parse_asn_inbound_delivery_search_worksheet()
+        if not search_tasks:
+            logging.info("Script finished: No valid search tasks for ASN search to process.")
+            return
+
+        all_results = []  # --- Collect all results here before writing to file ---
+        # --- Loop correctly over each task ---
+        # The try/except block is now INSIDE the loop to handle errors per task.
+        for i, task in enumerate(search_tasks):
+            # --- FIX: Use correct, lowercase dictionary keys ---
+            envn = task['environment']
+            plant_id = task['plant']
+            asn_ids = task['asn_ids']
+
+            logging.info(f"Processing Task {i + 1}/{len(search_tasks)}: Plant {plant_id} ({envn.upper()})")
+
+            try:
+                # --- 1. Authentication ---
+                token_handler = Get_Token(env=envn.lower(), plant=plant_id)
+                bearer_token = token_handler.get_bearer()
+                logging.info("Successfully retrieved token.")
+
+                # --- 2. URL Setup ---
+                awm_env = AWM_Env()
+                awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
+                program_name = Path(__file__).stem
+                api_url = awm_env.get_program_url(program=program_name)
+                logging.info(f"Target URL: {api_url}")
+
+                # --- 3. Request Headers & Payload ---
+                headers = {
+                    "Content-Type": "application/json",
+                    "organization": plant_id,  # Common practice is to use 'organization' and 'location'
+                    "location": plant_id,
+                    "Authorization": f"Bearer {bearer_token}"
+                }
+
+                # Creates a string like "('ASN1','ASN2','ASN3')"
+                query_values = "','".join(asn_ids)
+                # --- Correctly format the 'in' query string ---
+                query_string = f"AsnId in ('{query_values}')"
+
+                payload = {"Query": query_string}
+                # print(f"Sending Payload: {json.dumps(payload)}")
+
+                # --- 4. API Call ---
+                response = requests.post(api_url, json=payload, headers=headers, timeout=30)
+                response.raise_for_status()
+                response_data = response.json()
+                raw_data = response_data.get("data")
+
+                # --- 5. Process and Collect Response ---
+                extracted_data = asn_search_payload_init.parse_asn_inbound_delivery_response(response_data)
+                if extracted_data:
+                    logging.info(f"Success: Found {len(extracted_data)} detail rows for this task.")
+                    return extracted_data
+
+            except requests.exceptions.HTTPError as http_err:
+                logging.error(f"HTTP error occurred: {http_err}")
+                if http_err.response:
+                    logging.error(f"Response content: {http_err.response.text}")
+            except requests.exceptions.RequestException as req_err:
+                logging.error(f"A request error occurred: {req_err}")
+            except Exception as e:
+                logging.error(f"An unexpected error occurred: {e}")
+
+
+if __name__ == "__main__":
+    asn_search = ASN_Search()
+    response_data = asn_search.search_asn_get_ib_delivery()
+    print(response_data)

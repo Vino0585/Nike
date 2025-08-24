@@ -14,36 +14,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 
 class Inbound_Delivery_Payload:
-    """
-    Generates payloads for adding ASNs to Inbound Deliveries.
-    This class reads configuration from a worksheet, fetches necessary
-    Inbound Delivery IDs from an API for each environment/plant combination,
-    and constructs the final payloads.
-    """
 
     def __init__(self):
-        """
-        Initializes the payload generator with its dependencies.
-
-        Args:
-            worksheet: An instance to extract data from the worksheet.
-            env_handler: An instance to handle environment-specific URLs.
-        """
         self.worksheet = Worksheet()
         self.env_handler = AWM_Env()
 
     def _get_inbound_delivery_id(self, environment: str, plant_id: str, bearer_token: str) -> Optional[str]:
-        """
-        Fetches a new Inbound Delivery ID for a given environment and plant.
-
-        Args:
-            environment: The target environment (e.g., 'dev', 'qa').
-            plant_id: The facility/plant identifier.
-            bearer_token: The authorization bearer token.
-
-        Returns:
-            The Inbound Delivery ID as a string, or None if an error occurs.
-        """
         self.env_handler.get_wm_host(host=environment.lower(), facility=plant_id)
         api_url = self.env_handler.get_program_url(program="Get_Inbound_Delivery")
         logging.info(f"Requesting Inbound Delivery ID from URL: {api_url}")
@@ -77,14 +53,6 @@ class Inbound_Delivery_Payload:
         return None
 
     def generate_payloads(self) -> List[Dict[str, Any]]:
-        """
-        Parses the worksheet and generates a list of payloads.
-
-        Each payload is specific to an environment and plant combination.
-
-        Returns:
-            A list of fully constructed payload dictionaries.
-        """
         worksheet_data = self.worksheet.inbound_delivery_worksheet_extract()
         if not worksheet_data:
             logging.warning("Worksheet extract returned no data.")
@@ -130,6 +98,8 @@ class Inbound_Delivery_Payload:
                 all_payloads.append(full_payload)
 
         return all_payloads
+
+
 
 
 # if __name__ == "__main__":
