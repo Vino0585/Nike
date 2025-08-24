@@ -64,6 +64,7 @@ class MHE_Journal_Inbound:
                         response = requests.post(url=api_url, headers=header, json=payload_to_send)
                         response.raise_for_status()
                         response_data = response.json()
+                        print()
                         resp = response_data['data']['Results']
                         response_result.append(response_data.get('success'))
                         logging.info(f"SUCCESS: Payload {i + 1} processed successfully.")

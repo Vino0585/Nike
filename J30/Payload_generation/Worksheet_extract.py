@@ -28,6 +28,7 @@ class Worksheet:
         self.all_verify_asn_extract_param = []
         self.all_master_sheet_extract_param = []
         self.all_msg_type_parameters = []
+        self.all_lpn_parameter = []
 
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
@@ -522,7 +523,49 @@ class Worksheet:
             self.all_msg_type_parameters.append(goods_holder_weighed_params)
 
         return self.all_msg_type_parameters
-#
+
+    def extract_lpn_list(self):
+        if not self._master_excel_open(input_sheet_name='ExceptionInput'):
+            # The open method already prints the error, so we just exit.
+            return []
+
+        if not self.list_of_entry:
+            logging.error("No ASN for LPN List entries found to extract parameters.")
+            return []
+
+            # Define which columns are mandatory for each row.
+        required_fields = ["Plant", "Environment", "ASNID"]
+        validation_errors = []
+
+        for i, entry in enumerate(self.list_of_entry):
+            excel_row_num = i + 1
+
+            missing_fields = [field for field in required_fields if not entry.get(field)]
+
+            if missing_fields:
+                error_message = (f"Row {excel_row_num}: Validation failed. "
+                                 f"Required field(s) are empty: {', '.join(missing_fields)}")
+                validation_errors.append(error_message)
+                continue
+
+            plant = entry.get("Plant")
+            envn = entry.get("Environment")
+            asn_id = entry.get("ASNID")
+            lpn_id = entry.get("LPNID")
+
+            lpn_list_extract_param = {
+                "Plant": plant,
+                "Environment": envn,
+                "ASN_ID": asn_id,
+                "LPN_ID": lpn_id
+            }
+            self.all_lpn_parameter.append(lpn_list_extract_param)
+
+        return self.all_lpn_parameter
+
+# Work = Worksheet()
+# payload = Work.extract_lpn_list()
+# print(payload)
 # Work = Worksheet()
 # # # payload = Work.create_asn_extract_parameters()
 # # # print(payload)

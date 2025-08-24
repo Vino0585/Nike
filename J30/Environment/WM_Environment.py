@@ -35,6 +35,8 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/receiving/ui/asn/verify"
         elif program == "Message_Journal_Inbound":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/entity/search"
+        elif program == "LPN_Information":
+            self.url = f"https://{self.host_name}/receiving/api/receiving/lpn/search"
         else:
             self.url = None  # Set to None if no match
 
