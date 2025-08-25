@@ -73,6 +73,8 @@ class iLPN_Information:
                     all_results.extend(extracted_data)
                     for row in extracted_data:
                         output = {
+                            "Plant": plant_id,
+                            "Environment": envn.upper(),
                             "LPN_ID": row["LPN_ID"],
                             "Diversion_Code": row["Diversion_Code"]
                             }

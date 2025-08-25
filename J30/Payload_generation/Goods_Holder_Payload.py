@@ -19,10 +19,8 @@ class Goods_Holder_Announced_Payload:
         goods_holder_data = self.worksheet.goods_holder_announced()
 
         if not goods_holder_data:
-            logging.info("No valid item parameters found, cannot create any payloads.")
+            logging.info("No valid goods holder parameters found, cannot create any payloads.")
             return []
-
-        payloads = []
 
         for entry in goods_holder_data:
             plant = entry.get("Plant")
