@@ -41,11 +41,11 @@ class Routing_Task_Completed_Payload:
             elif diversion_code == 'MultiSKU':
                 locn = '15030000000'
             elif diversion_code == 'InVas':
-                locn = ''
+                locn = '1504000000'
             elif diversion_code == 'QA':
-                locn = ''
-            else:
-                locn = ''
+                locn = '1502000000'
+            elif diversion_code == 'Measure':
+                locn = '1505000000'
 
             if diversion_code != 'STORAGE':
                 routing_each_payload = {

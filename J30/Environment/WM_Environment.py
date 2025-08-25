@@ -37,6 +37,8 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/entity/search"
         elif program == "LPN_Information":
             self.url = f"https://{self.host_name}/receiving/api/receiving/lpn/search"
+        elif program == "Routing_Task_Completed":
+            self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKERoutingTaskResultSRCEndpointV1"
         else:
             self.url = None  # Set to None if no match
 
