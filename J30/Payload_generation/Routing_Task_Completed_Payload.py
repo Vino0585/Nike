@@ -36,10 +36,10 @@ class Routing_Task_Completed_Payload:
                 continue
 
             locn = ''
-            if diversion_code == 'FirstSKU':
-                locn = '15030000000'
+            if diversion_code == 'FIRST_SKU':
+                locn = '1503000000'
             elif diversion_code == 'MultiSKU':
-                locn = '15030000000'
+                locn = '1503000000'
             elif diversion_code == 'InVas':
                 locn = '1504000000'
             elif diversion_code == 'QA':
