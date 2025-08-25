@@ -527,7 +527,7 @@ class Worksheet:
         return self.all_msg_type_parameters
 
     def extract_lpn_list(self):
-        if not self._master_excel_open(input_sheet_name='ExceptionInput'):
+        if not self._master_excel_open(input_sheet_name='MasterInput'):
             # The open method already prints the error, so we just exit.
             return []
 

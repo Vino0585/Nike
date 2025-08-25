@@ -19,7 +19,7 @@ class Get_Token():
         self.payload = {
             "grant_type": "password",
             "username": "vgana3",
-            "password": "Vino-35160525"
+            "password": "Vino-35160825"
         }
 
         self.headers = {

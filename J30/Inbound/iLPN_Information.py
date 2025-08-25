@@ -27,6 +27,7 @@ class iLPN_Information:
             return
 
         all_results = []
+        exception_input = []
         raw_data = None
         response_data = ''
         # --- Loop correctly over each task ---
@@ -70,7 +71,12 @@ class iLPN_Information:
                 if extracted_data:
                     logging.info(f"Sucess: Found {len(extracted_data)} detail rows for this task")
                     all_results.extend(extracted_data)
-
+                    for row in extracted_data:
+                        output = {
+                            "LPN_ID": row["LPN_ID"],
+                            "Diversion_Code": row["Diversion_Code"]
+                            }
+                        exception_input.append(output)
 
             except requests.exceptions.HTTPError as http_err:
                 logging.error(f"HTTP error occurred: {http_err}")
@@ -91,10 +97,6 @@ class iLPN_Information:
         try:
             # Create the main DataFrame with the parsed results
             df_details = pd.DataFrame(all_results)
-            # print("--- LPN Details ---")
-            # print(df_details.to_string(index=False))
-
-            # Use pd.ExcelWriter to save multiple sheets to the SAME file
             with pd.ExcelWriter(self.OUTPUT_FILENAME, engine='openpyxl') as writer:
                 # Write the first sheet
                 df_details.to_excel(writer, sheet_name="LPN_Details", index=False)
@@ -115,9 +117,26 @@ class iLPN_Information:
         except Exception as e:
             logging.error(f" Error exporting final report to Excel: {e}")
 
-        return response_data
+        if exception_input:
+            logging.info(f"Consolidating and Exporting Exception Input")
+
+            try:
+                report_df = pd.DataFrame(exception_input)
+                output_dir = Path("../Input_files")
+                output_dir.mkdir(parents=True, exist_ok=True)
+                output_filepath = output_dir / "WorkSheet.xlsx"
+
+                with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                    lpn_df = report_df.rename(columns={"LPN_ID": "LPNID", "Diversion_Code": "DiversionCodeId"})
+                    lpn_df.to_excel(writer, sheet_name='Exception_Input', index=False)
+
+                logging.info(f"Successfully created multi-sheet report: {output_filepath}")
+
+            except Exception as e:
+                logging.error(f"ERROR: Failed to create multi-sheet Excel report. Error: {e}")
+        else:
+            logging.info("No data was successfully processed to generate an input sheet.")
 
 if __name__ == "__main__":
     lpn_search = iLPN_Information()
     response_data = lpn_search.search_lpn_information()
-    print(response_data)
