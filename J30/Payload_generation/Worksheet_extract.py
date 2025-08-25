@@ -470,19 +470,19 @@ class Worksheet:
 
             create_asn = entry.get("CreateASN")
             inbound_delivery = entry.get("InboundDelivery", 'N')
-            preallocate = entry.get("PreAllocate", 'N')
             goods_holder_announced = entry.get("GHAnnounced", 'N')
             goods_holder_weighed = entry.get("GHWeighed", 'N')
             putaway_complete = entry.get("PutawayComplete", 'N')
+            asn_verify = entry.get("ASNVerify", 'N')
             run_all = entry.get("RunAll")
 
             master_sheet_param = {
                 "CreateASN": create_asn,
                 "InboundDelivery": inbound_delivery,
-                "PreAllocate": preallocate,
                 "GH_Announced": goods_holder_announced,
                 "GH_Weighed": goods_holder_weighed,
                 "PutawayComplete": putaway_complete,
+                "ASNVerify": asn_verify,
                 "RunAll": run_all
             }
             self.all_master_sheet_extract_param.append(master_sheet_param)

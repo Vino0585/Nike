@@ -1,3 +1,4 @@
+import random
 import uuid
 import datetime as dt
 import pandas as pd
@@ -153,6 +154,11 @@ class Goods_Holder_Measured_Payload:
                 event_id = str(uuid.uuid4())
                 aware_timestamp = dt.datetime.now(dt.timezone.utc)
                 iso_timestamp_str = aware_timestamp.isoformat()
+                weight = random.randint(1000, 9999)
+                height = random.randint(1000, 9999)
+                width = random.randint(1000, 9999)
+                length = random.randint(1000, 9999)
+
                 payload = {
                     "event": {
                         "type": "GOODSHOLDER_MEASURED",
@@ -169,12 +175,12 @@ class Goods_Holder_Measured_Payload:
                         "goodsholderId": lpn,
                         "measuredByDeviceId": "124576",
                         "wtMeasurement": {
-                            "goodsholderWtInGram": 4000
+                            "goodsholderWtInGram": weight
                         },
                         "volMeasurement": {
-                            "goodsholderHghtInMillimeter": 1500,
-                            "goodsholderWdthInMillimeter": 1500,
-                            "goodsholderLenInMillimeter": 1500
+                            "goodsholderHghtInMillimeter": height,
+                            "goodsholderWdthInMillimeter": width,
+                            "goodsholderLenInMillimeter": length
                         },
                         "executionTmst": iso_timestamp_str
                     }
