@@ -1,3 +1,4 @@
+import random
 import uuid
 import datetime as dt
 import logging
@@ -38,16 +39,18 @@ class Routing_Task_Completed_Payload:
             locn = ''
             if diversion_code == 'FIRST_SKU':
                 locn = '1503000000'
-            elif diversion_code == 'MultiSKU':
+            elif diversion_code == 'MIXED_SKU':
                 locn = '1503000000'
-            elif diversion_code == 'InVas':
+            elif diversion_code == 'IN_VAS':
                 locn = '1504000000'
             elif diversion_code == 'QA':
                 locn = '1502000000'
-            elif diversion_code == 'Measure':
-                locn = '1505000000'
+            elif diversion_code == 'MEASUREMENT':
+                locn = '1506000000'
 
             if diversion_code != 'STORAGE':
+                seq = f"{dt.datetime.now().strftime("%Y%m%d%H")}{random.randint(1000, 9999)}"
+                task_id = f"IBRT{seq}"
                 routing_each_payload = {
                     "event": {
                         "type": "ROUTING_TASK_COMPLETED",
@@ -61,7 +64,7 @@ class Routing_Task_Completed_Payload:
                     },
                     "data": {
                         "distributionCenterCd": f"NODE_{plant}",
-                        "taskId": f"IBPW0000000351",
+                        "taskId": task_id,
                         "goodsholderId": f"{lpn_id}",
                         "executionTmst": iso_timestamp_str,
                         "routingTaskCompleted": {
@@ -81,8 +84,8 @@ class Routing_Task_Completed_Payload:
                      f"and sent to the program that called this function")
 
         return self.all_routing_task_completed
-
-initiation = Routing_Task_Completed_Payload()
-payload = initiation.create_routing_task_completed_payloads()
-for load in payload:
-    print(json.dumps(load, indent=2))
+#
+# initiation = Routing_Task_Completed_Payload()
+# payload = initiation.create_routing_task_completed_payloads()
+# for load in payload:
+#     print(json.dumps(load, indent=2))

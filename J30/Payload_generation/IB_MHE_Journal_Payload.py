@@ -28,7 +28,7 @@ class IB_MHE_Journal_Payload:
             asn_id = entry.get("ASN_ID")
             lpn_id = entry.get("LPN_ID")
 
-            message_type = ['GoodsholderAnnounced', 'PTW_DEI_AllocationCreated', 'GoodsholderMeasured', 'PutawayTaskResult', ]
+            message_type = ['GoodsholderAnnounced', 'PTW_DEI_AllocationCreated', 'RoutingTaskResult', 'GoodsholderMeasured', 'PutawayTaskResult', ]
 
             lpn_id_string = str(lpn_id) if pd.notna(lpn_id) and lpn_id != '' else None
             asn_id_string = str(asn_id) if pd.notna(asn_id) and asn_id != '' else None
@@ -84,6 +84,7 @@ class IB_MHE_Journal_Payload:
                 mhe_journal_payload = {
                     'environment': envn,
                     'plant': plant,
+                    'lpn_list': lpn_list,
                     'MHEJournalPayload': mhe_journal_each_payload
                 }
 

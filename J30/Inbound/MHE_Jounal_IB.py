@@ -29,6 +29,7 @@ class MHE_Journal_Inbound:
 
             env = package.get('environment')
             plant_id = package.get('plant')
+            lpn_list = package.get('lpn_list')
             payload = package.get('MHEJournalPayload')
 
             if env and plant_id and payload:

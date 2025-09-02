@@ -54,32 +54,59 @@ class ASN_Search_Payload:
         for asn in response_data.get("data", []):
             for lpn in asn.get("Lpn", []):
                 for detail in lpn.get("LpnDetail", []):
-                    row = {
-                        "AsnId": asn.get("AsnId"),
-                        "AsnStatus": asn.get("AsnStatus"),
-                        "AsnOriginTypeId": asn.get("AsnOriginTypeId"),
-                        "InboundDelivery": asn.get("ShipmentAsnAssociation")[0]["ShipmentId"],
-                        "LpnId": lpn.get("LpnId"),
-                        "LpnStatus": lpn.get("LpnStatus"),
-                        "ItemId": detail.get("ItemId"),
-                        "ShippedQty": detail.get("ShippedQuantity"),
-                        "DiversionCode": lpn.get('DiversionCodeId'),
-                        "Pre_receipt_Status": asn.get("PreReceiptStatusId"),
-                        "Single_Item_LPN": lpn.get("SingleItemLpn"),
-                        "BOL": asn.get('BillOfLadingNumber'),
-                        "ProNbr": asn.get('ProNumber'),
-                        "Carrier": asn.get('CarrierId'),
-                        "LPNSizeType": lpn.get('LpnSizeTypeId'),
-                        "Length": lpn['Extended'].get('LpnLength'),
-                        "Height": lpn['Extended'].get('LpnHeight'),
-                        "Width": lpn['Extended'].get('LpnWidth'),
-                        "Origin_facility": asn.get('OriginFacilityId'),
-                        "TrailerNbr": asn.get('TrailerId'),
-                        "UpdatedBy": detail.get("UpdatedBy"),
-                        "UpdatedTimestamp": detail.get("UpdatedTimestamp")
-
-                    }
-                    extracted_rows.append(row)
+                    if asn.get("ShipmentAsnAssociation"):
+                        row = {
+                            "AsnId": asn.get("AsnId"),
+                            "AsnStatus": asn.get("AsnStatus"),
+                            "AsnOriginTypeId": asn.get("AsnOriginTypeId"),
+                            "InboundDelivery": (asn.get("ShipmentAsnAssociation")[0]["ShipmentId"], 0),
+                            "Expedited_Flag": asn.get("Extended").get("ExpeditedFlag"),
+                            "LpnId": lpn.get("LpnId"),
+                            "LpnStatus": lpn.get("LpnStatus"),
+                            "ItemId": detail.get("ItemId"),
+                            "ShippedQty": detail.get("ShippedQuantity"),
+                            "DiversionCode": lpn.get('DiversionCodeId'),
+                            "Pre_receipt_Status": asn.get("PreReceiptStatusId"),
+                            "Single_Item_LPN": lpn.get("SingleItemLpn"),
+                            "BOL": asn.get('BillOfLadingNumber'),
+                            "ProNbr": asn.get('ProNumber'),
+                            "Carrier": asn.get('CarrierId'),
+                            "LPNSizeType": lpn.get('LpnSizeTypeId'),
+                            "Length": lpn['Extended'].get('LpnLength'),
+                            "Height": lpn['Extended'].get('LpnHeight'),
+                            "Width": lpn['Extended'].get('LpnWidth'),
+                            "Origin_facility": asn.get('OriginFacilityId'),
+                            "TrailerNbr": asn.get('TrailerId'),
+                            "UpdatedBy": detail.get("UpdatedBy"),
+                            "UpdatedTimestamp": detail.get("UpdatedTimestamp")
+                        }
+                        extracted_rows.append(row)
+                    else:
+                        row = {
+                            "AsnId": asn.get("AsnId"),
+                            "AsnStatus": asn.get("AsnStatus"),
+                            "AsnOriginTypeId": asn.get("AsnOriginTypeId"),
+                            "Expedited_Flag": asn.get("Extended").get("ExpeditedFlag"),
+                            "LpnId": lpn.get("LpnId"),
+                            "LpnStatus": lpn.get("LpnStatus"),
+                            "ItemId": detail.get("ItemId"),
+                            "ShippedQty": detail.get("ShippedQuantity"),
+                            "DiversionCode": lpn.get('DiversionCodeId'),
+                            "Pre_receipt_Status": asn.get("PreReceiptStatusId"),
+                            "Single_Item_LPN": lpn.get("SingleItemLpn"),
+                            "BOL": asn.get('BillOfLadingNumber'),
+                            "ProNbr": asn.get('ProNumber'),
+                            "Carrier": asn.get('CarrierId'),
+                            "LPNSizeType": lpn.get('LpnSizeTypeId'),
+                            "Length": lpn['Extended'].get('LpnLength'),
+                            "Height": lpn['Extended'].get('LpnHeight'),
+                            "Width": lpn['Extended'].get('LpnWidth'),
+                            "Origin_facility": asn.get('OriginFacilityId'),
+                            "TrailerNbr": asn.get('TrailerId'),
+                            "UpdatedBy": detail.get("UpdatedBy"),
+                            "UpdatedTimestamp": detail.get("UpdatedTimestamp")
+                        }
+                        extracted_rows.append(row)
         return extracted_rows
 
 

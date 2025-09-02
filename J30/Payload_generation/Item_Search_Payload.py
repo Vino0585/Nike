@@ -70,8 +70,12 @@ class ItemPayload():
             query_string = None
 
             if pd.notna(item_no_dims):
-                # FIX: Convert object to the expected query string format
-                query_string = f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL"
+                if pd.notna(product_type):
+                    product_code = PRODUCT_CODE_MAP.get(product_type)
+                    query_string = (f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL AND "
+                                    f"Extended.DivisionCode = {product_code}")
+                else:
+                    query_string = f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL"
 
             elif pd.notna(product_type):
                 product_code = PRODUCT_CODE_MAP.get(product_type)

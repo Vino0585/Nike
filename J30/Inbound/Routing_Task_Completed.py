@@ -8,11 +8,12 @@ from Payload_generation.Routing_Task_Completed_Payload import Routing_Task_Compl
 # Setup basic logging to provide better feedback than logging.info()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 class Routing_Task_Completed:
 
-    def create_routing_task_complete(self):
+    @staticmethod
+    def create_routing_task_complete():
         routing_instance = Routing_Task_Completed_Payload()
-        # ptwy means putaway task complete
         raw_payloads = routing_instance.create_routing_task_completed_payloads()
         if not raw_payloads:
             logging.error("No Routing Task Completed Payload Found")
@@ -48,18 +49,18 @@ class Routing_Task_Completed:
                 bearer_token = token_handler.get_bearer()
                 logging.info(f"Successfully retrieved token for {environment.upper()} env, Plant {plant_id}.")
 
-                #Get URL once for this group
+                # Get URL once for this group
                 env_handler.get_wm_host(host=environment.lower(), facility=plant_id)
                 # Hardcode the program name for reliability, fixing the issue where it resolves incorrectly.
                 api_url = env_handler.get_program_url(program="Routing_Task_Completed")
                 logging.info(f"Sending payloads to URL: {api_url}")
                 headers = {
                     "content-type": "application/json",
-                    "selectedorganization": str(plant_id),
-                    "selectedlocation": str(plant_id),
+                    "organization": str(plant_id),
+                    "location": str(plant_id),
                     "authorization": f'Bearer {bearer_token}'
                 }
-
+                response = ''
                 for i, payload_to_send in enumerate(payloads):
                     try:
                         logging.info(f"[{environment.upper()}] Processing Payload {i + 1}/{len(payloads)}")
@@ -84,6 +85,7 @@ class Routing_Task_Completed:
 
         logging.info(f"Processing Finished")
         logging.info(f"Total of {len(response_result)} payloads were sent successfully.")
+        return None
 
 
 routing_complete = Routing_Task_Completed()

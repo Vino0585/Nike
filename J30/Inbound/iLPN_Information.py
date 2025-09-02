@@ -29,7 +29,6 @@ class iLPN_Information:
         all_results = []
         exception_input = []
         raw_data = None
-        response_data = ''
         # --- Loop correctly over each task ---
         for i, task in enumerate(search_tasks):
             envn = task['environment']
@@ -67,11 +66,10 @@ class iLPN_Information:
                 raw_data = response_data.get("data")
 
                 # --- 5. Process and Collect Response ---
-                extracted_data = lpn_search_payload_init.parse_lpn_response(raw_data)
-                if extracted_data:
-                    logging.info(f"Sucess: Found {len(extracted_data)} detail rows for this task")
-                    all_results.extend(extracted_data)
-                    for row in extracted_data:
+                master_extracted_data = lpn_search_payload_init.parse_master_lpn_response(raw_data)
+                if master_extracted_data:
+                    logging.info(f"Sucess: Found {len(master_extracted_data)} detail rows for this task")
+                    for row in master_extracted_data:
                         output = {
                             "Plant": plant_id,
                             "Environment": envn.upper(),
@@ -79,6 +77,11 @@ class iLPN_Information:
                             "Diversion_Code": row["Diversion_Code"]
                             }
                         exception_input.append(output)
+
+                report_extracted_data = lpn_search_payload_init.parse_report_lpn_response(raw_data)
+                if report_extracted_data:
+                    logging.info(f"Success: Found {len(report_extracted_data)} detail rows for this task")
+                    all_results.extend(report_extracted_data)
 
             except requests.exceptions.HTTPError as http_err:
                 logging.error(f"HTTP error occurred: {http_err}")
