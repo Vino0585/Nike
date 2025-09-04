@@ -197,8 +197,8 @@ class ASN_Search:
             except Exception as e:
                 logging.error(f"An unexpected error occurred: {e}")
 
-#
-# if __name__ == "__main__":
-#     asn_search = ASN_Search()
-#     response_data = asn_search.search_asn_sending()
-#     print(response_data)
+
+if __name__ == "__main__":
+    asn_search = ASN_Search()
+    response_data = asn_search.search_asn_sending()
+    print(response_data)

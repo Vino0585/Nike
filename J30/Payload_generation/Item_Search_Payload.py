@@ -23,7 +23,7 @@ class ItemPayload():
             "ItemId": None, "WeightUomId": None, "Weight": None, "VolumeUomId": None,
             "Volume": None, "Height": None, "Length": None, "Width": None, "PrimaryBarCode": None,
             "DimensionUomId": None, "CriticalDimension1": None,
-            "CriticalDimension2": None, "CriticalDimension3": None,
+            "CriticalDimension2": None, "CriticalDimension3": None, "ProductClass": None,
             "Extended": {"MarkForCubiscan": None, "DivisionCode": None}
         }
 
@@ -73,14 +73,14 @@ class ItemPayload():
                 if pd.notna(product_type):
                     product_code = PRODUCT_CODE_MAP.get(product_type)
                     query_string = (f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL AND "
-                                    f"Extended.DivisionCode = {product_code}")
+                                    f"ProductClass = {product_code}")
                 else:
                     query_string = f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL"
 
             elif pd.notna(product_type):
                 product_code = PRODUCT_CODE_MAP.get(product_type)
                 if product_code is not None:
-                    query_string = f"Extended.DivisionCode = {product_code} AND Length > 1"
+                    query_string = f"ProductClass = {product_code} AND Length > 1"
 
             elif pd.notna(num_of_items):
                 # FIX: Convert object to a query string. "is not null" is a common way to check for existence.

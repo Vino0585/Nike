@@ -88,6 +88,7 @@ def item_search():
                             '30': 'Equipment'
                         }
                         product_code = PRODUCT_CODE_MAP.get(extended_data.get('DivisionCode'))
+                        product_class = PRODUCT_CODE_MAP.get(response_payload.get('ProductClass'))
 
                         result_row = {
                             'Environment': environment.upper(),
@@ -103,6 +104,7 @@ def item_search():
                             'WeightUOM': response_payload.get('WeightUomId'),
                             'PrimaryBarCode': response_payload.get('PrimaryBarCode'),
                             'DivisionCode': product_code,
+                            'ProductClass': product_class,
                             'MarkforCubiScan': extended_data.get('MarkForCubiscan')
                         }
                         all_results_data.append(result_row)
