@@ -142,6 +142,6 @@ class iLPN_Information:
         else:
             logging.info("No data was successfully processed to generate an input sheet.")
 
-if __name__ == "__main__":
-    lpn_search = iLPN_Information()
-    response_data = lpn_search.search_lpn_information()
+# if __name__ == "__main__":
+#     lpn_search = iLPN_Information()
+#     response_data = lpn_search.search_lpn_information()

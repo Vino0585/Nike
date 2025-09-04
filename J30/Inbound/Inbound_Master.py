@@ -120,7 +120,8 @@ class inbound_master_step:
 
             if entry.get("RunAll") == 'Y':
                 for op in operations:
-                    op['method']()
+                    if op['flag'] != 'ExceptionFlow':
+                        op['method']()
                 time.sleep(30)  # Final delay for RunAll
                 self.call_mhe_journal_inbound_program()
                 logging.info("Run All Program Completed Successfully")
