@@ -45,7 +45,7 @@ class ItemPayload():
                     "Query": query_string,
                     "Template": template_structure,
                     "Size": int(num_of_items or 1),
-                    "Page": random.randint(1, 9)
+                    "Page": random.randint(1, 5)
                 }
                 return {
                     "envn": params.get("environment"),
@@ -73,14 +73,14 @@ class ItemPayload():
                 if pd.notna(product_type):
                     product_code = PRODUCT_CODE_MAP.get(product_type)
                     query_string = (f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL AND "
-                                    f"ProductClass = {product_code}")
+                                    f"Extended.DivisionCode = {product_code}")
                 else:
                     query_string = f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL"
 
             elif pd.notna(product_type):
                 product_code = PRODUCT_CODE_MAP.get(product_type)
                 if product_code is not None:
-                    query_string = f"ProductClass = {product_code} AND Length > 1"
+                    query_string = f"Extended.DivisionCode = {product_code} AND Length > 1"
 
             elif pd.notna(num_of_items):
                 # FIX: Convert object to a query string. "is not null" is a common way to check for existence.

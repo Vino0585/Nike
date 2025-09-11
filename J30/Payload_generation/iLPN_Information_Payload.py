@@ -72,7 +72,7 @@ class iLPN_Information_Payload:
 
         return self.all_lpn_information_payload
 
-    def parse_report_lpn_response(self, response_data: dict) -> list:
+    def parse_report_lpn_receiving_response(self, response_data: dict) -> list:
         """
         Parses the ASN API response and extracts key fields into a list of dictionaries.
         This function no longer writes to a file; it just returns the data.
@@ -122,6 +122,39 @@ class iLPN_Information_Payload:
             }
             extracted_rows.append(row)
         return extracted_rows
+
+    # def parse_report_lpn_inventory_response(self, response_data: dict) -> list:
+    #     """
+    #     Parses the ASN API response and extracts key fields into a list of dictionaries.
+    #     This function no longer writes to a file; it just returns the data.
+    #     """
+    #     if not response_data:
+    #         logging.error("-> Success, but no ASN data was returned in the response.")
+    #         return []
+    #
+    #     extracted_rows = []
+    #     for lpn in response_data:
+    #         for detail in lpn.get("LpnDetail", []):
+    #             row = {
+    #                 "LPN_ID": lpn.get("LpnId"),
+    #                 "LPN_STATUS": lpn.get("LpnStatusId"),
+    #                 "ASN_ID": lpn.get("AsnId"),
+    #                 "Diversion_Code": lpn.get("DiversionCodeId"),
+    #                 "Updated_by": lpn.get("UpdatedBy"),
+    #                 "Item": detail.get("ItemId"),
+    #                 "Shipped_Quantity": detail.get("ShippedQuantity"),
+    #                 "Plant": lpn.get("OrgId"),
+    #                 "Length": lpn.get("Extended").get("LpnLength"),
+    #                 "Width": lpn.get("Extended").get("LpnWidth"),
+    #                 "Height": lpn.get("Extended").get("LpnHeight"),
+    #                 "Allocation_Type": lpn.get("AllocationTypeId"),
+    #                 "Invn_attrib": detail.get("InventoryAttribute1"),
+    #                 "PurchaseOrderId": lpn.get("PurchaseOrderId")
+    #             }
+    #             extracted_rows.append(row)
+    #     return extracted_rows
+
+
 #
 # initiation = iLPN_Information_Payload()
 # payload = initiation.create_lpn_information_payloads()

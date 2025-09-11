@@ -21,8 +21,8 @@ class inbound_master_step:
         self.worksheet_extractor = Worksheet()
         self.asn_creation = ASN_Creation()
         self.inbound_delivery = Inbound_Delivery()
-        self.iLPN_information = iLPN_Information()
-        self.routing_task_completed = Routing_Task_Completed()
+        # self.iLPN_information = iLPN_Information()
+        # self.routing_task_completed = Routing_Task_Completed()
         self.goods_holder_announced = Goods_Holder_Announced()
         self.goods_holder_measured = Goods_Holder_Measured()
         self.putaway_complete = Putaway_Complete()
@@ -48,15 +48,15 @@ class inbound_master_step:
         time.sleep(5)
         print("\n")
 
-    def call_exception_flow(self):
-        logging.info("Exception Flow Started")
-        logging.info("Filling iLPN Information for Routing Task Completed")
-        self.iLPN_information.search_lpn_information()
-        logging.info("Completed iLPN Information filling")
-        logging.info("Starting Routing Task Complete Flow")
-        self.routing_task_completed.create_routing_task_complete()
-        logging.info("Routing Task Complete Flow Completed")
-        logging.info("Exception Flow Completed")
+    # def call_exception_flow(self):
+    #     logging.info("Exception Flow Started")
+    #     logging.info("Filling iLPN Information for Routing Task Completed")
+    #     self.iLPN_information.search_lpn_information()
+    #     logging.info("Completed iLPN Information filling")
+    #     logging.info("Starting Routing Task Complete Flow")
+    #     self.routing_task_completed.create_routing_task_complete()
+    #     logging.info("Routing Task Complete Flow Completed")
+    #     logging.info("Exception Flow Completed")
 
     def call_goods_holder_announced_program(self):
         # Calling the goods holder announced function
@@ -108,10 +108,10 @@ class inbound_master_step:
         operations = [
             {'flag': 'CreateASN', 'method': self.call_asn_creation_program},
             {'flag': 'InboundDelivery', 'method': self.call_inbound_delivery_program},
-            {'flag': 'ExceptionFlow', 'method': self.call_exception_flow, 'mhe_delay': 35},
-            {'flag': 'GH_Announced', 'method': self.call_goods_holder_announced_program, 'mhe_delay': 35},
-            {'flag': 'GH_Weighed', 'method': self.call_goods_holder_measured_program, 'mhe_delay': 35},
-            {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program, 'mhe_delay': 30},
+            # {'flag': 'ExceptionFlow', 'method': self.call_exception_flow, 'mhe_delay': 35},
+            {'flag': 'GH_Announced', 'method': self.call_goods_holder_announced_program, 'mhe_delay': 60},
+            {'flag': 'GH_Weighed', 'method': self.call_goods_holder_measured_program, 'mhe_delay': 60},
+            {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program, 'mhe_delay': 60},
             {'flag': 'ASNVerify', 'method': self.call_asn_verify_program, 'mhe_delay': 30},
         ]
 

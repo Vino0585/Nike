@@ -42,7 +42,7 @@ class Routing_Task_Completed_Payload:
             elif diversion_code == 'MIXED_SKU':
                 locn = '1503000000'
             elif diversion_code == 'IN_VAS':
-                locn = '1504000000'
+                locn = '1507000000'
             elif diversion_code == 'QA':
                 locn = '1502000000'
             elif diversion_code == 'MEASUREMENT':

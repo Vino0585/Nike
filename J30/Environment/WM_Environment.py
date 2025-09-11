@@ -35,8 +35,10 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/receiving/ui/asn/verify"
         elif program == "Message_Journal_Inbound":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/entity/search"
-        elif program == "LPN_Information":
+        elif program == "iLPN_Information_Receiving":
             self.url = f"https://{self.host_name}/receiving/api/receiving/lpn/search"
+        elif program == "iLPN_Information_Inventory":
+            self.url = f"https://{self.host_name}/dcinventory/api/dcinventory/ilpn/search"
         elif program == "Routing_Task_Completed":
             self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKERoutingTaskResultSRCEndpointV1"
         else:
