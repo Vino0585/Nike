@@ -34,7 +34,7 @@ class Outbound_Worksheet:
             logging.info(f"Sheets found in '{self.excel_file_path}': {sheet_names}")
             if input_sheet_name not in sheet_names:
                 logging.error(f"Sheet {input_sheet_name} not found in the Excel file.")
-            df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1)
+            df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1, dtype={'D_Facility': str})
             if not df.empty:
                 data_dict_index = df.to_dict(orient='index')
                 for key, value in data_dict_index.items():
@@ -64,6 +64,7 @@ class Outbound_Worksheet:
             logging.error("No Order entries found to extract parameters.")
             return False
 
+
         for i, entry_dict in enumerate(self.list_of_entry):
             # Extract parameters for the each row/entry
             plant = entry_dict.get("Plant")
@@ -73,7 +74,7 @@ class Outbound_Worksheet:
             num_of_order = int(entry_dict.get("Number of Orders", 0))
             item = entry_dict.get("Item(s)")
             qty = entry_dict.get('Quantity')
-            d_facility = entry_dict.get("D_Facility", '0005005401')
+            d_facility = str(entry_dict.get("D_Facility", '0005005401'))
             pre_pack_code = entry_dict.get("PrePack Code")
             vas_code_service_id = entry_dict.get("VAS Code Service ID")
             vas_code_service_uom = entry_dict.get("VAS Code Service UOM")
@@ -114,9 +115,9 @@ class Outbound_Worksheet:
 
         return self.all_order_create_parameters
 #
-# Work = Outbound_Worksheet()
-# payload = Work.create_order_extract_parameters()
-# print(payload)
+Work = Outbound_Worksheet()
+payload = Work.create_order_extract_parameters()
+print(payload)
 
 
 

@@ -59,7 +59,7 @@ class Order_Creation_Payload:
                      "OriginalOrderLineId": order_line_id,
                      "ItemId": current_item,
                      "OrderedQuantity": current_qty,
-                     "QuantityUomId": "Unit", "ItemAttribute1": "01000", "UnitPrice": "32.5", "CountryOfOriginId": "ID",
+                     "QuantityUomId": "Unit", "ItemAttribute1": "01000", "UnitPrice": "32.5",
                      "Extended": extended, "OriginalOrderLineRequestedService": vas_detail
                          }
 
@@ -102,7 +102,7 @@ class Order_Creation_Payload:
             email = data_row.get("email")
             item = data_row.get("item")
             qty = str(data_row.get("qty"))
-            d_facility = str(data_row.get("d_facility"))
+            d_facility = data_row.get("d_facility")
             pre_pack_code = data_row.get("pre_pack_code")
             vas_code_service_id = data_row.get("vas_code_service_id", 'BOX')
             vas_code_service_uom = data_row.get("vas_code_service_uom", 'oLPN')
