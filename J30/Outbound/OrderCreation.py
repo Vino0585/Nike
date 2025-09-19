@@ -14,7 +14,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 class Order_Creation:
 
-
     def __init__(self):
         self.order_generation = Order_Creation_Payload()
         self.final_payloads = self.order_generation.generate_payloads
@@ -34,9 +33,7 @@ class Order_Creation:
             else:
                 logging.error(f"WARNING: Skipping malformed package: {package}")
 
-
         extracted_report_data = []
-        output_data = []
 
         for environment, payloads in payload_by_env.items():
             logging.info(f"Processing {len(payloads)} Payloads for Environment: {environment.upper()}")
@@ -81,7 +78,60 @@ class Order_Creation:
                         logging.info(f"Success: {response_data.get('success', 'N/A')}")
 
 
+                        # -- DATA COLLECTION FOR OUTPUT FILES --
+                        order_id = payload_to_send.get('OriginalOrderId')
+                        order_type = payload_to_send.get('OrderType')
+                        destination_facility = payload_to_send.get('DestinationFacilityId')
+                        order_line = payload_to_send.get('OriginalOrderLine', [])
+                        if order_line:
+                            item_id = order_line[0].get('ItemId')
+                            quantity = order_line[0].get('OrderedQuantity')
 
+                            report_entry = {
+                                "PLANT": plant_id,
+                                "ENVN": environment,
+                                "ORDER_ID": order_id,
+                                "ORDER_TYPE": order_type,
+                                "D_FACILITY": destination_facility,
+                                "ITEM_ID": item_id,
+                                "QTY": quantity
+                            }
+                            extracted_report_data.append(report_entry)
+
+                    except KeyError as e:
+                        logging.error(f"ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
+                    except requests.exceptions.RequestException as e:
+                        logging.error(f"ERROR: API request failed for payload {i + 1}: {e}")
+                        if e.response is not None:
+                            logging.error(f"Status Code: {e.response.status_code}, Response: {e.response.text}")
+                    except Exception as e:
+                        logging.error(f"ERROR: An unexpected error occurred for payload {i + 1}: {e}")
+
+            except Exception as e:
+                logging.error(f"FATAL ERROR: Could not process batch for environment {environment.upper()}. Error: {e}")
+
+
+        if extracted_report_data:
+            logging.info("Generating Report")
+            try:
+                report_df = pd.DataFrame(extracted_report_data)
+
+                # Define the Output path.
+                output_dir = Path("../Output_files")
+                output_dir.mkdir(parents=True, exist_ok=True)
+                output_filepath = output_dir / "Order_Creation_Report.xlsx"
+
+                report_df.to_excel(output_filepath, index=False)
+                logging.info(f"Successfully created report: {output_filepath}")
+            except Exception as e:
+                logging.error(f"Failed to create Excel report. Error: {e}")
+        else:
+            logging.info("No data was successfully processed to generate a report.")
+
+
+if __name__ == "__main__":
+    order_creation = Order_Creation()
+    order_creation.create_orders()
 
 
 
