@@ -2,11 +2,12 @@ import requests
 import pandas as pd
 import logging
 
-from Archive.ImportASNDev import token_handler
 from Payload_generation.Order_Creation_Payload import Order_Creation_Payload
 from Environment.Get_Token import Get_Token
-from Environment.WM_Environment import AWM_Env
+from Environment.WM_Outbound_API_EndPoint import AWM_OB_Env
 from collections import defaultdict
+from pathlib import Path
+
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -48,11 +49,11 @@ class Order_Creation:
                                   "is missing 'OrgId'")
                     continue
 
-                token_handler = Get_Token(env=environment.lower(), plant=plant_id_for_token)
+                token_handler = Get_Token(env=environment.lower(), plant=str(plant_id_for_token))
                 bearer_token = token_handler.get_bearer()
                 logging.info(f"Successfully retrieved token for {environment.upper()} environment.")
 
-                env_handler = AWM_Env()
+                env_handler = AWM_OB_Env()
 
                 for i, payload_to_send in enumerate(payloads):
                     try:
@@ -132,7 +133,3 @@ class Order_Creation:
 if __name__ == "__main__":
     order_creation = Order_Creation()
     order_creation.create_orders()
-
-
-
-

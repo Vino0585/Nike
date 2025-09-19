@@ -1,5 +1,6 @@
 import requests
 
+
 class Get_Token():
 
     # To get the bearer token
