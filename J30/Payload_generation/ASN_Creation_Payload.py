@@ -74,6 +74,7 @@ class Asn_Payload_Generator:
                 lpn_type = "Mixed-Item" if lpn_def['is_mixed'] else "Single-Item"
                 logging.info(f"{lpn_type} Group '{item_desc}': Generating {total_lpns_for_def} LPNs.")
 
+            current_po_id = self.number_gen.purchase_order_number()
             for _ in range(total_lpns_for_def):
                 current_lpn_id = self.number_gen.lpn_number_generation(envn)
                 lpn_detail_list = [
@@ -81,7 +82,7 @@ class Asn_Payload_Generator:
                         "AsnId": current_asn_id, "ExpiryDate": "", "InventoryAttribute1": "01000",
                         "CountryOfOrigin": "CN", "ItemId": item_id, "ManufacturingDate": "",
                         "QuantityUomId": "LPN", "ShipByDate": "", "ShippedQuantity": case_qty,
-                        "PurchaseOrderId": "25050501", "PurchaseOrderLineId": ""
+                        "PurchaseOrderId": current_po_id, "PurchaseOrderLineId": ""
                     } for item_id, case_qty in zip(lpn_def['items'], lpn_def['case_qtys'])
                 ]
                 lpn_extended = {"LpnHeight": "12", "LpnWidth": "12", "LpnLength": "24"}
@@ -157,14 +158,14 @@ class Asn_Payload_Generator:
         return self.all_asn_payloads
 
 
-# # This block is excellent for testing your class in isolation.
-# if __name__ == "__main__":
-#     asn_generator = Asn_Payload_Generator()
-#     final_payloads = asn_generator.generate_payloads
-#     # Optional: Pretty-print the first payload for verification
-#     if final_payloads:
-#         import json
-#         for i, payloads in enumerate(final_payloads):
-#             num = i+1
-#             logging.info(f"\n--- No {num} Generated Payload ---")
-#             print(json.dumps(payloads, indent=2))
+# This block is excellent for testing your class in isolation.
+if __name__ == "__main__":
+    asn_generator = Asn_Payload_Generator()
+    final_payloads = asn_generator.generate_payloads
+    # Optional: Pretty-print the first payload for verification
+    if final_payloads:
+        import json
+        for i, payloads in enumerate(final_payloads):
+            num = i+1
+            logging.info(f"\n--- No {num} Generated Payload ---")
+            print(json.dumps(payloads, indent=2))

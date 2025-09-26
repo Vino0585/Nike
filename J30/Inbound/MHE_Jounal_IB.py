@@ -126,6 +126,6 @@ class MHE_Journal_Inbound:
 
         logging.info(f"MHE Journal Processing Finished")
         logging.info(f"Total of {len(response_result)} payloads were sent successfully.")
-
+#
 # mhe_journal = MHE_Journal_Inbound()
 # mhe_journal.create_mhe_journal_inbound()

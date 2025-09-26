@@ -35,6 +35,7 @@ class Order_Creation:
                 logging.error(f"WARNING: Skipping malformed package: {package}")
 
         extracted_report_data = []
+        output_data = []  # This will hold one dictionary per successful payload
 
         for environment, payloads in payload_by_env.items():
             logging.info(f"Processing {len(payloads)} Payloads for Environment: {environment.upper()}")
@@ -84,6 +85,8 @@ class Order_Creation:
                         order_type = payload_to_send.get('OrderType')
                         destination_facility = payload_to_send.get('DestinationFacilityId')
                         order_line = payload_to_send.get('OriginalOrderLine', [])
+
+                        #1. Data for detailed report (Order Creation Report.xlsx)
                         if order_line:
                             item_id = order_line[0].get('ItemId')
                             quantity = order_line[0].get('OrderedQuantity')
@@ -98,6 +101,17 @@ class Order_Creation:
                                 "QTY": quantity
                             }
                             extracted_report_data.append(report_entry)
+
+
+                        # 2. Data for input sheet (Outbound_Worksheet.xlsx)
+                        # This creates one row per successful payload.
+
+                        output_row = {
+                            "PLANT": plant_id,
+                            "ENVN": environment,
+                            "ORDER_ID": order_id
+                        }
+                        output_data.append(output_row)
 
                     except KeyError as e:
                         logging.error(f"ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
@@ -128,6 +142,24 @@ class Order_Creation:
                 logging.error(f"Failed to create Excel report. Error: {e}")
         else:
             logging.info("No data was successfully processed to generate a report.")
+
+
+        if output_data:
+            logging.info("Generating Master Data information in Output_Worksheet excel file")
+            try:
+                report_df = pd.DataFrame(output_data)
+                output_dir = Path("../Input_files")
+                output_dir.mkdir(parents=True, exist_ok=True)
+                output_filepath = output_dir / "Outbound_Worksheet.xlsx"
+
+                with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                    order_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ORDER_ID": "OrderID"})
+                    order_df.to_excel(writer, sheet_name='MasterInput', index=False)
+                    logging.info(f"Successfully created multi-sheet report: {output_filepath}")
+            except Exception as e:
+                logging.error(f"ERROR: Failed to create multi-sheet Excel report. Error: {e}")
+        else:
+            logging.info("No data was successfully processed to generate an input sheet.")
 
 
 if __name__ == "__main__":

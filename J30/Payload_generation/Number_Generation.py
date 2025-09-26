@@ -37,7 +37,7 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         # Generate the LPN and then increment the counter for the next call
         self.generated_lpn_ids = (
             f'00V{datetime.today().strftime('%m%d%Y')}{envn.upper()}'
-            f'{random.randint(100, 999)}{self.lpn_unique_counter:02d}'
+            f'{random.randint(10000, 99999)}{self.lpn_unique_counter:02d}'
         )
         self.lpn_unique_counter += 1
         return self.generated_lpn_ids
@@ -77,12 +77,18 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
             self.generated_order_ids.append(id_)
         return self.generated_order_ids
 
+    def purchase_order_number(self):
+        self.generated_po_ids = (
+            f'PO{datetime.today().strftime('%m%d')}{random.randint(1000, 9999)}')
+
+        return self.generated_po_ids
+
 
 # # To execute this class to check on in the later stage.
 # number_generation = NumberGeneration()
 # asn = number_generation.asn_number_generation(2, 'dev')
 # print(asn)
-# lpn = number_generation.lpn_number_generation('dev')
+# lpn = number_generation.lpn_number_generation(envn='qa')
 # print(lpn)
 # bol, pro, trailer, seal = number_generation.misc_nbr('dev')
 # print(bol, pro, trailer, seal)

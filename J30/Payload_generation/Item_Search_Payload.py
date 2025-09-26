@@ -93,10 +93,10 @@ class ItemPayload():
 
         return all_payloads
 
-# # To execute to debug
-# if __name__ == '__main__':
-#     py = ItemPayload()
-#     # Use pprint for more readable output of complex objects
-#     import pprint
-#
-#     pprint.pprint(py.create_item_search_payloads())
+# To execute to debug
+if __name__ == '__main__':
+    py = ItemPayload()
+    # Use pprint for more readable output of complex objects
+    import pprint
+
+    pprint.pprint(py.create_item_search_payloads())
