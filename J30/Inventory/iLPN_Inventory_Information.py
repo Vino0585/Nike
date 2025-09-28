@@ -233,8 +233,7 @@ def iLPN_search():
         # Define the full path to the output file.
         output_filepath = output_dir / "iLPN_search_results.xlsx"
 
-        report_df = pd.DataFrame(result_receiving_df)
-        with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+        with pd.ExcelWriter(output_filepath, engine='openpyxl') as writer:
             result_receiving_df.to_excel(writer, sheet_name='iLPN_Receiving_Result', index=False)
             result_inventory_df.to_excel(writer, sheet_name='iLPN_Inventory_Result', index=False)
 
@@ -242,7 +241,7 @@ def iLPN_search():
             f"Successfully exported {len(all_ilpn_receiving_data)} and {len(all_ilpn_inventory_data)} results to '{output_filepath}'")
 
     except Exception as e:
-        logging.error(f"ERROR: Failed to generate or export the final report: {e}")
+        logging.error(f"Failed to generate or export the final report: {e}")
 
 
 if __name__ == "__main__":
