@@ -55,7 +55,7 @@ class Worksheet:
                 for key, value in data_dict_index.items():
                     self.list_of_entry.append(value)
             else:
-                raise ValueError("Sheet 'CreateASN' is empty or no data found in the first row.")
+                logging.error(f"Sheet {input_sheet_name} is empty or no data found in the first row.")
 
         except FileNotFoundError:
             logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
@@ -111,7 +111,7 @@ class Worksheet:
 
         # Step 1 to open the excel sheet and store list of entry.
         if not self._excel_open(input_sheet_name='CreateASN'):
-            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            logging.error(f"Error: The sheet name in '{self.excel_file_path}' was not found.")
 
         # We need a list to store the extracted parameters for each ASN,
         # as there will be multiple ASNs.

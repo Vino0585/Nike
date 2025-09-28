@@ -41,6 +41,10 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/dcinventory/api/dcinventory/ilpn/search"
         elif program == "Routing_Task_Completed":
             self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKERoutingTaskResultSRCEndpointV1"
+        elif program == 'iLPN_Receiving':
+            self.url = f"https://{self.host_name}/receiving/api/receiving/lpn/search"
+        elif program == 'iLPN_Inventory':
+            self.url = f"https://{self.host_name}/dcinventory/api/dcinventory/ilpn/search"
         else:
             self.url = None  # Set to None if no match
 

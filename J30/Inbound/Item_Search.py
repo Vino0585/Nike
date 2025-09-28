@@ -122,7 +122,6 @@ def item_search():
             print(f"--> FATAL: Could not process batch for environment {environment.upper()}. Error: {e}")
 
     # --- Final Step: Process all collected results after the loops are done ---
-    # --- Final Step: Process all collected results after the loops are done ---
     if not all_results_data:
         print("\n--- Script finished, but no results were collected from any API calls. ---")
         return
