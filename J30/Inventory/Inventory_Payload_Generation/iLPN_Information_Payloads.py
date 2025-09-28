@@ -49,7 +49,7 @@ class iLPN_Search_Payload:
                     if not asn_id:
                         continue
 
-                    query = f"'Query': AsnId = '{asn_id}'"
+                    query = f"AsnId = '{asn_id}'"
                     all_payloads.append(create_receiving_package(query))
 
             elif pd.notna(lpn_id) and str(lpn_id).strip():
@@ -106,7 +106,7 @@ class iLPN_Search_Payload:
                     if not asn_id:
                         continue
 
-                    query = f"'Query': AsnId = '{asn_id}'"
+                    query = f"AsnId = '{asn_id}'"
                     all_payloads.append(create_inventory_package(query))
 
             elif pd.notna(lpn_id) and str(lpn_id).strip():

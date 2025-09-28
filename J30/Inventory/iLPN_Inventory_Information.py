@@ -1,11 +1,8 @@
-from collections import defaultdict
-
 import pandas as pd
 import requests
 import logging
 
-from numpy.ma.core import append
-
+from collections import defaultdict
 from Inventory.Inventory_Payload_Generation.iLPN_Information_Payloads import iLPN_Search_Payload
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
@@ -15,9 +12,7 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-
 def iLPN_search():
-
     # 1. Create an instance of the generator and assigning the function to variable.
     ilpn_payload = iLPN_Search_Payload()
 
@@ -43,7 +38,6 @@ def iLPN_search():
             logging.error(f"--> WARNING: Skipping malformed package: {payload}")
             continue
 
-
     for environment, packaged_payloads in payload_by_env.items():
         logging.info(f"Processing {len(packaged_payloads)} Payloads for Environment: {environment.upper()}")
         try:
@@ -66,7 +60,8 @@ def iLPN_search():
                     plant_id = item['plant']
                     payload_to_send = item['payload']
 
-                    logging.info(f"[{environment.upper()}] Processing Payload {i + 1}/{len(packaged_payloads)} for Plant {plant_id}")
+                    logging.info(
+                        f"[{environment.upper()}] Processing Payload {i + 1}/{len(packaged_payloads)} for Plant {plant_id}")
 
                     # 8. Get URL for this payloads specific plant
                     env_handler.get_wm_host(host=environment.lower(), facility=str(plant_id))
@@ -94,23 +89,23 @@ def iLPN_search():
 
                     logging.info(f"-> Success: Found {len(ilpn_list)} iLPN(s) in response.")
                     for response_payload in ilpn_list:
-                        lpn_detail = response_payload.get('LpnDetail', {})
-
-                        result_row = {
-                            'Environment': environment.upper(),
-                            'Plant': plant_id,
-                            'ASN_ID': response_payload.get('AsnId'),
-                            'iLPN_ID': response_payload.get('LpnId'),
-                            'LpnStatus': response_payload.get('LpnStatus'),
-                            'DiversionCodeId': response_payload.get('DiversionCodeId'),
-                            'PreReceiptStatusId': response_payload.get('PreReceiptStatusId'),
-                            'ItemID': lpn_detail.get('ItemId'),
-                            'Qty': lpn_detail.get('ShippedQuantity'),
-                            'InventoryAttribute1': lpn_detail.get('InventoryAttribute1'),
-                            'PO_NBR': lpn_detail.get('PurchaseOrderId'),
-                            'UpdatedBy': lpn_detail.get('UpdatedBy')
-                        }
-                        all_ilpn_receiving_data.append(result_row)
+                        lpn_detail = response_payload.get('LpnDetail', [])
+                        for lpn_detail in lpn_detail:
+                            result_row = {
+                                'Environment': environment.upper(),
+                                'Plant': plant_id,
+                                'ASN_ID': response_payload.get('AsnId'),
+                                'iLPN_ID': response_payload.get('LpnId'),
+                                'LpnStatus': response_payload.get('LpnStatus'),
+                                'DiversionCodeId': response_payload.get('DiversionCodeId'),
+                                'PreReceiptStatusId': response_payload.get('PreReceiptStatusId'),
+                                'ItemID': lpn_detail.get('ItemId'),
+                                'Qty': lpn_detail.get('ShippedQuantity'),
+                                'InventoryAttribute1': lpn_detail.get('InventoryAttribute1'),
+                                'PO_NBR': lpn_detail.get('PurchaseOrderId'),
+                                'UpdatedBy': lpn_detail.get('UpdatedBy')
+                            }
+                            all_ilpn_receiving_data.append(result_row)
 
                 except (KeyError, TypeError) as e:
                     logging.error(f"ERROR: Could not process payload {i + 1}. Data malformed. Details: {e}")
@@ -119,7 +114,7 @@ def iLPN_search():
                     if e.response is not None:
                         logging.error(f"Status Code: {e.response.status_code}, Response: {e.response.text}")
                 except Exception as e:
-                    logging.error(f"ERROR: An unexpected error occurred for payload {i + 1}: {e}")
+                    logging.error(f"An unexpected error occurred for payload {i + 1}: {e}")
 
         except Exception as e:
             logging.error(f"FATAL: Could not process batch for environment {environment.upper()}. Error: {e}")
@@ -196,7 +191,7 @@ def iLPN_search():
                                 'Current_Location': response_payload.get('CurrentLocationId'),
                                 'Destination_Location': response_payload.get('DestinationLocationId')
                             }
-                            all_ilpn_receiving_data.append(result_row)
+                            all_ilpn_inventory_data.append(result_row)
 
                     except (KeyError, TypeError) as e:
                         logging.error(f"ERROR: Could not process payload {i + 1}. Data malformed. Details: {e}")
@@ -205,16 +200,19 @@ def iLPN_search():
                         if e.response is not None:
                             logging.error(f"Status Code: {e.response.status_code}, Response: {e.response.text}")
                     except Exception as e:
-                        logging.error(f"ERROR: An unexpected error occurred for payload {i + 1}: {e}")
+                        logging.error(f"An unexpected error occurred for payload {i + 1}: {e}")
 
             except Exception as e:
                 logging.error(f"FATAL: Could not process batch for environment {environment.upper()}. Error: {e}")
 
-
     # --- Final Step: Process all collected results after the loops are done ---
 
-    if not all_ilpn_receiving_data and all_ilpn_inventory_data:
-        logging.info("\n--- Script finished, but no results were collected from any API calls. ---")
+    if not all_ilpn_receiving_data:
+        logging.info("Script finished, but no results were collected from API call made to iLPN Receiving")
+        return
+
+    if not all_ilpn_inventory_data:
+        logging.info("Script finished, but no results were collected from API call made to iLPN Inventory")
         return
 
     logging.info(f"Consolidated Search Results")
@@ -234,15 +232,18 @@ def iLPN_search():
         output_dir.mkdir(parents=True, exist_ok=True)
         # Define the full path to the output file.
         output_filepath = output_dir / "iLPN_search_results.xlsx"
-        result_receiving_df.to_excel(output_filepath, sheet_name='iLPNReceivingResult', index=False)
-        result_inventory_df.to_excel(output_filepath, sheet_name='iLPNInventoryResult', index=False)
 
-        logging.info(f"Successfully exported {len(all_ilpn_receiving_data)} and {len(all_ilpn_inventory_data)} results to '{output_filepath}'")
+        report_df = pd.DataFrame(result_receiving_df)
+        with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+            result_receiving_df.to_excel(writer, sheet_name='iLPN_Receiving_Result', index=False)
+            result_inventory_df.to_excel(writer, sheet_name='iLPN_Inventory_Result', index=False)
+
+        logging.info(
+            f"Successfully exported {len(all_ilpn_receiving_data)} and {len(all_ilpn_inventory_data)} results to '{output_filepath}'")
 
     except Exception as e:
         logging.error(f"ERROR: Failed to generate or export the final report: {e}")
 
 
 if __name__ == "__main__":
-     iLPN_search()
-
+    iLPN_search()
