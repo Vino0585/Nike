@@ -50,7 +50,8 @@ class iLPN_Search_Payload:
                         continue
 
                     query = f"AsnId = '{asn_id}'"
-                    all_payloads.append(create_receiving_package(query))
+                    if query:
+                        all_payloads.append(create_receiving_package(query))
 
             elif pd.notna(lpn_id) and str(lpn_id).strip():
                 lpn_id_list = str(lpn_id).split(';')
@@ -60,10 +61,8 @@ class iLPN_Search_Payload:
                         continue
 
                     query = f"'Query': LpnId = '{lpn_id}'"
-                    all_payloads.append(create_receiving_package(query))
-
-            if query:
-                all_payloads.append(create_receiving_package(query))
+                    if query:
+                        all_payloads.append(create_receiving_package(query))
 
         return all_payloads
 
@@ -107,7 +106,8 @@ class iLPN_Search_Payload:
                         continue
 
                     query = f"AsnId = '{asn_id}'"
-                    all_payloads.append(create_inventory_package(query))
+                    if query:
+                        all_payloads.append(create_inventory_package(query))
 
             elif pd.notna(lpn_id) and str(lpn_id).strip():
                 lpn_id_list = str(lpn_id).split(';')
@@ -117,10 +117,8 @@ class iLPN_Search_Payload:
                         continue
 
                     query = f"'Query': LpnId = '{lpn_id}'"
-                    all_payloads.append(create_inventory_package(query))
-
-            if query:
-                all_payloads.append(create_inventory_package(query))
+                    if query:
+                        all_payloads.append(create_inventory_package(query))
 
         return all_payloads
 

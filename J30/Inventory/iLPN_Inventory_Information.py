@@ -27,18 +27,18 @@ def iLPN_search():
         logging.error("No payloads were generated. Please check your Excel input and generator logic.")
         return
 
-    payload_by_env = defaultdict(list)
+    receiving_payload_by_env = defaultdict(list)
     for payload in iLPN_receiving_payload:
         env = payload.get('envn')
         plant_id = payload.get('plant')
         payload_to_send = payload.get('payload')
         if env and plant_id and payload_to_send:
-            payload_by_env[env].append({'plant': plant_id, 'payload': payload_to_send})
+            receiving_payload_by_env[env].append({'plant': plant_id, 'payload': payload_to_send})
         else:
             logging.error(f"--> WARNING: Skipping malformed package: {payload}")
             continue
 
-    for environment, packaged_payloads in payload_by_env.items():
+    for environment, packaged_payloads in receiving_payload_by_env.items():
         logging.info(f"Processing {len(packaged_payloads)} Payloads for Environment: {environment.upper()}")
         try:
             plant_id = packaged_payloads[0].get('plant')
@@ -92,18 +92,18 @@ def iLPN_search():
                         lpn_detail = response_payload.get('LpnDetail', [])
                         for lpn_detail in lpn_detail:
                             result_row = {
-                                'Environment': environment.upper(),
+                                'ENVN': environment.upper(),
                                 'Plant': plant_id,
                                 'ASN_ID': response_payload.get('AsnId'),
                                 'iLPN_ID': response_payload.get('LpnId'),
-                                'LpnStatus': response_payload.get('LpnStatus'),
-                                'DiversionCodeId': response_payload.get('DiversionCodeId'),
-                                'PreReceiptStatusId': response_payload.get('PreReceiptStatusId'),
+                                'LpnStat': response_payload.get('LpnStatus'),
+                                'Diversion': response_payload.get('DiversionCodeId'),
+                                'PreRecptStatId': response_payload.get('PreReceiptStatusId'),
                                 'ItemID': lpn_detail.get('ItemId'),
                                 'Qty': lpn_detail.get('ShippedQuantity'),
-                                'InventoryAttribute1': lpn_detail.get('InventoryAttribute1'),
+                                'Invn_Attri_1': lpn_detail.get('InventoryAttribute1'),
                                 'PO_NBR': lpn_detail.get('PurchaseOrderId'),
-                                'UpdatedBy': lpn_detail.get('UpdatedBy')
+                                'User': lpn_detail.get('UpdatedBy')
                             }
                             all_ilpn_receiving_data.append(result_row)
 
@@ -119,91 +119,91 @@ def iLPN_search():
         except Exception as e:
             logging.error(f"FATAL: Could not process batch for environment {environment.upper()}. Error: {e}")
 
-        payload_by_env = defaultdict(list)
-        for payload in iLPN_inventory_payload:
-            env = payload.get('envn')
-            plant_id = payload.get('plant')
-            payload_to_send = payload.get('payload')
-            if env and plant_id and payload_to_send:
-                payload_by_env[env].append({'plant': plant_id, 'payload': payload_to_send})
-            else:
-                logging.error(f"--> WARNING: Skipping malformed package: {payload}")
-                continue
+    inventory_payload_by_env = defaultdict(list)
+    for payload in iLPN_inventory_payload:
+        env = payload.get('envn')
+        plant_id = payload.get('plant')
+        payload_to_send = payload.get('payload')
+        if env and plant_id and payload_to_send:
+            inventory_payload_by_env[env].append({'plant': plant_id, 'payload': payload_to_send})
+        else:
+            logging.error(f"--> WARNING: Skipping malformed package: {payload}")
+            continue
 
-        for environment, packaged_payloads in payload_by_env.items():
-            logging.info(f"Processing {len(packaged_payloads)} Payloads for Environment: {environment.upper()}")
-            try:
-                plant_id = packaged_payloads[0].get('plant')
-                # 5. Already got the bearer token and stored in the variable.
+    for environment, packaged_payloads in inventory_payload_by_env.items():
+        logging.info(f"Processing {len(packaged_payloads)} Payloads for Environment: {environment.upper()}")
+        try:
+            plant_id = packaged_payloads[0].get('plant')
+            # 5. Already got the bearer token and stored in the variable.
 
-                # 6. Now loop through the individual payloads for this environment
-                for i, item in enumerate(packaged_payloads):
-                    try:
-                        # 7. Unpack the plant_id and payload for this specific request
-                        plant_id = item['plant']
-                        payload_to_send = item['payload']
+            # 6. Now loop through the individual payloads for this environment
+            for i, item in enumerate(packaged_payloads):
+                try:
+                    # 7. Unpack the plant_id and payload for this specific request
+                    plant_id = item['plant']
+                    payload_to_send = item['payload']
 
-                        logging.info(
-                            f"[{environment.upper()}] Processing Payload {i + 1}/{len(packaged_payloads)} for Plant {plant_id}")
+                    logging.info(
+                        f"[{environment.upper()}] Processing Payload {i + 1}/{len(packaged_payloads)} for Plant {plant_id}")
 
-                        # 8. Get URL for this payloads specific plant
-                        env_handler.get_wm_host(host=environment.lower(), facility=str(plant_id))
-                        url_value = env_handler.get_program_url(program='iLPN_Inventory')
-                        logging.info(f"Sending payload to URL: {url_value}")
+                    # 8. Get URL for this payloads specific plant
+                    env_handler.get_wm_host(host=environment.lower(), facility=str(plant_id))
+                    url_value = env_handler.get_program_url(program='iLPN_Inventory')
+                    logging.info(f"Sending payload to URL: {url_value}")
 
-                        # 9. Build headers
-                        headers = {
-                            "content-type": "application/json",
-                            "organization": str(plant_id),
-                            "location": str(plant_id),
-                            "authorization": 'Bearer ' + bearer_token
+                    # 9. Build headers
+                    headers = {
+                        "content-type": "application/json",
+                        "organization": str(plant_id),
+                        "location": str(plant_id),
+                        "authorization": 'Bearer ' + bearer_token
+                    }
+
+                    # 10. Send the request
+                    response = requests.post(url=url_value, headers=headers, json=payload_to_send)
+                    response.raise_for_status()
+                    response_data = response.json()
+
+                    # 11. Process and collect the result from the response.
+                    ilpn_list = response_data.get('data', [])
+                    if not ilpn_list:
+                        logging.info("-> Success, but no ilpn were returned in the response.")
+                        continue
+
+                    logging.info(f"-> Success: Found {len(ilpn_list)} iLPN(s) in response.")
+                    for response_payload in ilpn_list:
+                        result_row = {
+                            'ENVN': environment.upper(),
+                            'Plant': plant_id,
+                            'ASN_ID': response_payload.get('AsnId'),
+                            'iLPN_ID': response_payload.get('IlpnId'),
+                            'IB_Delivery': response_payload.get('ShipmentId'),
+                            'iLPN_Status': response_payload.get('Status'),
+                            'ItemID': response_payload.get('ItemId'),
+                            'Single_SKU': response_payload.get('SingleLineLpn'),
+                            'H': response_payload.get('Height'),
+                            'W': response_payload.get('Width'),
+                            'L': response_payload.get('Length'),
+                            'Weight': response_payload.get('ActualWeight'),
+                            'Volume': response_payload.get('Volume'),
+                            'PO_NBR': response_payload.get('PurchaseOrderId'),
+                            'Prev_Locn': response_payload.get('PreviousLocationId'),
+                            'Curr_Locn': response_payload.get('CurrentLocationId'),
+                            'Dest_Locn': response_payload.get('DestinationLocationId')
                         }
+                        all_ilpn_inventory_data.append(result_row)
 
-                        # 10. Send the request
-                        response = requests.post(url=url_value, headers=headers, json=payload_to_send)
-                        response.raise_for_status()
-                        response_data = response.json()
+                except (KeyError, TypeError) as e:
+                    logging.error(f"ERROR: Could not process payload {i + 1}. Data malformed. Details: {e}")
+                except requests.exceptions.RequestException as e:
+                    logging.error(f"ERROR: API request failed for payload {i + 1}: {e}")
+                    if e.response is not None:
+                        logging.error(f"Status Code: {e.response.status_code}, Response: {e.response.text}")
+                except Exception as e:
+                    logging.error(f"An unexpected error occurred for payload {i + 1}: {e}")
 
-                        # 11. Process and collect the result from the response.
-                        ilpn_list = response_data.get('data', [])
-                        if not ilpn_list:
-                            logging.info("-> Success, but no ilpn were returned in the response.")
-                            continue
-
-                        logging.info(f"-> Success: Found {len(ilpn_list)} iLPN(s) in response.")
-                        for response_payload in ilpn_list:
-                            result_row = {
-                                'Environment': environment.upper(),
-                                'Plant': plant_id,
-                                'ASN_ID': response_payload.get('AsnId'),
-                                'iLPN_ID': response_payload.get('IlpnId'),
-                                'IB_Delivery': response_payload.get('ShipmentId'),
-                                'iLPN_Status': response_payload.get('Status'),
-                                'ItemID': response_payload.get('ItemId'),
-                                'Single_Line_LPN': response_payload.get('SingleLineLpn'),
-                                'Height': response_payload.get('Height'),
-                                'Width': response_payload.get('Width'),
-                                'Length': response_payload.get('Length'),
-                                'Actual_Weight': response_payload.get('ActualWeight'),
-                                'Volume': response_payload.get('Volume'),
-                                'PO_NBR': response_payload.get('PurchaseOrderId'),
-                                'Previous_Location': response_payload.get('PreviousLocationId'),
-                                'Current_Location': response_payload.get('CurrentLocationId'),
-                                'Destination_Location': response_payload.get('DestinationLocationId')
-                            }
-                            all_ilpn_inventory_data.append(result_row)
-
-                    except (KeyError, TypeError) as e:
-                        logging.error(f"ERROR: Could not process payload {i + 1}. Data malformed. Details: {e}")
-                    except requests.exceptions.RequestException as e:
-                        logging.error(f"ERROR: API request failed for payload {i + 1}: {e}")
-                        if e.response is not None:
-                            logging.error(f"Status Code: {e.response.status_code}, Response: {e.response.text}")
-                    except Exception as e:
-                        logging.error(f"An unexpected error occurred for payload {i + 1}: {e}")
-
-            except Exception as e:
-                logging.error(f"FATAL: Could not process batch for environment {environment.upper()}. Error: {e}")
+        except Exception as e:
+            logging.error(f"FATAL: Could not process batch for environment {environment.upper()}. Error: {e}")
 
     # --- Final Step: Process all collected results after the loops are done ---
 

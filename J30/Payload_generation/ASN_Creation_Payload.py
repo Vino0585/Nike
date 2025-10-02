@@ -81,7 +81,7 @@ class Asn_Payload_Generator:
                     {
                         "AsnId": current_asn_id, "ExpiryDate": "", "InventoryAttribute1": "01000",
                         "CountryOfOrigin": "CN", "ItemId": item_id, "ManufacturingDate": "",
-                        "QuantityUomId": "LPN", "ShipByDate": "", "ShippedQuantity": case_qty,
+                        "QuantityUomId": "Unit", "ShipByDate": "", "ShippedQuantity": case_qty,
                         "PurchaseOrderId": current_po_id, "PurchaseOrderLineId": ""
                     } for item_id, case_qty in zip(lpn_def['items'], lpn_def['case_qtys'])
                 ]

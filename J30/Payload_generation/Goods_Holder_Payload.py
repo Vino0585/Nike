@@ -154,10 +154,10 @@ class Goods_Holder_Measured_Payload:
                 event_id = str(uuid.uuid4())
                 aware_timestamp = dt.datetime.now(dt.timezone.utc)
                 iso_timestamp_str = aware_timestamp.isoformat()
-                weight = random.randint(1000, 9999)
-                height = random.randint(1000, 9999)
-                width = random.randint(1000, 9999)
-                length = random.randint(1000, 9999)
+                weight = random.randint(10000, 50000)
+                height = random.randint(100, 800)
+                width = random.randint(100, 800)
+                length = random.randint(100, 800)
 
                 payload = {
                     "event": {
@@ -201,9 +201,15 @@ class Goods_Holder_Measured_Payload:
 
 # It's best practice to run scripts within this block.
 # Also, avoid using 'list' as a variable name as it shadows the built-in type.
-# if __name__ == "__main__":
-#     gh_announced = Goods_Holder_Announced_Payload()
-#     generated_payloads = gh_announced.create_goods_holder_announced_payloads()
-#     # Pretty-print the result for better readability
-#     import json
-#     print(json.dumps(generated_payloads, indent=2))
+if __name__ == "__main__":
+    gh_announced = Goods_Holder_Announced_Payload()
+    generated_payloads = gh_announced.create_goods_holder_announced_payloads()
+    # Pretty-print the result for better readability
+    import json
+    print(json.dumps(generated_payloads, indent=2))
+
+    # gh_measured = Goods_Holder_Measured_Payload()
+    # generated_payloads = gh_measured.create_goods_holder_measure_payload()
+    # # Pretty-print the result for better readability
+    # import json
+    # print(json.dumps(generated_payloads, indent=2))
