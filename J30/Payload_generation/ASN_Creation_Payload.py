@@ -1,3 +1,4 @@
+import datetime
 import logging
 from Payload_generation.Worksheet_extract import Worksheet
 from Payload_generation.Number_Generation import NumberGeneration
@@ -144,12 +145,15 @@ class Asn_Payload_Generator:
 
                 if lpn_list:
                     bol, pro, trailer, seal = self.number_gen.misc_nbr(envn=envn)
-                    # asn_extended = {"BolNumber": bol, "ProNumber": pro, "SealNumber": seal}
+                    date_now = datetime.date.today().strftime("%Y-%m-%d")
+                    date_now_utc = datetime.datetime.today().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+                    asn_extended = {"BolNumber": bol, "ProNumber": pro, "SealNumber": seal, "ShipmentStart": date_now, "ShipmentCreateDate": date_now_utc}
+
                     asn_payload = {
                         "AsnId": current_asn_id, "AsnOriginTypeId": "P", "OriginFacilityId": o_facility,
                         "VendorId": None, "CarrierId": carrier_id, "BillOfLadingNumber": bol,
                         "ProNumber": pro, "OrgId": str(plant), "DestinationFacilityId": str(plant),
-                        "AsnStatus": "1000", "AsnLevel": "LPN", "TrailerId": str(trailer),
+                        "AsnStatus": "1000", "AsnLevel": "LPN", "TrailerId": str(trailer), "Extended": asn_extended,
                         "Lpn": lpn_list
                     }
                     self.all_asn_payloads.append({'payload': asn_payload, 'environment': envn})

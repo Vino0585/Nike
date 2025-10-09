@@ -163,13 +163,13 @@ class Order_Creation_Payload:
         return self.all_order_payloads
 
 # This block is excellent for testing your class in isolation.
-# if __name__ == "__main__":
-#     order_generation = Order_Creation_Payload()
-#     final_payloads = order_generation.generate_payloads
-#     # Optional: Pretty-print the first payload for verification
-#     if final_payloads:
-#         import json
-#         for i, payloads in enumerate(final_payloads):
-#             num = i+1
-#             logging.info(f"No {num} Generated Payload")
-#             print(json.dumps(payloads, indent=2))
+if __name__ == "__main__":
+    order_generation = Order_Creation_Payload()
+    final_payloads = order_generation.generate_payloads
+    # Optional: Pretty-print the first payload for verification
+    if final_payloads:
+        import json
+        for i, payloads in enumerate(final_payloads):
+            num = i+1
+            logging.info(f"No {num} Generated Payload")
+            print(json.dumps(payloads, indent=2))

@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import logging
 
-from Payload_generation.Order_Creation_Payload import Order_Creation_Payload
+from Outbound.Outbound_Payload_Generation.Order_Creation_Payload import Order_Creation_Payload
 from Environment.Get_Token import Get_Token
 from Environment.WM_Outbound_API_EndPoint import AWM_OB_Env
 from collections import defaultdict
