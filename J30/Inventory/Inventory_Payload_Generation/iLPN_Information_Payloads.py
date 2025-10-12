@@ -11,11 +11,11 @@ class iLPN_Search_Payload:
     def __init__(self):
         self.inventory_worksheet = Inventory_WorkSheet_Extract()
         self.all_iLPN_search_payload = []
+        self.all_search_iLPN_parameters = self.inventory_worksheet.search_iLPN_parameters()
 
     def create_lpn_receiving_payload(self) -> list:
-        all_search_iLPN_parameters = self.inventory_worksheet.search_iLPN_parameters()
 
-        if not all_search_iLPN_parameters:
+        if not self.all_search_iLPN_parameters:
             logging.error("No valid iLPN parameters found, cannot create any payloads.")
             return []
 
@@ -26,7 +26,7 @@ class iLPN_Search_Payload:
                           "ShippedQuantity": None}
             }
 
-        for entry in all_search_iLPN_parameters:
+        for entry in self.all_search_iLPN_parameters:
             asn_id = entry['ASN_ID']
             lpn_id = entry['iLPN_ID']
 
@@ -68,9 +68,8 @@ class iLPN_Search_Payload:
 
 
     def create_lpn_inventory_payload(self) -> list:
-        all_search_iLPN_parameters = self.inventory_worksheet.search_iLPN_parameters()
 
-        if not all_search_iLPN_parameters:
+        if not self.all_search_iLPN_parameters:
             logging.error("No valid iLPN parameters found, cannot create any payloads.")
             return []
 
@@ -82,7 +81,7 @@ class iLPN_Search_Payload:
         "PurchaseOrderId": None
         }
 
-        for entry in all_search_iLPN_parameters:
+        for entry in self.all_search_iLPN_parameters:
             asn_id = entry['ASN_ID']
             lpn_id = entry['iLPN_ID']
 
@@ -122,9 +121,56 @@ class iLPN_Search_Payload:
 
         return all_payloads
 
+    def create_ilpn_condition_code_payload(self) -> list:
+
+        if not self.all_search_iLPN_parameters:
+            logging.error("No valid iLPN parameters found, cannot create any payloads.")
+            return []
+
+        all_payloads = []
+        for entry in self.all_search_iLPN_parameters:
+            asn_id = entry['ASN_ID']
+            lpn_id = entry['iLPN_ID']
+
+            def create_inventory_package(query_string):
+                payload = {
+                    "Query": query_string,
+                }
+                return {
+                    "envn": entry.get("Environment"),
+                    "plant": entry.get("Plant"),
+                    "payload": payload
+                }
+
+            query = None
+            if pd.notna(asn_id) and str(asn_id).strip():
+                asn_id_list = str(asn_id).split(';')
+                for asn in asn_id_list:
+                    asn_id = asn.strip()
+                    if not asn_id:
+                        continue
+
+                    query = f"Ilpn.AsnId = '{asn_id}'"
+                    if query:
+                        all_payloads.append(create_inventory_package(query))
+
+            elif pd.notna(lpn_id) and str(lpn_id).strip():
+                lpn_id_list = str(lpn_id).split(';')
+                for lpn in lpn_id_list:
+                    lpn_id = lpn.strip()
+                    if not lpn_id:
+                        continue
+
+                    query = f"'Query': Ilpn.IlpnId = '{lpn_id}'"
+                    if query:
+                        all_payloads.append(create_inventory_package(query))
+
+        return all_payloads
+
 
 if __name__ == '__main__':
     py = iLPN_Search_Payload()
     import pprint
     pprint.pprint(py.create_lpn_receiving_payload())
     pprint.pprint(py.create_lpn_inventory_payload())
+    pprint.pprint(py.create_ilpn_condition_code_payload())

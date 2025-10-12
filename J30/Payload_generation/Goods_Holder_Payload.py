@@ -202,14 +202,14 @@ class Goods_Holder_Measured_Payload:
 # It's best practice to run scripts within this block.
 # Also, avoid using 'list' as a variable name as it shadows the built-in type.
 if __name__ == "__main__":
-    gh_announced = Goods_Holder_Announced_Payload()
-    generated_payloads = gh_announced.create_goods_holder_announced_payloads()
-    # Pretty-print the result for better readability
-    import json
-    print(json.dumps(generated_payloads, indent=2))
-
-    # gh_measured = Goods_Holder_Measured_Payload()
-    # generated_payloads = gh_measured.create_goods_holder_measure_payload()
+    # gh_announced = Goods_Holder_Announced_Payload()
+    # generated_payloads = gh_announced.create_goods_holder_announced_payloads()
     # # Pretty-print the result for better readability
     # import json
     # print(json.dumps(generated_payloads, indent=2))
+
+    gh_measured = Goods_Holder_Measured_Payload()
+    generated_payloads = gh_measured.create_goods_holder_measure_payload()
+    # Pretty-print the result for better readability
+    import json
+    print(json.dumps(generated_payloads, indent=2))
