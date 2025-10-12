@@ -9,7 +9,7 @@ from Environment.WM_Environment import AWM_Env
 from pathlib import Path
 
 # Set up Logging level and format.
-logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.warning(), format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 class iLPN_Search:
