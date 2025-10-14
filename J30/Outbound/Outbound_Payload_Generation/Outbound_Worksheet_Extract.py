@@ -2,21 +2,18 @@ import logging
 import pandas as pd
 from pathlib import Path
 
-from Payload_generation.Worksheet_extract import MASTER_EXCEL_PATH
-
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
+PROJECT_ROOT = (SCRIPT_DIR.parent).parent
 # 3. Construct the full, robust path to the Excel file.
 DEFAULT_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Outbound_Worksheet.xlsx'
-MASTER_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Outbound_Master_Sheet.xlsx'
 
 
 class Outbound_Worksheet:
-    def __init__(self, excel_path=DEFAULT_EXCEL_PATH, master_path=MASTER_EXCEL_PATH):
+    def __init__(self, excel_path=DEFAULT_EXCEL_PATH):
         self.excel_file_path = excel_path
-        self.master_file_path = master_path
+        # self.master_file_path = master_path
         self.list_of_entry = []
         self.all_order_create_parameters = []
         self.all_order_search_parameters = []
@@ -34,13 +31,18 @@ class Outbound_Worksheet:
             logging.info(f"Sheets found in '{self.excel_file_path}': {sheet_names}")
             if input_sheet_name not in sheet_names:
                 logging.error(f"Sheet {input_sheet_name} not found in the Excel file.")
-            df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1, dtype={'D_Facility': str})
+
+            df = ''
+            if input_sheet_name == 'CreateOrder':
+                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1, dtype={'D_Facility': str})
+            else:
+                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, dtype={'D_Facility': str})
             if not df.empty:
                 data_dict_index = df.to_dict(orient='index')
                 for key, value in data_dict_index.items():
                     self.list_of_entry.append(value)
             else:
-                raise ValueError("Sheet 'CreateOrder' is empty or no data found in the first row.")
+                raise ValueError(f"Sheet {sheet_names} is empty or no data found in the first row.")
 
         except FileNotFoundError:
             logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
@@ -114,10 +116,47 @@ class Outbound_Worksheet:
             self.all_order_create_parameters.append(order_params)  # Add to our new list
 
         return self.all_order_create_parameters
-#
-Work = Outbound_Worksheet()
-payload = Work.create_order_extract_parameters()
-print(payload)
+
+
+    def create_new_shipment_extract_parameter(self):
+        self.all_create_shipment_parameters = []
+        if not self._excel_open(input_sheet_name='CreateShipment'):
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            return False
+
+        if not self.list_of_entry:
+            logging.error("No Create Shipment entries found to extract parameters.")
+            return False
+
+        for i, entry_dict in enumerate(self.list_of_entry):
+            # Extract parameters for the each row/entry
+            plant = entry_dict.get("Plant")
+            envn = entry_dict.get("Environment")
+            create_shipment = entry_dict.get("Create_Shipment")
+            carrier = entry_dict.get("Carrier")
+            service_level = entry_dict.get("ServiceLevel")
+            mode = entry_dict.get('Mode')
+
+
+            create_shipment_params = {
+                "plant": plant,
+                "environment": envn,
+                "create_shipment": create_shipment,
+                "carrier": carrier,
+                "service_level": service_level,
+                "mode": mode,
+            }
+            self.all_create_shipment_parameters.append(create_shipment_params)  # Add to our new list
+
+        return self.all_create_shipment_parameters
+
+
+if __name__ == '__main__':
+    Work = Outbound_Worksheet()
+    payload = Work.create_order_extract_parameters()
+    print(payload)
+    create_shipment = Work.create_new_shipment_extract_parameter()
+    print(create_shipment)
 
 
 

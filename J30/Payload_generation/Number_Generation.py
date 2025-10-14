@@ -84,13 +84,24 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         return self.generated_po_ids
 
 
-# # To execute this class to check on in the later stage.
-# number_generation = NumberGeneration()
-# asn = number_generation.asn_number_generation(2, 'dev')
-# print(asn)
-# lpn = number_generation.lpn_number_generation(envn='qa')
-# print(lpn)
-# bol, pro, trailer, seal = number_generation.misc_nbr('dev')
-# print(bol, pro, trailer, seal)
-# order = number_generation.order_number_generation(2, 'QA', 'VG')
-# print(order)
+    def create_shipment_number(self):
+        self.generated_shipment_ids = (
+            f"VGS{datetime.today().strftime('%m%d%y')}{random.randint(100, 999)}"
+        )
+
+        return self.generated_shipment_ids
+
+
+if __name__ == '__main__':
+    # # To execute this class to check on in the later stage.
+    number_generation = NumberGeneration()
+    # asn = number_generation.asn_number_generation(2, 'dev')
+    # print(asn)
+    # lpn = number_generation.lpn_number_generation(envn='qa')
+    # print(lpn)
+    # bol, pro, trailer, seal = number_generation.misc_nbr('dev')
+    # print(bol, pro, trailer, seal)
+    # order = number_generation.order_number_generation(2, 'QA', 'VG')
+    # print(order)
+    shipment = number_generation.create_shipment_number()
+    print(shipment)

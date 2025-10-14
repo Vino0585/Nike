@@ -9,7 +9,7 @@ from Environment.WM_Environment import AWM_Env
 from pathlib import Path
 
 # Set up Logging level and format.
-logging.basicConfig(level=logging.warning(), format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 class iLPN_Search:
@@ -255,7 +255,6 @@ class iLPN_Search:
 
                         # 11. Process and collect the result from the response.
                         ilpn_list = response_data.get('data', [])
-                        print(ilpn_list)
                         if not ilpn_list:
                             logging.info("-> Success, but no ilpn were returned in the response.")
                             continue
@@ -308,9 +307,9 @@ class iLPN_Search:
             logging.info("Script finished, but no results were collected from API call made to iLPN Inventory")
             return
 
-        if not all_ilpn_condition_code_data:
-            logging.info("Script finished, but no results were collected from API call made to iLPN Condition Code")
-            return
+        # if not all_ilpn_condition_code_data:
+        #     logging.info("Script finished, but no results were collected from API call made to iLPN Condition Code")
+        #     return
 
         logging.info(f"Consolidated Search Results")
         try:
