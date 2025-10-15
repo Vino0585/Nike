@@ -2,7 +2,6 @@ import requests
 import pandas as pd
 import logging
 
-from Archive.ImportASNDev import response
 from Outbound.Outbound_Payload_Generation.Create_Shipment_Payload import Create_New_Shipment
 from Environment.Get_Token import Get_Token
 from Environment.WM_Outbound_API_EndPoint import AWM_OB_Env
@@ -36,7 +35,7 @@ class Create_Shipment:
         extracted_report_data = []
         output_data = []  # This will hold one dictionary per successful payload
 
-        for environment, plant, payloads in payload_by_env_by_plant.items():
+        for (environment, plant), payloads in payload_by_env_by_plant.items():
             logging.info(f"Processing {len(payloads)} Payloads for Environment: {environment.upper()}")
             if not payloads:
                 logging.error(f"WARNING: Skipping empty payload list for environment {environment.upper()}.")
@@ -79,9 +78,11 @@ class Create_Shipment:
                         response_data = response.json()
                         logging.info(f"Success: {response_data.get('success', 'N/A')}")
 
+
                         # -- DATA COLLECTION FOR OUTPUT FILES --
                         shipment_id = payload_to_send.get('ShipmentId')
                         plant = plant_id_for_token
+                        logging.info(f"Suceesfully created the ShipmentID: {shipment_id}")
 
                         output_row = {
                             "SHIPMENT_ID": shipment_id,
@@ -112,7 +113,7 @@ class Create_Shipment:
                 output_filepath = output_dir / "Outbound_Worksheet.xlsx"
 
                 with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                    shipment_df = report_df.rename(columns={"SHIPMENT_ID": "ShipmentId", "PLANT": "Plant", "ENVN": "Environment"})
+                    shipment_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "SHIPMENT_ID": "ShipmentId"})
                     shipment_df.to_excel(writer, sheet_name='Shipment_ID',  index=False)
                     logging.info(f"Successfully created multi-sheet report: {output_filepath}")
             except Exception as e:

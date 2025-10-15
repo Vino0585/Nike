@@ -15,6 +15,8 @@ class AWM_OB_Env():
     def get_program_url(self, program):
         if program == 'OrderCreation':
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/originalOrder/save"
+        elif program == 'CreateShipment':
+            self.url = f"https://{self.host_name}/shipment/api/ServiceDefinition/invoke/NIKEINT10CreateShipmentCS"
         else:
             self.url = None  # Set to None if no match
 
