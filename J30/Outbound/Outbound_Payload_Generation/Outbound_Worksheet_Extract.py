@@ -150,6 +150,23 @@ class Outbound_Worksheet:
 
         return self.all_create_shipment_parameters
 
+    def add_order_to_shipment_extract_parameter(self):
+        self.all_add_order_to_shipment_parameters = []
+        if not self._excel_open(input_sheet_name='OriginalOrderInput'):
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            return False
+
+        add_order_extract = {}
+        original_order_entry = self.list_of_entry
+
+        if not self._excel_open(input_sheet_name='Shipment_ID'):
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            return False
+
+        shipment_id_info = self.list_of_entry
+
+
+
 
 if __name__ == '__main__':
     Work = Outbound_Worksheet()

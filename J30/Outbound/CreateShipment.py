@@ -82,12 +82,19 @@ class Create_Shipment:
                         # -- DATA COLLECTION FOR OUTPUT FILES --
                         shipment_id = payload_to_send.get('ShipmentId')
                         plant = plant_id_for_token
+                        carrier_id = payload_to_send.get("AssignedCarrierId")
+                        service_level_id = payload_to_send.get("AssignedServiceLevelId")
+                        mode_id = payload_to_send.get("AssignedModeId")
+
                         logging.info(f"Suceesfully created the ShipmentID: {shipment_id}")
 
                         output_row = {
-                            "SHIPMENT_ID": shipment_id,
                             "PLANT": plant,
-                            "ENVN": environment
+                            "ENVN": environment,
+                            "SHIPMENT_ID": shipment_id,
+                            "Carrier": carrier_id,
+                            "Service_Level": service_level_id,
+                            "Mode": mode_id
                         }
                         output_data.append(output_row)
 
@@ -113,7 +120,9 @@ class Create_Shipment:
                 output_filepath = output_dir / "Outbound_Worksheet.xlsx"
 
                 with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                    shipment_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "SHIPMENT_ID": "ShipmentId"})
+                    shipment_df = report_df.rename(
+                        columns={"PLANT": "Plant", "ENVN": "Environment", "SHIPMENT_ID": "ShipmentId",
+                                 "CARRIER": "Carrier", "SERVICE_LEVEL": "ServiceLevel", "MODE": "Mode"})
                     shipment_df.to_excel(writer, sheet_name='Shipment_ID',  index=False)
                     logging.info(f"Successfully created multi-sheet report: {output_filepath}")
             except Exception as e:

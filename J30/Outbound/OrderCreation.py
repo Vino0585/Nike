@@ -102,7 +102,6 @@ class Order_Creation:
                             }
                             extracted_report_data.append(report_entry)
 
-
                         # 2. Data for input sheet (Outbound_Worksheet.xlsx)
                         # This creates one row per successful payload.
 
@@ -145,7 +144,7 @@ class Order_Creation:
 
 
         if output_data:
-            logging.info("Generating Master Data information in Output_Worksheet excel file")
+            logging.info("Generating Original Order Data information in Output_Worksheet excel file")
             try:
                 report_df = pd.DataFrame(output_data)
                 output_dir = Path("../Input_files")
@@ -154,10 +153,10 @@ class Order_Creation:
 
                 with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
                     order_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ORDER_ID": "OrderID"})
-                    order_df.to_excel(writer, sheet_name='MasterInput', index=False)
-                    logging.info(f"Successfully created multi-sheet report: {output_filepath}")
+                    order_df.to_excel(writer, sheet_name='OriginalOrderInput', index=False)
+                    logging.info(f"Successfully created original order report: {output_filepath}")
             except Exception as e:
-                logging.error(f"ERROR: Failed to create multi-sheet Excel report. Error: {e}")
+                logging.error(f"ERROR: Failed to create original order Excel report. Error: {e}")
         else:
             logging.info("No data was successfully processed to generate an input sheet.")
 
