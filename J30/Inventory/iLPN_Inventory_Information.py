@@ -320,11 +320,11 @@ class iLPN_Search:
 
             # Sort the DataFrames for consistent and readable output.
             if not result_receiving_df.empty:
-                result_receiving_df = result_receiving_df.sort_values(by=['ASN_ID', 'iLPN_ID'])
+                result_receiving_df = result_receiving_df.sort_values(by=['ASN_ID', 'ItemID'])
             if not result_inventory_df.empty:
-                result_inventory_df = result_inventory_df.sort_values(by=['ASN_ID', 'iLPN_ID'])
+                result_inventory_df = result_inventory_df.sort_values(by=['ASN_ID', 'ItemID'])
             if not result_condition_df.empty:
-                result_condition_df = result_condition_df.sort_values(by=['ASN_ID', 'iLPN_ID'])
+                result_condition_df = result_condition_df.sort_values(by=['ASN_ID', 'ItemID'])
 
             # 1. Print the results to the console in a clean table format
             if not result_receiving_df.empty:
