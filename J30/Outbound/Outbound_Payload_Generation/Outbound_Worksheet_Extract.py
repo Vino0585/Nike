@@ -158,6 +158,9 @@ class Outbound_Worksheet:
 
         add_order_extract = {}
         original_order_entry = self.list_of_entry
+        order_ids = []
+        for entry in original_order_entry:
+            order_ids.append(entry.get('OrderID'))
 
         if not self._excel_open(input_sheet_name='Shipment_ID'):
             logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
@@ -165,19 +168,33 @@ class Outbound_Worksheet:
 
         shipment_id_info = self.list_of_entry
 
+        plant = original_order_entry[0]["Plant"]
+        environment = original_order_entry[0]["Environment"]
+        shipment_id = shipment_id_info[0]["ShipmentId"]
+        carrier_id = shipment_id_info[0]["Carrier"]
+        mode = shipment_id_info[0]["Mode"]
+        service_level = shipment_id_info[0]["Service_Level"]
+        order_ids = order_ids
 
+        add_order_extract = {
+            'Plant': plant,
+            'Environment': environment,
+            'Shipment_ID': shipment_id,
+            'Carrier_ID': carrier_id,
+            'Order_ID': order_ids,
+            'Mode': mode,
+            'Service_Level': service_level
+        }
+
+        self.all_add_order_to_shipment_parameters.append(add_order_extract)
+        return self.all_add_order_to_shipment_parameters
 
 
 if __name__ == '__main__':
     Work = Outbound_Worksheet()
-    payload = Work.create_order_extract_parameters()
-    print(payload)
-    create_shipment = Work.create_new_shipment_extract_parameter()
-    print(create_shipment)
-
-
-
-
-
-
-
+    # payload = Work.create_order_extract_parameters()
+    # print(payload)
+    # create_shipment = Work.create_new_shipment_extract_parameter()
+    # print(create_shipment)
+    add_order_to_shipment = Work.add_order_to_shipment_extract_parameter()
+    print(add_order_to_shipment)

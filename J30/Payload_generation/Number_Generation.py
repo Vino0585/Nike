@@ -91,6 +91,11 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         return self.generated_shipment_ids
 
+    def loading_group_number(self):
+        self.generated_loading_group_ids = (
+            f"VL{datetime.today().strftime('%m%d%y')}{random.randint(100, 999)}"
+        )
+        return self.generated_loading_group_ids
 
 if __name__ == '__main__':
     # # To execute this class to check on in the later stage.
@@ -103,5 +108,8 @@ if __name__ == '__main__':
     # print(bol, pro, trailer, seal)
     # order = number_generation.order_number_generation(2, 'QA', 'VG')
     # print(order)
-    shipment = number_generation.create_shipment_number()
-    print(shipment)
+    # shipment = number_generation.create_shipment_number()
+    # print(shipment)
+    # loading = number_generation.loading_group_number()
+    # print(loading)
+
