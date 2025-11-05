@@ -17,7 +17,9 @@ class AWM_OB_Env():
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/originalOrder/save"
         elif program == 'CreateShipment':
             self.url = f"https://{self.host_name}/shipment/api/ServiceDefinition/invoke/NIKEINT10CreateShipmentCS"
+        elif program == "AddOrderToShipment":
+            self.url = f"https://{self.host_name}/dcorder/api/ServiceDefinition/invoke/NIKEINT10OriginalOrderUpdateCS"
         else:
-            self.url = None  # Set to None if no match
+            self.url = None
 
         return self.url

@@ -189,6 +189,29 @@ class Outbound_Worksheet:
         self.all_add_order_to_shipment_parameters.append(add_order_extract)
         return self.all_add_order_to_shipment_parameters
 
+    def search_parent_order(self):
+        self.all_search_order = []
+        if not self._excel_open(input_sheet_name='OriginalOrderInput'):
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            return False
+
+        original_order_entry = self.list_of_entry
+        order_ids = []
+        for entry in original_order_entry:
+            order_ids.append(entry.get('OrderID'))
+
+        plant = original_order_entry[0]["Plant"]
+        environment = original_order_entry[0]["Environment"]
+
+        search_order = {
+            'Plant': plant,
+            'Environment': environment,
+            'Order_IDs': order_ids
+        }
+
+        self.all_search_order.append(search_order)
+        return self.all_search_order
+
 
 if __name__ == '__main__':
     Work = Outbound_Worksheet()
@@ -196,5 +219,7 @@ if __name__ == '__main__':
     # print(payload)
     # create_shipment = Work.create_new_shipment_extract_parameter()
     # print(create_shipment)
-    add_order_to_shipment = Work.add_order_to_shipment_extract_parameter()
-    print(add_order_to_shipment)
+    # add_order_to_shipment = Work.add_order_to_shipment_extract_parameter()
+    # print(add_order_to_shipment)
+    # search_parent_order = Work.search_parent_order()
+    # print(search_parent_order)
