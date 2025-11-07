@@ -38,15 +38,15 @@ class Routing_Task_Completed_Payload:
 
             locn = ''
             if diversion_code == 'FIRST_SKU':
-                locn = '1503000000'
+                locn = '1903000000'
             elif diversion_code == 'MIXED_SKU':
-                locn = '1503000000'
+                locn = '1903000000'
             elif diversion_code == 'IN_VAS':
-                locn = '1507000000'
+                locn = '1907000000'
             elif diversion_code == 'QA':
-                locn = '1502000000'
+                locn = '1904000000'
             elif diversion_code == 'MEASUREMENT':
-                locn = '1506000000'
+                locn = '1906000000'
 
             if diversion_code != 'STORAGE':
                 seq = f"{dt.datetime.now().strftime("%Y%m%d%H")}{random.randint(1000, 9999)}"

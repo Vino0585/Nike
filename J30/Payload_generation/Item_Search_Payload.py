@@ -69,22 +69,25 @@ class ItemPayload():
             # --- Priority 2: Search by other criteria ---
             query_string = None
 
+
             if pd.notna(item_no_dims):
                 if pd.notna(product_type):
                     product_code = PRODUCT_CODE_MAP.get(product_type)
-                    query_string = (f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL AND "
-                                    f"Extended.DivisionCode = {product_code}")
+                    query_string = (f"Extended.DivisionCode = {product_code} AND Extended.MarkForCubiscan = NULL AND "
+                                    f"Length = NULL AND Width = NULL AND Height = NULL AND Volume = NULL")
                 else:
-                    query_string = f"Volume = NULL AND Length = NULL AND Extended.MarkForCubiscan = NULL"
+                    query_string = (f"Extended.MarkForCubiscan = NULL AND Length = NULL AND Width = NULL AND "
+                                    f"Height = NULL AND Volume = NULL")
 
             elif pd.notna(product_type):
                 product_code = PRODUCT_CODE_MAP.get(product_type)
                 if product_code is not None:
-                    query_string = f"Extended.DivisionCode = {product_code} AND Length > 1"
+                    query_string = (f"Extended.DivisionCode = {product_code} AND Length > 1 AND Width > 1 AND "
+                                    f"Height > 1 AND Volume > 1")
 
             elif pd.notna(num_of_items):
                 # FIX: Convert object to a query string. "is not null" is a common way to check for existence.
-                query_string = f"Volume != NULL AND Length != NULL"
+                query_string = (f"Length != NULL AND Width != NULL AND Height != NULL AND Volume != NULL")
 
 
             # If any of the criteria above created a query, build the payload
