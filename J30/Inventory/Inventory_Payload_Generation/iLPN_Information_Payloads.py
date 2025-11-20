@@ -167,10 +167,66 @@ class iLPN_Search_Payload:
 
         return all_payloads
 
+    def create_item_inventory_by_location_payload(self):
+
+        if not self.all_search_iLPN_parameters:
+            logging.error("No valid iLPN parameters found, cannot create any payloads.")
+            return []
+
+        all_payloads = []
+        full_payload = {}
+        for entry in self.all_search_iLPN_parameters:
+            item_id = entry['ITEM_IDS']
+            status = entry['STATUS']
+
+            LPN_STATUS_MAP = {
+                'Allocated': 5000,
+                'Not Allocated': 3000,
+            }
+
+            LPN_STATUS = LPN_STATUS_MAP.get(status)
+            if pd.notna(item_id) and str(item_id).strip():
+                item_id_list = str(item_id).split(';')
+                for item_id in item_id_list:
+                    item_id = item_id.strip()
+                    if not item_id:
+                        logging.error("Item ID not found, cannot create any payloads.")
+
+                    payload = {
+                        "ViewName": "InventoryGrid",
+                        "Filters": [
+                            {
+                                "ViewName": "InventoryDetails", "AttributeId": "ItemId", "DataType": None,
+                                "requiredFilter": "False", "Operator": "=", "FilterValues": [f"{item_id}"]
+                            },
+                            {
+                                "ViewName": "InventoryGrid", "AttributeId": "Status", "DataType": None,
+                                "requiredFilter": "False", "Operator": "=", "FilterValues": [LPN_STATUS]
+                            },
+                            {
+                                "ViewName": "InventoryGrid", "AttributeId": "Zone", "DataType": None,
+                                "requiredFilter": "False", "Operator": "=", "FilterValues": ["24"]
+                            }
+                        ],
+                        "Page": 0, "TotalCount": -1, "SortOrder": "asc", "TimeZone": "Japan",
+                        "EnableMaxCountLimit": "true", "MaxCountLimit": 25, "Size": 10
+                    }
+                    if payload:
+                        all_payloads.append(payload)
+
+                full_payload = {
+                    "envn": entry.get("Environment"),
+                    "plant": entry.get("Plant"),
+                    "payload": all_payloads
+                }
+
+            return full_payload
+
 
 if __name__ == '__main__':
     py = iLPN_Search_Payload()
     import pprint
-    pprint.pprint(py.create_lpn_receiving_payload())
-    pprint.pprint(py.create_lpn_inventory_payload())
-    pprint.pprint(py.create_ilpn_condition_code_payload())
+    # pprint.pprint(py.create_lpn_receiving_payload())
+    # pprint.pprint(py.create_lpn_inventory_payload())
+    # pprint.pprint(py.create_ilpn_condition_code_payload())
+    pprint.pprint(py.create_item_inventory_by_location_payload())

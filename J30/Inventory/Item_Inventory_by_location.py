@@ -1,0 +1,72 @@
+import requests
+import pandas as pd
+import logging
+
+from collections import defaultdict
+from Environment.Get_Token import Get_Token
+from Environment.WM_Environment import AWM_Env
+from Inventory.Inventory_Payload_Generation.iLPN_Information_Payloads import iLPN_Search_Payload
+from pathlib import Path
+
+# Set up Logging level and format
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+
+class item_inventory_by_location:
+
+    def item_inventory_by_location(self):
+        # Create an instance of the generator and assigning the function to variable.
+        item_payload = iLPN_Search_Payload()
+
+        item_inventory_payload = item_payload.create_item_inventory_by_location_payload()
+        bearer_token = ''
+        all_item_inventory_data = []
+
+        if not item_inventory_payload:
+            logging.error("No payloads were generated. Please check your payload generator logic and excel"
+                          " input and generator logic.")
+            return
+
+        #1. Get all variables from payload
+
+        env = item_inventory_payload['envn']
+        plant_id = item_inventory_payload['plant']
+        payload_to_send = item_inventory_payload['payload']
+
+        if not (env and plant_id and payload_to_send):
+            logging.error(f"--> WARNING: Skipping malformed package: {item_inventory_payload}")
+            return
+
+        try:
+            # 2. Get token once for the entire environment batch
+            token_handler = Get_Token(env.lower(), plant=plant_id)
+            bearer_token = token_handler.get_bearer()
+            if not bearer_token:
+                logging.error(f"--> FATAL: Could not get token for {env.upper()}. "
+                              f"Skipping this environment.")
+                return
+            logging.info(f"Successfully retrieved token for {env.upper()} environment.")
+
+            env_handler = AWM_Env()
+
+            # 3. Get URL for this payloads specific plant
+            env_handler.get_wm_host(host=env.lower(), facility=str(plant_id))
+            url_value = env_handler.get_program_url(program='Item_Inventory_By_Location')
+            logging.info(f"Sending payload to URL: {url_value}")
+
+            # 4. Build headers
+            headers = {
+                "content-type": "application/json",
+                "organization": str(plant_id),
+                "location": str(plant_id),
+                "authorization": 'Bearer ' + bearer_token
+            }
+
+            # 5. Send the request
+            response = requests.post(url=url_value, headers=headers, json=payload_to_send)
+            response.raise_for_status()
+            response_data = response.json()
+
+
+
+

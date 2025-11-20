@@ -78,8 +78,8 @@ class Inventory_WorkSheet_Extract:
             condition_code_flag = entry_dict.get("Condition_Code_Flag", 'N')
             diversion_codes = entry_dict.get("Diversion_Codes", "N")
             diversion_code_flag = entry_dict.get("Diversion_Code_Flag", 'N')
-            item_ids = entry_dict.get("ITEM(S)", 0)
-            item_flag = entry_dict.get("ITEM_Flag", 'N')
+            item_ids = entry_dict.get("ITEM_IDS", 0)
+            status = entry_dict.get("Status", "Not Allocated")
             location = entry_dict.get("Location", 0)
             location_flag = entry_dict.get("Location_Flag", 'N')
 
@@ -94,8 +94,8 @@ class Inventory_WorkSheet_Extract:
                 "Condition_Code_Flag": condition_code_flag,
                 "Diversion_Codes": diversion_codes,
                 "Diversion_Code_Flag": diversion_code_flag,
-                "ITEM": item_ids,
-                "Item_Flag": item_flag,
+                "ITEM_IDS": item_ids,
+                "STATUS": status,
                 "Location": location,
                 "Location_Flag": location_flag
             }

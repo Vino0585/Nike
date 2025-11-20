@@ -82,8 +82,8 @@ class ItemPayload():
             elif pd.notna(product_type):
                 product_code = PRODUCT_CODE_MAP.get(product_type)
                 if product_code is not None:
-                    query_string = (f"Extended.DivisionCode = {product_code} AND Length > 1 AND Width > 1 AND "
-                                    f"Height > 1 AND Volume > 1")
+                    query_string = (f"Extended.DivisionCode = {product_code} AND Length != NULL AND "
+                                    f"Extended.MarkForCubiscan != NULL")
 
             elif pd.notna(num_of_items):
                 # FIX: Convert object to a query string. "is not null" is a common way to check for existence.

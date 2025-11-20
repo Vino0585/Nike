@@ -38,11 +38,27 @@ class Search_Order_Payload:
                     return []
 
                 order_id_query_value = "','".join(order_ids)
-                query_string = f"OriginalOrderId in ('{order_id_query_value}')"
-
                 payload = {
-                    "Query": query_string,
-                    }
+                            {
+                              "ViewName": "Order",
+                              "Filters": [
+                                {
+                                  "ViewName": "orders",
+                                  "AttributeId": "OrderLine.OriginalOrderId",
+                                  "Operator": "=",
+                                  "FilterValues": [
+                                    order_id_query_value
+                                  ]
+                                }
+                              ],
+                              "SortIndicator": None,
+                              "TimeZone": "Japan",
+                              "MaxCountLimit": 100,
+                              "ComponentName": "com-manh-cp-dcorder",
+                              "Size": 10,
+                              "Sort": "CreatedTimestamp"
+                            }
+                        }
 
                 final_payload = {
                     'Plant': plant,
@@ -62,7 +78,7 @@ class Search_Order_Payload:
             return []
 
         parent_order_data = []
-        for order_data in response_data.get("data", []):
+        for order_data in response_data.get("data['Result']", []):
             row = {
                 "OrderId": order_data.get("OrderId")
             }

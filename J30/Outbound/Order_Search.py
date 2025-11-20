@@ -1,10 +1,10 @@
 import requests
 import logging
-from Environment.Get_Token import Get_Token
-from Environment.WM_Environment import AWM_Env
 from pathlib import Path
+from Environment.Get_Token import Get_Token
+from Environment.WM_Outbound_API_EndPoint import AWM_OB_Env
 import pandas as pd
-from Outbound_Payload_Generation import Search_Order_Payload
+from Outbound.Outbound_Payload_Generation.Search_Order_Payload import Search_Order_Payload
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -12,7 +12,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 class Outbound_Order_Search:
 
-    def search_order_payload(self):
+    def search_parent_order_payload(self):
         order_search_payload = Search_Order_Payload()
         get_payload = order_search_payload.parse_parent_order_search()
 
@@ -25,7 +25,7 @@ class Outbound_Order_Search:
 
         for i, payload in enumerate(get_payload):
             envn = payload['Environment']
-            plant_id = payload['Plant']
+            plant_id = str(payload['Plant'])
             order_payload = payload['Payload']
 
             logging.info(f"Processing Task {i+1}/{len(get_payload)}: Plant {plant_id} ({envn.upper()})")
@@ -37,11 +37,10 @@ class Outbound_Order_Search:
                 logging.info("Successfully retrieved token.")
 
                 # --- 2. URL Setup ---
-                awm_env = AWM_Env()
+                awm_env = AWM_OB_Env()
                 awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
-                program_name = Path(__file__).stem
-                api_url = awm_env.get_program_url(program=program_name)
-                logging.info(f"Target URL: {api_url}")
+                api_url = awm_env.get_program_url(program='ParentOrderSearch')
+                logging.info(f"Sending payload to URL: {api_url}")
 
                 # --- 3. Request Headers & Payload ---
                 headers = {
