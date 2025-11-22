@@ -76,19 +76,20 @@ class ItemPayload():
 
 
             # Helper function to create the final packaged payload
-            def create_package(query_string):
-                payload = ''
+            def create_package(query):
                 return {
                     "envn": params.get("environment"),
                     "plant": params.get("plant"),
-                    "payload": payload
+                    "payload": query
                 }
 
-            # --- Priority 1: Search by specific Item IDs ---
+            query_string = {}
+
+            # --- Condition 1: Search by specific Item IDs ---
             if pd.notna(item_ids_string) and str(item_ids_string).strip():
                 item_id_list = str(item_ids_string).split(';')
                 quoted_item_ids = ",".join([f"'{item.strip()}'" for item in item_id_list if item.strip()])
-                query = {
+                query_string = {
                             "ViewName": "Item",
                             "Filters": [
                                 {
@@ -101,49 +102,119 @@ class ItemPayload():
                             "Size": size,
                         }
 
-                all_payloads.append(create_package(query))
-                continue
-
-
-            # --- Priority 2: Search by other criteria ---
-
-            query_string = None
-            if pd.notna(item_no_dims):
+            # --- Condition 2: Search by specific Item IDs that has no dims---
+            elif pd.notna(item_no_dims):
+                # --- Condition 2.1: Search by specific Item IDs that has no dims but with specific product type---
                 if pd.notna(product_type):
                     product_code = PRODUCT_CODE_MAP.get(product_type)
-
                     query_string = {
-                                        "ViewName": "Item",
-                                        "Filters": [
-                                            {
-                                                "ViewName": "Item", "AttributeId": "Extended.DivisionCode", "Operator": "=",
-                                                "FilterValues": [product_code]
-                                            }
-                                        ],
-                                        "SortOrder": "asc", "SortIndicator": "chevron-up", "TimeZone": "Japan",
-                                        "ComponentName": "com-manh-cp-item-master", "MaxCountLimit": size,
-                                        "Size": 1,
-                                        "Sort": "ItemId"
-                                    }
-
-                    query_string = (f"Extended.DivisionCode = {product_code} AND Extended.MarkForCubiscan = NULL AND "
-                                    f"Length = NULL AND Width = NULL AND Height = NULL AND Volume = NULL")
+                                "ViewName": "Item",
+                                "Filters": [
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Extended.DivisionCode", "Operator": "=",
+                                        "FilterValues": [product_code]
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Extended.MarkForCubiscan",
+                                        "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Length",
+                                        "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Width",
+                                        "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Height",
+                                        "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Volume",
+                                        "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                ],
+                                "SortOrder": "asc", "SortIndicator": "chevron-up", "TimeZone": "Japan",
+                                "ComponentName": "com-manh-cp-item-master", "MaxCountLimit": size,
+                                "Size": size, "Sort": "ItemId"
+                            }
+                # --- Condition 2.2: Search by specific Item IDs that has no dims but without specific product type---
                 else:
-                    query_string = (f"Extended.MarkForCubiscan = NULL AND Length = NULL AND Width = NULL AND "
-                                    f"Height = NULL AND Volume = NULL")
+                    query_string = {
+                                "ViewName": "Item",
+                                "Filters": [
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Extended.MarkForCubiscan", "Operator": "=",
+                                        "FilterValues": "NULL"
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Length", "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Width", "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Height", "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Volume", "Operator": "=", "FilterValues": "NULL"
+                                    },
+                                ],
+                                "SortOrder": "asc", "SortIndicator": "chevron-up", "TimeZone": "Japan",
+                                "ComponentName": "com-manh-cp-item-master", "MaxCountLimit": size, "Size": size,
+                                "Sort": "ItemId"
+                            }
 
+            # --- Condition 3: Search by specific product ids for the item search ---
             elif pd.notna(product_type):
                 product_code = PRODUCT_CODE_MAP.get(product_type)
                 if product_code is not None:
-                    query_string = (f"Extended.DivisionCode = {product_code} AND Length != NULL AND "
-                                    f"Extended.MarkForCubiscan != NULL")
+                    query_string = {
+                                "ViewName": "Item",
+                                "Filters": [
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Extended.DivisionCode", "Operator": "=",
+                                        "FilterValues": product_code
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Length", "Operator": "!=",
+                                        "FilterValues": None
+                                    },
+                                    {
+                                        "ViewName": "Item", "AttributeId": "Extended.MarkForCubiscan", "Operator": "!=",
+                                        "FilterValues": None
+                                    }
+                                ],
+                                "SortOrder": "asc", "SortIndicator": "chevron-up", "TimeZone": "Japan",
+                                "ComponentName": "com-manh-cp-item-master", "Sort": "ItemId",
+                                "Size": size,
+                            }
 
+            # --- Condition 4: Search by count of items needed ---
             elif pd.notna(num_of_items):
-                # FIX: Convert object to a query string. "is not null" is a common way to check for existence.
-                query_string = (f"Length != NULL AND Width != NULL AND Height != NULL AND Volume != NULL")
+                query_string = {
+                    "ViewName": "Item",
+                    "Filters": [
+                        {
+                            "ViewName": "Item", "AttributeId": "Length", "Operator": "!=", "FilterValues": "NULL"
+                        },
+                        {
+                            "ViewName": "Item", "AttributeId": "Width", "Operator": "!=", "FilterValues": "NULL"
+                        },
+                        {
+                            "ViewName": "Item", "AttributeId": "Height", "Operator": "!=", "FilterValues": "NULL"
+                        },
+                        {
+                            "ViewName": "Item", "AttributeId": "Volume", "Operator": "!=", "FilterValues": "NULL"
+                        },
+                    ],
+                    "SortOrder": "asc", "SortIndicator": "chevron-up", "TimeZone": "Japan",
+                    "ComponentName": "com-manh-cp-item-master", "MaxCountLimit": size, "Size": size,
+                    "Sort": "ItemId"
+                }
 
-
-            # If any of the criteria above created a query, build the payload
+            # --- return the above conditions to the final payload. ---
             if query_string:
                 all_payloads.append(create_package(query_string))
 
@@ -154,5 +225,4 @@ if __name__ == '__main__':
     py = ItemPayload()
     # Use pprint for more readable output of complex objects
     import pprint
-
     pprint.pprint(py.create_item_search_payloads())
