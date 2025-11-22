@@ -82,18 +82,23 @@ class Outbound_Order_Search:
                 output_filepath = output_dir / "Outbound_Worksheet.xlsx"
 
                 with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                    output_df = df_order_search.rename(columns={"PLANT": '1081', "ENVN": "Environment", "ORDER_ID": "OrderID"})
-                    output_df.to_excel(writer, sheet_name='ParentOrder', index=False)
-                    logging.info(f"Sucessfully exported parent order to Excel file: {output_filepath}")
+                    output_df = df_order_search.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "PARENT_ORDER_ID": "OrderId"})
+                    
+                    # Reorder columns to your desired sequence
+                    desired_order = ["Plant", "Environment", "OrderId"]
+                    output_df = output_df[desired_order]
+                    
+                    output_df.to_excel(writer, sheet_name='Parent_Order', index=False)
+                    logging.info(f"Successfully exported parent order to Excel file: {output_filepath}")
 
             except Exception as e:
                 logging.error(f"An unexpected error occurred: {e}")
 
         else:
             logging.info("No parent order data available therefore didn't export any data")
+            return None
 
 
 if __name__ == '__main__':
     search_order = Outbound_Order_Search()
-    search_order.search_order_payload()
-
+    search_order.search_parent_order_payload()

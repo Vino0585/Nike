@@ -193,7 +193,9 @@ class Worksheet:
                 "num_of_items_to_search": entry.get("Num_of_Items_to_search"),
                 "search_by_item": entry.get("Search_by_Item"),
                 "search_by_product_type": entry.get("Search_by_Product_Type"),
-                "search_by_missing_dims": entry.get("Search_by_Missing_Dims")
+                "search_by_missing_dims": entry.get("Search_by_Missing_Dims"),
+                "search_by_style": entry.get("Search_by_Style"),
+                "search_by_color": entry.get("Search_by_Color")
             }
             all_item_parameters.append(params)
 
@@ -604,31 +606,31 @@ class Worksheet:
         return self.all_exception_lpn_parameter
 
 
-# Work = Worksheet()
-# payload = Work.get_lpn_for_routing_task_complete()
-# print(payload)
-# payload = Work.extract_lpn_list()
-# print(payload)
-# Work = Worksheet()
-# # # payload = Work.create_asn_extract_parameters()
-# # # print(payload)
-# # payload = Work.search_item_extract_parameters()
-# # print(payload)
-# payload = Work.search_asn_extract_parameters()
-# print(payload)
-# # payload = Work.inbound_delivery_worksheet_extract()
-# # print(payload)
-# # payload = Work.goods_holder_weighed()
-# # print(payload)
-# # payload = Work.putaway_task_complete()
-# # print(payload)
-# # payload = Work.verify_asn_worksheet_extract()
-# # print(payload)
-# payload = Work.extract_mhe_journal_info()
-# print(payload)
-# payload = Work.extract_master_sheet_from_worksheet()
-# print(payload)
-
+if __name__ == '__main__':
+    Work = Worksheet()
+    import pprint
+    # payload = Work.create_asn_extract_parameters()
+    # print(payload)
+    # payload = Work.search_item_extract_parameters()
+    # pprint.pprint(payload)
+    # payload = Work.search_asn_extract_parameters()
+    # print(payload)
+    # payload = Work.inbound_delivery_worksheet_extract()
+    # print(payload)
+    # payload = Work.goods_holder_weighed()
+    # print(payload)
+    # payload = Work.putaway_task_complete()
+    # print(payload)
+    # payload = Work.verify_asn_worksheet_extract()
+    # print(payload)
+    # payload = Work.extract_mhe_journal_info()
+    # print(payload)
+    # payload = Work.extract_master_sheet_from_worksheet()
+    # print(payload)
+    # payload = Work.get_lpn_for_routing_task_complete()
+    # print(payload)
+    # payload = Work.extract_lpn_list()
+    # print(payload)
 
 # self.plant = None
 # self.num_of_asn = 0

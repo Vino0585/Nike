@@ -221,5 +221,5 @@ if __name__ == '__main__':
     # print(create_shipment)
     # add_order_to_shipment = Work.add_order_to_shipment_extract_parameter()
     # print(add_order_to_shipment)
-    # search_parent_order = Work.search_parent_order()
-    # print(search_parent_order)
+    search_parent_order = Work.search_parent_order()
+    print(search_parent_order)

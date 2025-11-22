@@ -39,7 +39,6 @@ class Search_Order_Payload:
 
                 order_id_query_value = "','".join(order_ids)
                 payload = {
-                            {
                               "ViewName": "Order",
                               "Filters": [
                                 {
@@ -58,7 +57,6 @@ class Search_Order_Payload:
                               "Size": 10,
                               "Sort": "CreatedTimestamp"
                             }
-                        }
 
                 final_payload = {
                     'Plant': plant,
@@ -78,9 +76,12 @@ class Search_Order_Payload:
             return []
 
         parent_order_data = []
-        for order_data in response_data.get("data['Result']", []):
+        results = response_data.get("data", {}).get("Results", [])
+        for order_data in results:
             row = {
-                "OrderId": order_data.get("OrderId")
+                "OrderId": order_data.get('OrderId'),
+                "Plant": order_data.get('OriginFacilityId'),
+                "Environment": 'QA'
             }
             parent_order_data.append(row)
         return parent_order_data
