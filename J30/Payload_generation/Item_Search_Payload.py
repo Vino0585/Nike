@@ -38,14 +38,17 @@ class ItemPayload():
             num_of_items = params.get("num_of_items_to_search")
             item_no_dims = params.get("search_by_missing_dims")
             product_type = params.get("search_by_product_type")
+            size = 0
 
             # Helper function to create the final packaged payload
-            def create_package(query_string):
+            def create_package(query_string, size):
                 payload = {
                     "Query": query_string,
                     "Template": template_structure,
-                    "Size": int(num_of_items or 1),
-                    "Page": random.randint(1, 5)
+                    "Size": size,
+                    "Page": random.randint(1, 5),
+                    "MaxCountLimit": size,
+                    "EnableMaxCountLimit": True,
                 }
                 return {
                     "envn": params.get("environment"),
@@ -56,6 +59,7 @@ class ItemPayload():
             # --- Priority 1: Search by specific Item IDs ---
             if pd.notna(item_ids_string) and str(item_ids_string).strip():
                 item_id_list = str(item_ids_string).split(';')
+                size = len(item_id_list)
                 for item in item_id_list:
                     item_id = item.strip()
                     if not item_id:
@@ -63,36 +67,40 @@ class ItemPayload():
 
                     # Consistently create the full package for every payload
                     query = f"'Query': ItemId = '{item_id}'"
-                    all_payloads.append(create_package(query))
+                    all_payloads.append(create_package(query, size))
                 continue
 
             # --- Priority 2: Search by other criteria ---
             query_string = None
 
 
-            if pd.notna(item_no_dims):
+            if pd.notna(item_no_dims) and pd.notna(num_of_items):
                 if pd.notna(product_type):
                     product_code = PRODUCT_CODE_MAP.get(product_type)
                     query_string = (f"Extended.DivisionCode = {product_code} AND Extended.MarkForCubiscan = NULL AND "
                                     f"Length = NULL AND Width = NULL AND Height = NULL AND Volume = NULL")
+                    size = int(num_of_items)
                 else:
                     query_string = (f"Extended.MarkForCubiscan = NULL AND Length = NULL AND Width = NULL AND "
                                     f"Height = NULL AND Volume = NULL")
+                    size = int(num_of_items)
 
-            elif pd.notna(product_type):
+
+            elif pd.notna(product_type) and pd.notna(num_of_items):
                 product_code = PRODUCT_CODE_MAP.get(product_type)
                 if product_code is not None:
                     query_string = (f"Extended.DivisionCode = {product_code} AND Length != NULL AND "
                                     f"Extended.MarkForCubiscan != NULL")
+                    size = int(num_of_items)
 
             elif pd.notna(num_of_items):
-                # FIX: Convert object to a query string. "is not null" is a common way to check for existence.
+                size = int(num_of_items)
                 query_string = (f"Length != NULL AND Width != NULL AND Height != NULL AND Volume != NULL")
 
 
             # If any of the criteria above created a query, build the payload
             if query_string:
-                all_payloads.append(create_package(query_string))
+                all_payloads.append(create_package(query_string, size))
 
         return all_payloads
 
