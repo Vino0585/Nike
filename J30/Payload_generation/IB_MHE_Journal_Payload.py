@@ -96,7 +96,8 @@ class IB_MHE_Journal_Payload:
         return self.all_mhe_journal_payloads
 
 
-# initiation = IB_MHE_Journal_Payload()
-# payload = initiation.create_mhe_journal_payloads()
-# for load in payload:
-#     print(json.dumps(load["MHEJournalPayload"], indent=2))
+if __name__ == "__main__":
+    initiation = IB_MHE_Journal_Payload()
+    payload = initiation.create_mhe_journal_payloads()
+    for load in payload:
+        print(json.dumps(load["MHEJournalPayload"], indent=2))
