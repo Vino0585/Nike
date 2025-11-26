@@ -87,5 +87,6 @@ class Putaway_Complete:
         logging.info(f"Total of {len(response_result)} payloads were sent successfully.")
 
 
-# ptwy_complete = Putaway_Complete()
-# ptwy_complete.create_putaway_task_complete()
+if __name__ == "__main__":
+    ptwy_complete = Putaway_Complete()
+    ptwy_complete.create_putaway_task_complete()

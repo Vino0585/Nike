@@ -68,6 +68,12 @@ class Payload_Complete_Payload:
                 iso_timestamp_str = aware_timestamp.isoformat()
                 event_id = str(uuid.uuid4())
                 putaway_each_payload = {}
+
+                if lpn.startswith('T4'):
+                    locn = '2402000000'
+                else:
+                    locn = '2401000000'
+
                 if (failed_flag == 'N' or failed_flag is None or pd.isna(failed_flag)) and (cancelled_flag == 'N' or cancelled_flag is None):
                     putaway_each_payload = {
                         "event": {
@@ -84,7 +90,7 @@ class Payload_Complete_Payload:
                             "taskId": f"IBPW0000000351",
                             "goodsholderId": f"{lpn}",
                             "putawayTaskCompleted": {
-                                "storedAtLogicalStorageLocationId": f"2401000000",
+                                "storedAtLogicalStorageLocationId": f"{locn}",
                                 "substitutionlockActivated": "false",
                                 "confirmedByDeviceId": "12345678"
                             },

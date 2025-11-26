@@ -324,7 +324,7 @@ class iLPN_Search:
             if not result_inventory_df.empty:
                 result_inventory_df = result_inventory_df.sort_values(by=['ASN_ID', 'ItemID'])
             if not result_condition_df.empty:
-                result_condition_df = result_condition_df.sort_values(by=['ASN_ID', 'ItemID'])
+                result_condition_df = result_condition_df.sort_values(by=['ASN_ID', 'iLPN_ID', 'ItemID'])
 
             # 1. Print the results to the console in a clean table format
             if not result_receiving_df.empty:
@@ -353,7 +353,6 @@ class iLPN_Search:
 
         except Exception as e:
             logging.error(f"Failed to generate or export the final report: {e}")
-
 
 if __name__ == "__main__":
     query = iLPN_Search()

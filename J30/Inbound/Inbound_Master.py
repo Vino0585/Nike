@@ -166,9 +166,9 @@ class inbound_master_step:
                 # This case should not be reached due to the start_index check, but is here for safety
                 logging.info("The combination provided doesn't match the requirement.")
 
-
-inbound_master = inbound_master_step()
-inbound_master.get_inbound_master_worksheet_extract()
+if __name__ == "__main__":
+    inbound_master = inbound_master_step()
+    inbound_master.get_inbound_master_worksheet_extract()
 
 
 # Do not delete this as this is the version 1 of my learning.
