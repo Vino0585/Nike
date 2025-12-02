@@ -21,6 +21,8 @@ class AWM_OB_Env():
             self.url = f"https://{self.host_name}/dcorder/api/ServiceDefinition/invoke/NIKEINT10OriginalOrderUpdateCS"
         elif program == "ParentOrderSearch":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/entity/search"
+        elif program == "ParentOrderSearchBackup":
+            self.url = f"https://{self.host_name}/dcorder/api/dcorder/order/search"
         else:
             self.url = None
 

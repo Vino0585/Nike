@@ -4,7 +4,7 @@ from pathlib import Path
 from Environment.Get_Token import Get_Token
 from Environment.WM_Outbound_API_EndPoint import AWM_OB_Env
 import pandas as pd
-from Outbound.Outbound_Payload_Generation.Search_Order_Payload import Search_Order_Payload
+from Outbound.Outbound_Payload_Generation.Search_Order_Payload_Backup import Search_Order_Payload_BackUp
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -13,8 +13,8 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 class Outbound_Order_Search:
 
     def search_parent_order_payload(self):
-        order_search_payload = Search_Order_Payload()
-        get_payload = order_search_payload.parse_parent_order_search()
+        order_search_payload = Search_Order_Payload_BackUp()
+        get_payload = order_search_payload.get_order_info_payload()
 
         if not get_payload:
             logging.error("No payload returned from search order payload file")
@@ -28,7 +28,7 @@ class Outbound_Order_Search:
             plant_id = str(payload['Plant'])
             order_payload = payload['Payload']
 
-            logging.info(f"Processing Task {i+1}/{len(get_payload)}: Plant {plant_id} ({envn.upper()})")
+            logging.info(f"Processing Task {i + 1}/{len(get_payload)}: Plant {plant_id} ({envn.upper()})")
 
             try:
                 # --- 1. Authentication ---
@@ -39,7 +39,7 @@ class Outbound_Order_Search:
                 # --- 2. URL Setup ---
                 awm_env = AWM_OB_Env()
                 awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
-                api_url = awm_env.get_program_url(program='ParentOrderSearch')
+                api_url = awm_env.get_program_url(program='ParentOrderSearchBackup')
                 logging.info(f"Sending payload to URL: {api_url}")
 
                 # --- 3. Request Headers & Payload ---
@@ -54,9 +54,11 @@ class Outbound_Order_Search:
                 response = requests.post(api_url, json=order_payload, headers=headers, timeout=30)
                 response.raise_for_status()
                 response_data = response.json()
+                raw_data = response_data.get("data")
+                logging.info(f"Success: {response_data.get('success', 'N/A')}")
+                extracted_data = order_search_payload.parse_major_order_response(raw_data)
 
                 # --- 5. Process and Collect Response ---
-                extracted_data = order_search_payload.parse_major_order_response(response_data)
                 if extracted_data:
                     logging.info(f"Success: Found {len(extracted_data)} detail rows for this task.")
                     all_results.extend(extracted_data)  # Add results to the master list
@@ -77,17 +79,19 @@ class Outbound_Order_Search:
 
             try:
                 df_order_search = pd.DataFrame(all_results)
+                print(df_order_search)
                 output_dir = Path("../Input_files")
                 output_dir.mkdir(parents=True, exist_ok=True)
                 output_filepath = output_dir / "Outbound_Worksheet.xlsx"
 
                 with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                    output_df = df_order_search.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "PARENT_ORDER_ID": "OrderId"})
-                    
+                    output_df = df_order_search.rename(
+                        columns={"PLANT": "Plant", "ENVN": "Environment", "PARENT_ORDER_ID": "OrderId, "})
+
                     # Reorder columns to your desired sequence
                     desired_order = ["Plant", "Environment", "OrderId"]
                     output_df = output_df[desired_order]
-                    
+
                     output_df.to_excel(writer, sheet_name='Parent_Order', index=False)
                     logging.info(f"Successfully exported parent order to Excel file: {output_filepath}")
 

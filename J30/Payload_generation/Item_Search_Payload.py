@@ -41,12 +41,17 @@ class ItemPayload():
             size = 0
 
             # Helper function to create the final packaged payload
-            def create_package(query_string, size):
+            def create_package(query_string, size, page):
+
+                internal_page = page
+                if internal_page != None:
+                    internal_page = random.randint(1, 5)
+
                 payload = {
                     "Query": query_string,
                     "Template": template_structure,
                     "Size": size,
-                    "Page": random.randint(1, 5),
+                    "Page": internal_page,
                     "MaxCountLimit": size,
                     "EnableMaxCountLimit": True,
                 }
@@ -60,14 +65,15 @@ class ItemPayload():
             if pd.notna(item_ids_string) and str(item_ids_string).strip():
                 item_id_list = str(item_ids_string).split(';')
                 size = len(item_id_list)
+                page = None
                 for item in item_id_list:
                     item_id = item.strip()
                     if not item_id:
                         continue
 
                     # Consistently create the full package for every payload
-                    query = f"'Query': ItemId = '{item_id}'"
-                    all_payloads.append(create_package(query, size))
+                    query = f"ItemId = '{item_id}'"
+                    all_payloads.append(create_package(query, size, page))
                 continue
 
             # --- Priority 2: Search by other criteria ---
