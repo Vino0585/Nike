@@ -1,11 +1,14 @@
+import logging
 import random
 
-from Payload_generation.Worksheet_extract import Worksheet
+from click import style
+
+from Inventory.Inventory_Payload_Generation.Inventory_WorkSheet_Extract import Inventory_WorkSheet_Extract
 import pandas as pd
 
 class ItemPayload():
     def __init__(self):
-        self.worksheet = Worksheet()
+        self.worksheet = Inventory_WorkSheet_Extract()
 
     def create_item_search_payloads(self) -> list:
         """
@@ -38,6 +41,7 @@ class ItemPayload():
             num_of_items = params.get("num_of_items_to_search")
             item_no_dims = params.get("search_by_missing_dims")
             product_type = params.get("search_by_product_type")
+            style = str(params.get("search_by_style"))
             size = 0
 
             # Helper function to create the final packaged payload
@@ -103,6 +107,13 @@ class ItemPayload():
                 size = int(num_of_items)
                 query_string = (f"Length != NULL AND Width != NULL AND Height != NULL AND Volume != NULL")
 
+            elif pd.notna(style):
+                if not style:
+                    logging.error(f"Style {style} not found.")
+                    continue
+                # Consistently create the full package for every payload
+                query_string = f"Style = '{style}'"
+                size = 40
 
             # If any of the criteria above created a query, build the payload
             if query_string:

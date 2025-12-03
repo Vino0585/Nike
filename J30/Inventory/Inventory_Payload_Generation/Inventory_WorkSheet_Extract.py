@@ -4,7 +4,7 @@ from pathlib import Path
 
 from git.index.fun import entry_key
 
-# Setup basic logging to provide better feeback than print()
+# Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
@@ -103,7 +103,60 @@ class Inventory_WorkSheet_Extract:
 
         return self.all_search_iLPN_parameters
 
+    def search_item_extract_parameters(self):
+
+        # Step 1: Open the excel sheet and store the list of entries.
+        if not self._excel_open(input_sheet_name='ItemSearch'):
+            logging.error(f"Error: The input sheet ItemSearch not found in the Excel file.")
+            return []
+
+        if not self.list_of_entry:
+            logging.error("No ItemSearch entries found to extract parameters.")
+            return []
+
+        all_item_parameters = []
+        validation_errors = []
+        # Define which columns are mandatory for each row.
+        required_fields = ["Plant", "Environment"]
+
+        # Enumerate to get the index 'i' for helpful error messages.
+        for i, entry in enumerate(self.list_of_entry):
+            # The Excel row number is the list index + 2 (1 for 0-based index, 1 for the header row).
+            excel_row_num = i + 2
+
+            # Find all missing fields for the current entry
+            missing_fields = [field for field in required_fields if not entry.get(field)]
+
+            if missing_fields:
+                # If any required fields are missing, record an error for this row.
+                error_message = (f"Row {excel_row_num}: Validation failed. "
+                                 f"Required field(s) are empty: {', '.join(missing_fields)}")
+                validation_errors.append(error_message)
+                continue  # Skip to the next entry
+
+            # If the entry is valid, extract its parameters.
+            params = {
+                "plant": entry.get("Plant"),
+                "environment": entry.get("Environment"),
+                "num_of_items_to_search": entry.get("Num_of_Items_to_search"),
+                "search_by_item": entry.get("Search_by_Item"),
+                "search_by_product_type": entry.get("Search_by_Product_Type"),
+                "search_by_missing_dims": entry.get("Search_by_Missing_Dims"),
+                "search_by_style": entry.get("Search_by_Style")
+            }
+            all_item_parameters.append(params)
+
+        # After checking all entries, if we found any errors, print them all.
+        if validation_errors:
+            logging.error("Errors found in 'ItemSearch' sheet. Please correct them:")
+            for error in validation_errors:
+                logging.error(f"{error}")
+            return []  # Return an empty list to indicate failure
+
+        logging.info("All ItemSearch entries validated successfully.")
+        return all_item_parameters
 
 if __name__ == "__main__":
     invn = Inventory_WorkSheet_Extract()
     print(invn.search_iLPN_parameters())
+    print(invn.search_item_extract_parameters())

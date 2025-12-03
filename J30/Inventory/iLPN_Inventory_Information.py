@@ -282,6 +282,7 @@ class iLPN_Search:
                                 'Condition_Code_Desc': response_payload.get('ConditionCodeDescription'),
                                 'UserId': response_payload.get('UpdatedBy'),
                                 'Status': response_payload.get('IlpnStatusDescription'),
+                                'Barcode': inventory.get('PrimaryBarCode')
                             }
                             all_ilpn_condition_code_data.append(condition_code_result_row)
 
