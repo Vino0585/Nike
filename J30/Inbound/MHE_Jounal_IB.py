@@ -2,6 +2,7 @@ import requests
 import logging
 import pandas as pd
 from pathlib import Path
+import json
 
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
@@ -72,10 +73,16 @@ class MHE_Journal_Inbound:
                         # 11. Process and collect the results from the response
                         for entry in resp:
                             header_info = entry.get('headers')
+                            # iLPN = entry.get('Stage1.MessagePayload.data.goodsholderId')
+                            message_payload_str = entry['Stage1']['MessagePayload']
+                            message_payload_dict = json.loads(message_payload_str)
+                            goodsholder_id = message_payload_dict['data']['goodsholderId']
+
                             result_row = {
                                 'Envn': environment.upper(),
                                 'Plant': plant_id,
                                 'MessageID': entry.get('MessageId'),
+                                'LPN_ID': goodsholder_id,
                                 'Message_Type': entry.get('MessageType'),
                                 'Status': entry.get('Status'),
                                 'User': header_info.get('User'),
@@ -105,6 +112,9 @@ class MHE_Journal_Inbound:
         try:
             # Create a pandas DataFrame from the list of result dictionaries
             results_df = pd.DataFrame(all_result_data)
+
+            # Sort the DataFrame by the 'Created_on' column chronologically
+            results_df = results_df.sort_values(by='Created_on')
 
             # 1. Print the results to the console in a clean table format
             print(results_df.to_string(index=False))

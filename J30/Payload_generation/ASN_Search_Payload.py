@@ -151,7 +151,8 @@ class ASN_Search_Payload:
 
         return shipment_id
 
-# if __name__ == "__main__":
-#     initiate = ASN_Search_Payload()
-#     result = initiate.parse_asn_response([{'AsnId': 'VGASN1126QA8010'}])
-#     print(result)
+if __name__ == "__main__":
+    initiate = ASN_Search_Payload()
+    # result = initiate.parse_asn_response([{'AsnId': '0215055465'}])
+    result = initiate.parse_asn_search_worksheet()
+    print(result)

@@ -42,22 +42,22 @@ class ItemPayload():
             item_no_dims = params.get("search_by_missing_dims")
             product_type = params.get("search_by_product_type")
             style = str(params.get("search_by_style"))
+            color = str(params.get("search_by_color"))
             size = 0
 
             # Helper function to create the final packaged payload
             def create_package(query_string, size, page):
 
-                internal_page = page
-                if internal_page != None:
-                    internal_page = random.randint(1, 5)
+                if (page != 0 or page is None):
+                    page = random.randint(1, 5)
 
                 payload = {
                     "Query": query_string,
                     "Template": template_structure,
                     "Size": size,
-                    "Page": internal_page,
+                    "Page": page,
                     "MaxCountLimit": size,
-                    "EnableMaxCountLimit": True,
+                    "EnableMaxCountLimit": "True",
                 }
                 return {
                     "envn": params.get("environment"),
@@ -107,6 +107,15 @@ class ItemPayload():
                 size = int(num_of_items)
                 query_string = (f"Length != NULL AND Width != NULL AND Height != NULL AND Volume != NULL")
 
+            elif pd.notna(style) and pd.notna(color):
+                if not style and color:
+                    logging.error("Style or Color is required and one of them is missing or incorrect")
+                    continue
+
+                query_string = f"Style = {style} AND Color = {color}"
+                size = 40
+                page = 0
+
             elif pd.notna(style):
                 if not style:
                     logging.error(f"Style {style} not found.")
@@ -114,10 +123,11 @@ class ItemPayload():
                 # Consistently create the full package for every payload
                 query_string = f"Style = '{style}'"
                 size = 40
+                page = 5
 
             # If any of the criteria above created a query, build the payload
             if query_string:
-                all_payloads.append(create_package(query_string, size, page=5))
+                all_payloads.append(create_package(query_string, size, page))
 
         return all_payloads
 

@@ -142,7 +142,8 @@ class Inventory_WorkSheet_Extract:
                 "search_by_item": entry.get("Search_by_Item"),
                 "search_by_product_type": entry.get("Search_by_Product_Type"),
                 "search_by_missing_dims": entry.get("Search_by_Missing_Dims"),
-                "search_by_style": entry.get("Search_by_Style")
+                "search_by_style": entry.get("Search_by_Style"),
+                "search_by_color": entry.get("Search_by_Color")
             }
             all_item_parameters.append(params)
 
