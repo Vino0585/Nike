@@ -37,16 +37,16 @@ class inbound_master_step:
         logging.info("ASN Creation Program Started Successfully")
         self.asn_creation.create_asns()
         logging.info("ASN Created Program Completed Successfully")
-        time.sleep(5)
         print("\n")
+        time.sleep(5)
 
     def call_inbound_delivery_program(self):
         # Calling the inbound delivery function
         logging.info("Inbound Delivery Program Started Successfully")
         self.inbound_delivery.send_inbound_delivery()
         logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
-        time.sleep(5)
         print("\n")
+        time.sleep(5)
 
     # def call_exception_flow(self):
     #     logging.info("Exception Flow Started")
@@ -63,32 +63,32 @@ class inbound_master_step:
         logging.info("Goods Holder Announced Program Started Successfully")
         self.goods_holder_announced.send_goods_holder_announced()
         logging.info("Goods Holder Announced Completed Successfully")
-        time.sleep(5)
         print("\n")
+        time.sleep(5)
 
     def call_goods_holder_measured_program(self):
         # Calling the goods holder measured function.
         logging.info("Goods Holder Measured Program Started Successfully")
         self.goods_holder_measured.send_goods_holder_measured()
         logging.info("Goods Holder Measured Program Completed Successfully")
-        time.sleep(5)
         print("\n")
+        time.sleep(5)
 
     def call_putaway_complete_program(self):
         # Calling the Putaway Complete Function.
         logging.info("Putaway Completed Program Started Successfully")
         self.putaway_complete.create_putaway_task_complete()
         logging.info("Putaway Completed Successfully")
-        time.sleep(5)
         print("\n")
+        time.sleep(5)
 
     def call_asn_verify_program(self):
         # Calling the ASN Verification Function
         logging.info("ASN Verification Started Successfully")
         self.asn_verify.send_asn_verify()
         logging.info("ASN Verified Successfully")
-        time.sleep(5)
         print("\n")
+        time.sleep(5)
 
     def call_mhe_journal_inbound_program(self):
         # Calling the Message Journal Program

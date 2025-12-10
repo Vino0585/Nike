@@ -34,9 +34,9 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
             print("Warning: Environment not provided. Cannot generate LPN.")
             return None
 
-        # Generate the LPN and then increment the counter for the next call
+        # Generate the LPN and then increment the counter for the next call {envn.upper()}
         self.generated_lpn_ids = (
-            f'00V{datetime.today().strftime('%m%d%Y')}{envn.upper()}'
+            f'00081{datetime.today().strftime('%m%d%Y')}'
             f'{random.randint(10000, 99999)}{self.lpn_unique_counter:02d}'
         )
         self.lpn_unique_counter += 1

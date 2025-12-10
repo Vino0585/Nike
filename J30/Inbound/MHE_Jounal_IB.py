@@ -76,20 +76,43 @@ class MHE_Journal_Inbound:
                             # iLPN = entry.get('Stage1.MessagePayload.data.goodsholderId')
                             message_payload_str = entry['Stage1']['MessagePayload']
                             message_payload_dict = json.loads(message_payload_str)
-                            goodsholder_id = message_payload_dict['data']['goodsholderId']
+                            try:
+                                events = message_payload_dict['event']['type']
+                            except:
+                                events = message_payload_dict['MessageType']
+
+                            if events in ('GOODSHOLDER_ANNOUNCED', 'GOODSHOLDER_MEASURED', 'PUTAWAY_TASK_COMPLETED',
+                                          'ROUTING_TASK_COMPLETED', 'GOODSHOLDER_DIVERTED_DUE_TO_EXCEPTION',
+                                          'PUTAWAY_TASK_FAILED'):
+                                goodsholder_id = message_payload_dict['data']['goodsholderId']
+                            elif events == 'PTW_DEI_AllocationCreated':
+                                goodsholder_id = message_payload_dict["PutawayTaskDetails"]["TaskDetailDTOs"][0]["SourceContainerId"]
+                            elif events == 'DCI_DEI_RemoveConditionCode':
+                                goodsholder_id = message_payload_dict["IlpnId"]
+                            else:
+                                goodsholder_id = None
+
+                            if goodsholder_id is None:
+                                logging.info(f"Could not obtain the Carton information for {events}")
+                                continue
+
+                            try:
+                                lock_code = message_payload_dict["RemoveConditionCodes"][0]
+                            except (KeyError, IndexError):
+                                lock_code = 'NA'
 
                             result_row = {
                                 'Envn': environment.upper(),
                                 'Plant': plant_id,
                                 'MessageID': entry.get('MessageId'),
                                 'LPN_ID': goodsholder_id,
+                                "Lock": lock_code,
                                 'Message_Type': entry.get('MessageType'),
                                 'Status': entry.get('Status'),
                                 'User': header_info.get('User'),
                                 'Created_on': header_info.get('MessageTimeStamp')
                             }
                             all_result_data.append(result_row)
-
 
                     except requests.exceptions.JSONDecodeError:
                         logging.error(f"ERROR: Failed to decode JSON from response for payload {i + 1}.")
@@ -114,7 +137,7 @@ class MHE_Journal_Inbound:
             results_df = pd.DataFrame(all_result_data)
 
             # Sort the DataFrame by the 'Created_on' column chronologically
-            results_df = results_df.sort_values(by='Created_on')
+            results_df = results_df.sort_values(by=['LPN_ID', 'Created_on'])
 
             # 1. Print the results to the console in a clean table format
             print(results_df.to_string(index=False))

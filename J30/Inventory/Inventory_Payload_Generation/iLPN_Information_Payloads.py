@@ -60,7 +60,7 @@ class iLPN_Search_Payload:
                     if not lpn_id:
                         continue
 
-                    query = f"'Query': LpnId = '{lpn_id}'"
+                    query = f"LpnId = '{lpn_id}'"
                     if query:
                         all_payloads.append(create_receiving_package(query))
 
@@ -115,7 +115,7 @@ class iLPN_Search_Payload:
                     if not lpn_id:
                         continue
 
-                    query = f"'Query': LpnId = '{lpn_id}'"
+                    query = f"IlpnId = '{lpn_id}'"
                     if query:
                         all_payloads.append(create_inventory_package(query))
 
@@ -161,7 +161,7 @@ class iLPN_Search_Payload:
                     if not lpn_id:
                         continue
 
-                    query = f"'Query': Ilpn.IlpnId = '{lpn_id}'"
+                    query = f"Ilpn.IlpnId = '{lpn_id}'"
                     if query:
                         all_payloads.append(create_inventory_package(query))
 
@@ -208,8 +208,7 @@ class iLPN_Search_Payload:
                                 "requiredFilter": "False", "Operator": "=", "FilterValues": ["24"]
                             }
                         ],
-                        "Page": 0, "TotalCount": -1, "SortOrder": "asc", "TimeZone": "Japan",
-                        "EnableMaxCountLimit": "true", "MaxCountLimit": 25, "Size": 10
+                        "Page": 0, "TotalCount": -1, "SortOrder": "asc", "TimeZone": "Japan"
                     }
                     if payload:
                         all_payloads.append(payload)
@@ -226,7 +225,7 @@ class iLPN_Search_Payload:
 if __name__ == '__main__':
     py = iLPN_Search_Payload()
     import pprint
-    # pprint.pprint(py.create_lpn_receiving_payload())
-    # pprint.pprint(py.create_lpn_inventory_payload())
+    pprint.pprint(py.create_lpn_receiving_payload())
+    pprint.pprint(py.create_lpn_inventory_payload())
     # pprint.pprint(py.create_ilpn_condition_code_payload())
-    pprint.pprint(py.create_item_inventory_by_location_payload())
+    # pprint.pprint(py.create_item_inventory_by_location_payload())

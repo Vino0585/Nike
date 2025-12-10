@@ -107,23 +107,23 @@ class ItemPayload():
                 size = int(num_of_items)
                 query_string = (f"Length != NULL AND Width != NULL AND Height != NULL AND Volume != NULL")
 
+            elif pd.notna(style) and color == 'nan':
+                if not style:
+                    logging.error(f"Style {style} not found.")
+                    continue
+                # Consistently create the full package for every payload
+                query_string = f"Style = '{style}'"
+                size = 300
+                page = 5
+
             elif pd.notna(style) and pd.notna(color):
                 if not style and color:
                     logging.error("Style or Color is required and one of them is missing or incorrect")
                     continue
 
                 query_string = f"Style = {style} AND Color = {color}"
-                size = 40
+                size = 300
                 page = 0
-
-            elif pd.notna(style):
-                if not style:
-                    logging.error(f"Style {style} not found.")
-                    continue
-                # Consistently create the full package for every payload
-                query_string = f"Style = '{style}'"
-                size = 40
-                page = 5
 
             # If any of the criteria above created a query, build the payload
             if query_string:
