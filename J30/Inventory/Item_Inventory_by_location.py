@@ -1,18 +1,15 @@
 import requests
-import pandas as pd
 import logging
 
-from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 from Inventory.Inventory_Payload_Generation.iLPN_Information_Payloads import iLPN_Search_Payload
-from pathlib import Path
 
 # Set up Logging level and format
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-class item_inventory_by_location:
+class Item_Inventory_By_Location:
 
     def item_inventory_by_location(self):
         # Create an instance of the generator and assigning the function to variable.
@@ -62,11 +59,23 @@ class item_inventory_by_location:
                 "authorization": 'Bearer ' + bearer_token
             }
 
-            # 5. Send the request
-            response = requests.post(url=url_value, headers=headers, json=payload_to_send)
-            response.raise_for_status()
-            response_data = response.json()
+            response_data = []
+            for payload in payload_to_send:
+                # 5. Send the request
+                response = requests.post(url=url_value, headers=headers, json=payload)
+                response.raise_for_status()
+                response_data.append(response.json())
 
+
+        except Exception as e:
+            logging.error(f"--> FATAL: {e}")
+            return None
+
+        return response_data
+
+if __name__ == "__main__":
+    response = Item_Inventory_By_Location()
+    print(response.item_inventory_by_location())
 
 
 

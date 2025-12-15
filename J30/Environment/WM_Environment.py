@@ -47,6 +47,10 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/dcinventory/api/dcinventory/ilpn/search"
         elif program == 'iLPN_Condition_Code':
             self.url = f"https://{self.host_name}/dcinventory/api/dcinventory/containerConditionVisibility/search"
+        elif program == 'Recall_Retrieval_Task_Complete':
+            self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKERetrievalTaskResultSRCEndpointV1"
+        elif program == 'Item_Inventory_By_Location':
+            self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/inventory/grid/search"
         else:
             self.url = None  # Set to None if no match
 

@@ -2,6 +2,7 @@
 from Inventory.Inventory_Payload_Generation.Inventory_WorkSheet_Extract import Inventory_WorkSheet_Extract
 import logging
 import pandas as pd
+from datetime import date
 
 # Setup basic logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -222,10 +223,74 @@ class iLPN_Search_Payload:
             return full_payload
 
 
+    def extract_item_inventory_by_location(self, response_data):
+        pass
+
+    def extract_tran_log_header(self):
+        if not self.all_search_iLPN_parameters:
+            logging.error("No valid iLPN parameters found, cannot create any payloads.")
+            return []
+
+        all_payloads = []
+        # Get today's date and format it to 'DD Mon YYYY' (e.g., '26 Oct 2023')
+        todays_date_str = date.today().strftime('%d %b %Y')
+
+        for entry in self.all_search_iLPN_parameters:
+            lpn_id = entry['iLPN_ID']
+            message_type = entry['MESSAGE_TYPE']
+
+            def create_receiving_package(query_string):
+                payload = {
+                    "Query": query_string,
+                }
+                return {
+                    "envn": entry.get("Environment"),
+                    "plant": entry.get("Plant"),
+                    "payload": payload
+                }
+
+            query = None
+            if pd.notna(lpn_id) and str(lpn_id).strip():
+                lpn_id_list = str(lpn_id).split(';')
+                for lpn in lpn_id_list:
+                    lpn_id = lpn.strip()
+                    if not lpn_id:
+                        continue
+
+                    # Construct the complex date filter string using a multi-line f-string for readability.
+                    # Note: {{ and }} are used to create literal curly braces inside an f-string.
+                    date_filter_value = f"{{'date':{{'from':'{todays_date_str}', 'to':'{todays_date_str}'}}, 'time':{{'from':'00:00', 'to':'23:59:59', 'start':0, 'end':288}}}}"
+                    date = f"""({{'ViewName':'tranlogdetails', 'Filters':[{{'ViewName':'tranlogdetails', 'AttributeId':'InternalProcessDate', 'Operator':'=', 'FilterValues':[{{'filter':'{date_filter_value}'}}]}}]}})"""
+                    msg_type = f"""({{'ViewName':'tranlogdetails', 'AttributeId':'MsgType', 'Operator':'=', 'FilterValues':['{message_type}']}})"""
+                    # Let's assume 'direction' is a variable holding the value you want.
+                    direction = "Outbound"
+
+                    # Using a triple-quoted f-string makes it easy to write the structure
+                    # without worrying about escaping quotes.
+                    # Note the {{ and }} to create literal curly braces.
+                    direction_filter = f"""{{
+                        "ViewName": "tranlogdetails",
+                        "AttributeId": "Direction",
+                        "DataType": "date",
+                        "Operator": "=",
+                        "FilterValues": [
+                            "{direction}"
+                        ]
+                    }}"""
+
+                    query = f"LpnId = '{lpn_id}'"
+                    if query:
+                        all_payloads.append(create_receiving_package(query))
+
+            return all_payloads
+
+
+
+
 if __name__ == '__main__':
     py = iLPN_Search_Payload()
     import pprint
-    pprint.pprint(py.create_lpn_receiving_payload())
-    pprint.pprint(py.create_lpn_inventory_payload())
+    # pprint.pprint(py.create_lpn_receiving_payload())
+    # pprint.pprint(py.create_lpn_inventory_payload())
     # pprint.pprint(py.create_ilpn_condition_code_payload())
-    # pprint.pprint(py.create_item_inventory_by_location_payload())
+    pprint.pprint(py.create_item_inventory_by_location_payload(), indent=4)

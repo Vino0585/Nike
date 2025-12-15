@@ -14,7 +14,7 @@ class iLPN_Information_Payload:
         self.all_lpn_information_payload = []
 
     def create_lpn_information_payloads(self) -> list:
-        lpn_information_data = self.worksheet.extract_lpn_list()
+        lpn_information_data = self.worksheet.extract_relpn_list()
 
         if not lpn_information_data:
             logging.info("No Valid LPN Information parameter found, cannot create any payloads for LPN Information task")

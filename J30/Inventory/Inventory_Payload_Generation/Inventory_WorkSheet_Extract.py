@@ -79,9 +79,9 @@ class Inventory_WorkSheet_Extract:
             diversion_codes = entry_dict.get("Diversion_Codes", "N")
             diversion_code_flag = entry_dict.get("Diversion_Code_Flag", 'N')
             item_ids = entry_dict.get("ITEM_IDS", 0)
-            status = entry_dict.get("Status", "Not Allocated")
-            location = entry_dict.get("Location", 0)
-            location_flag = entry_dict.get("Location_Flag", 'N')
+            status = entry_dict.get("STATUS", "Not Allocated")
+            msg_type = entry_dict.get("MESSAGE_TYPE")
+            user_id = entry_dict.get("USER_ID")
 
             lpn_params = {
                 "Plant": plant,
@@ -96,8 +96,8 @@ class Inventory_WorkSheet_Extract:
                 "Diversion_Code_Flag": diversion_code_flag,
                 "ITEM_IDS": item_ids,
                 "STATUS": status,
-                "Location": location,
-                "Location_Flag": location_flag
+                "MESSAGE_TYPE": msg_type,
+                "USER_ID": user_id
             }
             self.all_search_iLPN_parameters.append(lpn_params)
 
@@ -156,6 +156,32 @@ class Inventory_WorkSheet_Extract:
 
         logging.info("All ItemSearch entries validated successfully.")
         return all_item_parameters
+
+    def search_recall_iLPN_parameters(self):
+        self.all_search_iLPN_parameters = []
+
+        if not self._excel_open(input_sheet_name='Recall_iLPN'):
+            logging.error(f"Error: The sheet name in '{self.inventory_excel_file_path}' was not found.")
+
+
+        if not self.list_of_entry:
+            logging.error(f"No iLPN entry found to extract parameters from {self.list_of_entry}.")
+            return None
+
+        for i, entry_dict in enumerate(self.list_of_entry):
+            # Extracting parameter from excel sheet iLPN_Info
+            plant = entry_dict.get("Plant")
+            envn = entry_dict.get("Environment")
+            ilpns_ids = entry_dict.get("iLPN_ID(S)", 0)
+
+            lpn_params = {
+                "Plant": plant,
+                "Environment": envn,
+                "iLPN_ID": ilpns_ids,
+            }
+            self.all_search_iLPN_parameters.append(lpn_params)
+
+        return self.all_search_iLPN_parameters
 
 if __name__ == "__main__":
     invn = Inventory_WorkSheet_Extract()
