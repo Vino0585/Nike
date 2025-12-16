@@ -18,7 +18,7 @@ class Tran_Log_Detail_Payload:
             logging.error('The tranlog_detail_header record returned nothing. Please check Tran_log_detail_header.py')
             return None
 
-        logging.info(f"The total message to provide payload is len{self.tran_log_detail_header_info} entries")
+        logging.info(f"The total message to provide payload is {len(self.tran_log_detail_header_info)} entries")
 
         for entry in self.tran_log_detail_header_info:
             plant = entry.get("Plant")
@@ -42,6 +42,6 @@ if __name__ == "__main__":
     py = Tran_Log_Detail_Payload()
     full_payload = py.create_tran_log_detail_payload()
     for payload in full_payload:
-        print(json.dump(payload))
+        print(payload)
 
 

@@ -53,6 +53,8 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/inventory/grid/search"
         elif program == 'Tran_log_detail_header':
             self.url = f"https://{self.host_name}/fwuifacade/api/fwuifacade/entity/search"
+        elif program == 'Tran_log_detail':
+            self.url = f"https://{self.host_name}/fwuifacade/api/fwuifacade/entity/invoke?componentName=com-manh-cp-xint&url=/api/xint/payload/getByMessageId/"
         else:
             self.url = None  # Set to None if no match
 
