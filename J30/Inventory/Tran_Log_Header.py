@@ -1,15 +1,8 @@
-import datetime
-
 import requests
 import logging
 import pandas as pd
-from pathlib import Path
-import json
 
 from collections import defaultdict
-
-from pandas import to_datetime
-
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 from Inventory.Inventory_Payload_Generation.Tran_Log_Header_Payload import Tran_log_detail_header
@@ -33,13 +26,12 @@ class Tran_Log_Detail_Header_Info:
                 logging.error("WARNING: Skipping package as it's not a valid dictionary")
                 continue
 
-            env = package.get('environment')
-            plant_id = package.get('plant')
-            lpn_list = package.get('lpn_list')
-            payload = package.get('tran_log_detail_payload')
+            env = package.get('Environment')
+            plant_id = package.get('Plant')
+            payloads = package.get('Tran_log_detail_payload')
 
-            if env and plant_id and payload:
-                payloads_by_group[(env, plant_id)].append(payload)
+            if env and plant_id and payloads:
+                payloads_by_group[(env, plant_id)].append(payloads)
             else:
                 logging.error(f"WARNING: Skipping malformed package: {package}")
 
@@ -68,7 +60,7 @@ class Tran_Log_Detail_Header_Info:
                 for i, payload_to_send in enumerate(payloads):
                     try:
                         logging.info(f"[{environment.upper()}] Processing Payload {i + 1}/{len(payloads)}")
-                        response = requests.post(url=api_url, headers=header, json=payload_to_send)
+                        response = requests.post(url=api_url, headers=header, data=payload_to_send)
                         response.raise_for_status()
                         response_data = response.json()
                         resp = response_data['data']['Results']
@@ -101,7 +93,7 @@ class Tran_Log_Detail_Header_Info:
                         logging.error(f"ERROR: An unexpected error occurred for payload {i + 1}: {e}")
 
             except Exception as e:
-                logging.error( f"FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
+                logging.error(f"FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
 
 
         if not all_result_data:

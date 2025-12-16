@@ -51,6 +51,8 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKERetrievalTaskResultSRCEndpointV1"
         elif program == 'Item_Inventory_By_Location':
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/inventory/grid/search"
+        elif program == 'Tran_log_detail_header':
+            self.url = f"https://{self.host_name}/fwuifacade/api/fwuifacade/entity/search"
         else:
             self.url = None  # Set to None if no match
 

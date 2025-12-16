@@ -1,71 +1,8 @@
-# I want to create a payload structure of this type:
-#
-# {
-#    "ViewName":"tranlogdetails",
-#    "Filters":[
-#       {
-#          "ViewName":"tranlogdetails",
-#          "AttributeId":"InternalProcessDate",
-#          "Operator":"=",
-#          "FilterValues":[
-#             {
-#                "filter":{
-#                   "date":{
-#                      "from":"15 Dec 2025",
-#                      "to":"15 Dec 2025"
-#                   },
-#                   "time":{
-#                      "from":"00:00",
-#                      "to":"23:59:59",
-#                      "start":0,
-#                      "end":288
-#                   }
-#                }
-#             }
-#          ]
-#       },
-#       {
-#          "ViewName":"tranlogdetails",
-#          "AttributeId":"MsgType",
-#          "Operator":"=",
-#          "FilterValues":[
-#             "PIX_XIN_InventoryAdjustment"
-#          ]
-#       },
-#       {
-#          "ViewName":"tranlogdetails",
-#          "AttributeId":"Direction",
-#          "DataType":"date",
-#          "Operator":"=",
-#          "FilterValues":[
-#             "Outbound"
-#          ]
-#       },
-#       {
-#          "ViewName":"tranlogdetails",
-#          "AttributeId":"TextSearch",
-#          "Operator":"=",
-#          "FilterValues":[
-#             "vgana3"
-#          ]
-#       }
-#    ],
-#    "Page":0,
-#    "TotalCount":-1,
-#    "SortOrder":"desc",
-#    "SortIndicator":"chevron-up",
-#    "TimeZone":"Japan",
-#    "EnableMaxCountLimit":true,
-#    "MaxCountLimit":500,
-#    "ComponentName":"com-manh-cp-xint",
-#    "Size":25,
-#    "Sort":"InternalProcessDate"
-# }
-
 from Inventory.Inventory_Payload_Generation.Inventory_WorkSheet_Extract import Inventory_WorkSheet_Extract
 import logging
 import pandas as pd
-from datetime import date
+import datetime as datetime
+import json
 
 # Setup basic logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -85,12 +22,25 @@ class Tran_log_detail_header:
 
         all_payloads = []
         # Get today's date and format it to 'DD Mon YYYY' (e.g., '26 Oct 2023')
-        todays_date_str = date.today().strftime('%d %b %Y')
+        todays_date_str = datetime.date.today().strftime('%d %b %Y')
+        yesterday_date_str = (datetime.date.today() - pd.Timedelta(days=1)).strftime('%d %b %Y')
+        seven_days = (datetime.date.today() - pd.Timedelta(days=7)).strftime('%d %b %Y')
 
         for entry in self.all_search_iLPN_parameters:
             lpn_id = entry['iLPN_ID']
             message_type = entry['MESSAGE_TYPE']
             user_id = entry['USER_ID']
+            date = entry['Date']
+
+
+            if date == 'Today':
+                msg_date = todays_date_str
+            elif date == 'Yesterday':
+                msg_date = yesterday_date_str
+            elif date == '7':
+                msg_date = seven_days
+            else:
+                msg_date = todays_date_str
 
             if pd.notna(lpn_id) and str(lpn_id).strip():
                 lpn_id_list = str(lpn_id).split(';')
@@ -99,88 +49,70 @@ class Tran_log_detail_header:
                     if not lpn_id:
                         continue
 
-                    # 1. Construct individual filter components as strings
-                    date_filter = f"""{{
+                    # 1. Build the payload as a Python dictionary
+                    payload_dict = {
                         "ViewName": "tranlogdetails",
-                        "AttributeId": "InternalProcessDate",
-                        "Operator": "=",
-                        "FilterValues": [
-                            {{
-                                "filter": {{
-                                    "date": {{
-                                        "from": "{todays_date_str}",
-                                        "to": "{todays_date_str}"
-                                    }},
-                                    "time": {{
-                                        "from": "00:00",
-                                        "to": "23:59:59",
-                                        "start": 0,
-                                        "end": 288
-                                    }}
-                                }}
-                            }}
-                        ]
-                    }}"""
-                    
-                    msg_type_filter = f"""{{
-                        "ViewName": "tranlogdetails",
-                        "AttributeId": "MsgType",
-                        "Operator": "=",
-                        "FilterValues": [
-                            "{message_type}"
-                        ]
-                    }}"""
-
-                    # Let's assume 'direction' is a variable holding the value you want.
-                    direction = "Outbound"
-                    direction_filter = f"""{{
-                        "ViewName": "tranlogdetails",
-                        "AttributeId": "Direction",
-                        "DataType": "date",
-                        "Operator": "=",
-                        "FilterValues": [
-                            "{direction}"
-                        ]
-                    }}"""
-
-                    text_search_filter = f"""{{
-                        "ViewName": "tranlogdetails",
-                        "AttributeId": "TextSearch",
-                        "Operator": "=",
-                        "FilterValues": [
-                            f"{user_id}"
-                        ]
-                    }}"""
-                    
-                    # Define the static footer part of the payload for reusability
-                    payload_footer = f""""Page": 0,
+                        "Filters": [
+                            {
+                                "ViewName": "tranlogdetails",
+                                "AttributeId": "InternalProcessDate",
+                                "Operator": "=",
+                                "FilterValues": [
+                                    {
+                                        "filter": {
+                                            "date": {
+                                                "from": msg_date,
+                                                "to": msg_date
+                                            },
+                                            "time": {
+                                                "from": "00:00",
+                                                "to": "23:59:59",
+                                                "start": 0,
+                                                "end": 288
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "ViewName": "tranlogdetails",
+                                "AttributeId": "MsgType",
+                                "Operator": "=",
+                                "FilterValues": [message_type]
+                            },
+                            {
+                                "ViewName": "tranlogdetails",
+                                "AttributeId": "Direction",
+                                "DataType": "date",
+                                "Operator": "=",
+                                "FilterValues": ["Outbound"]
+                            },
+                            {
+                                "ViewName": "tranlogdetails",
+                                "AttributeId": "TextSearch",
+                                "Operator": "=",
+                                "FilterValues": [lpn_id]
+                            }
+                        ],
+                        "Page": 0,
                         "TotalCount": -1,
                         "SortOrder": "desc",
                         "SortIndicator": "chevron-up",
                         "TimeZone": "Japan",
-                        "EnableMaxCountLimit": true,
+                        "EnableMaxCountLimit": True,
                         "MaxCountLimit": 500,
                         "ComponentName": "com-manh-cp-xint",
                         "Size": 25,
                         "Sort": "InternalProcessDate"
-                    """
+                    }
 
-                    # 2. Assemble the final payload using the filter strings
-                    final_payload = f"""{{
-                        "ViewName": "tranlogdetails",
-                        "Filters": [
-                            {date_filter},
-                            {msg_type_filter},
-                            {direction_filter},
-                            {text_search_filter}
-                        ],
-                        {payload_footer}
-                    }}"""
+                    # 2. Serialize the dictionary to a compact JSON string
+                    final_payload = json.dumps(payload_dict)
 
                     all_payloads.append({
-                        "envn": entry.get("Environment"),
-                        "plant": entry.get("Plant"),
-                        "tran_log_detail_payload": final_payload
+                        "Environment": entry.get("Environment"),
+                        "Plant": entry.get("Plant"),
+                        "Tran_log_detail_payload": final_payload
                     })
 
             return all_payloads

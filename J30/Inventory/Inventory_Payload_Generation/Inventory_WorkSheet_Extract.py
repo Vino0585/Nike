@@ -82,6 +82,7 @@ class Inventory_WorkSheet_Extract:
             status = entry_dict.get("STATUS", "Not Allocated")
             msg_type = entry_dict.get("MESSAGE_TYPE")
             user_id = entry_dict.get("USER_ID")
+            date = entry_dict.get("DATE", 0)
 
             lpn_params = {
                 "Plant": plant,
@@ -97,7 +98,8 @@ class Inventory_WorkSheet_Extract:
                 "ITEM_IDS": item_ids,
                 "STATUS": status,
                 "MESSAGE_TYPE": msg_type,
-                "USER_ID": user_id
+                "USER_ID": user_id,
+                "Date": date
             }
             self.all_search_iLPN_parameters.append(lpn_params)
 
