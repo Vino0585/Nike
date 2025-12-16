@@ -5,7 +5,7 @@ import pandas as pd
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Inventory.Inventory_Payload_Generation.Tran_Log_Header_Payload import Tran_log_detail_header
+from Inventory.Inventory_Payload_Generation.Tran_Log_Detail_Header_Payload import Tran_log_detail_header
 
 # Setup basic logging to provide better feedback than logging.info()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -95,7 +95,6 @@ class Tran_Log_Detail_Header_Info:
             except Exception as e:
                 logging.error(f"FATAL ERROR: Could not process batch for env {environment.upper()}/plant {plant_id}. Error: {e}")
 
-
         if not all_result_data:
             logging.error("Script finished, but no results were collected from any API calls")
             return
@@ -112,6 +111,7 @@ class Tran_Log_Detail_Header_Info:
         logging.info(f"Tran log Detail Processing Finished")
         logging.info(f"Total of {len(response_result)} payloads were sent successfully.")
 
+        return all_result_data
 
 if __name__ == "__main__":
     Tran_Log_Detail_Info = Tran_Log_Detail_Header_Info()
