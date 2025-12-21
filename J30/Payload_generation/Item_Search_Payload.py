@@ -46,14 +46,11 @@ class ItemPayload():
                 internal_page = page
                 if internal_page != None:
                     internal_page = random.randint(1, 5)
-
                 payload = {
                     "Query": query_string,
                     "Template": template_structure,
                     "Size": size,
                     "Page": internal_page,
-                    "MaxCountLimit": size,
-                    "EnableMaxCountLimit": True,
                 }
                 return {
                     "envn": params.get("environment"),
@@ -106,7 +103,7 @@ class ItemPayload():
 
             # If any of the criteria above created a query, build the payload
             if query_string:
-                all_payloads.append(create_package(query_string, size, page=5))
+                all_payloads.append(create_package(query_string, size, page=0))
 
         return all_payloads
 

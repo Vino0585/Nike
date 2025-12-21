@@ -6,6 +6,7 @@ from Environment.WM_Environment import AWM_Env
 import requests
 from pathlib import Path
 
+
 def item_search():
     # 1. Create an instance of the generator
     item_payload_gen = ItemPayload()
@@ -82,13 +83,13 @@ def item_search():
                     print(f"-> Success: Found {len(item_list)} item(s) in response.")
                     for response_payload in item_list:
                         extended_data = response_payload.get('Extended', {})
-                        PRODUCT_CODE_MAP = {
+                        product_code_map = {
                             '10': 'Apparel',
                             '20': 'Footwear',
                             '30': 'Equipment'
                         }
-                        product_code = PRODUCT_CODE_MAP.get(extended_data.get('DivisionCode'))
-                        product_class = PRODUCT_CODE_MAP.get(response_payload.get('ProductClass'))
+                        product_code = product_code_map.get(extended_data.get('DivisionCode'))
+                        product_class = product_code_map.get(response_payload.get('ProductClass'))
 
                         result_row = {
                             'Environment': environment.upper(),
@@ -152,6 +153,7 @@ def item_search():
 
     except Exception as e:
         print(f"\n--> ERROR: Failed to generate or export the final report: {e}")
+
 
 if __name__ == "__main__":
     item_search()

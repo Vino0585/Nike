@@ -138,7 +138,6 @@ class iLPN_Search:
             logging.info(f"Processing {len(packaged_payloads)} Payloads for Environment: {environment.upper()}")
             try:
                 plant_id = packaged_payloads[0].get('plant')
-                # 5. Already got the bearer token and stored in the variable.
 
                 # 6. Now loop through the individual payloads for this environment
                 for i, item in enumerate(packaged_payloads):
@@ -224,8 +223,6 @@ class iLPN_Search:
         for environment, packaged_payloads in condition_code_payload_by_env.items():
             logging.info(f"Processing {len(packaged_payloads)} Payloads for Environment: {environment.upper()}")
             try:
-                # 5. Already got the bearer token and stored in the variable.
-                # 6. Now loop through the individual payloads for this environment
                 for i, item in enumerate(packaged_payloads):
                     try:
                         # 7. Unpack the plant_id and payload for this specific request
@@ -308,10 +305,6 @@ class iLPN_Search:
             logging.info("Script finished, but no results were collected from API call made to iLPN Inventory")
             return
 
-        # if not all_ilpn_condition_code_data:
-        #     logging.info("Script finished, but no results were collected from API call made to iLPN Condition Code")
-        #     return
-
         logging.info(f"Consolidated Search Results")
         try:
             # Create a pandas DataFrame from the list of result dictionaries
@@ -337,11 +330,8 @@ class iLPN_Search:
 
 
             # 2. Export the DataFrame to an Excel file (Improved Path Handling)
-            # Create a Path object for the output directory.
             output_dir = Path("../Output_files")
-            # Check if directory exist.
             output_dir.mkdir(parents=True, exist_ok=True)
-            # Define the full path to the output file.
             output_filepath = output_dir / "iLPN_search_results.xlsx"
 
             with pd.ExcelWriter(output_filepath, engine='openpyxl') as writer:

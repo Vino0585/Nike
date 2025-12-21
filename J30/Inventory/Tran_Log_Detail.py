@@ -66,7 +66,8 @@ class Tran_Log_Detail:
                         response = requests.get(url=full_url, headers=header)
                         response.raise_for_status()
                         response_data = response.json()
-                        
+
+                        extract_message
                         # The 'payload' is a string that contains another JSON object. We need to parse it twice.
                         payload_string = response_data.get('data', [{}])[0].get('payload')
                         

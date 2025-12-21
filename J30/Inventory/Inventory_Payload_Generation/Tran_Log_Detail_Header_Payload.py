@@ -1,3 +1,5 @@
+from math import isnan
+
 from Inventory.Inventory_Payload_Generation.Inventory_WorkSheet_Extract import Inventory_WorkSheet_Extract
 import logging
 import pandas as pd
@@ -32,6 +34,9 @@ class Tran_log_detail_header:
             user_id = entry['USER_ID']
             date = entry['Date']
 
+            if isnan(lpn_id):
+                lpn_id = user_id
+
 
             if date == 'Today':
                 msg_date = todays_date_str
@@ -62,7 +67,7 @@ class Tran_log_detail_header:
                                         "filter": {
                                             "date": {
                                                 "from": msg_date,
-                                                "to": msg_date
+                                                "to": todays_date_str
                                             },
                                             "time": {
                                                 "from": "00:00",
@@ -85,13 +90,13 @@ class Tran_log_detail_header:
                                 "AttributeId": "Direction",
                                 "DataType": "date",
                                 "Operator": "=",
-                                "FilterValues": ["Outbound"]
+                                "FilterValues": ["Inbound"]
                             },
                             {
                                 "ViewName": "tranlogdetails",
                                 "AttributeId": "TextSearch",
                                 "Operator": "=",
-                                "FilterValues": [lpn_id]
+                                "FilterValues": lpn_id
                             }
                         ],
                         "Page": 0,
@@ -121,4 +126,4 @@ if __name__ == '__main__':
     py = Tran_log_detail_header()
     full_payload = py.construct_tran_log_detail_header_payload()
     for payload in full_payload:
-        print(payload.get('tran_log_detail_payload'))
+        print(payload.get('Tran_log_detail_payload'))

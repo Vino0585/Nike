@@ -14,6 +14,8 @@ class Get_Token():
             self.bearer_host_name = "https://nikeaplawmqa1-auth.sce.manh.com/oauth/token"
         elif env == 'dev' and plant == '1081':
             self.bearer_host_name = "https://nikeaplawmdev1-auth.sce.manh.com/oauth/token"
+        elif env == 'qa' and plant == '1093':
+            self.bearer_host_name = "https://nikeaplawmqa1-auth.sce.manh.com/oauth/token"
         else:
             print("No proper Environment is passed to token class.")
 

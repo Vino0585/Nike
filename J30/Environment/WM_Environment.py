@@ -7,6 +7,8 @@ class AWM_Env():
             self.host_name = 'nikeaplawmdev1.sce.manh.com'
         elif host == 'qa' and facility == "1081":
             self.host_name = 'nikeaplawmqa1.sce.manh.com'
+        elif host == 'qa' and facility == '1093':
+            self.host_name = 'nikeaplawmqa1.sce.manh.com'
         else:
             self.host_name = 'default_host.com'  # Added a default for clarity
 

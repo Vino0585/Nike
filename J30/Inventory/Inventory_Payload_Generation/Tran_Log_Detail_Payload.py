@@ -38,10 +38,13 @@ class Tran_Log_Detail_Payload:
 
         return self.all_tran_log_detail_payload
 
+    def decide_the_message_type(self, extracted_message):
+        pass
+
 if __name__ == "__main__":
     py = Tran_Log_Detail_Payload()
     full_payload = py.create_tran_log_detail_payload()
     for payload in full_payload:
-        print(payload)
+        print(payload["msg_id"])
 
 
