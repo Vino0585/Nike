@@ -1,6 +1,7 @@
 import logging
 import json
 import pandas as pd
+import datetime as datetime
 
 from Inventory.Inventory_Payload_Generation.Inventory_WorkSheet_Extract import Inventory_WorkSheet_Extract
 
@@ -28,34 +29,60 @@ class Troubleshoot_MHE_Journal_Payload:
 
             message_type = ['GoodsholderDivertedDueToException']
 
-            lpn_id_string = str(lpn_id) if pd.notna(lpn_id) and lpn_id != '' else None
-
-            if not all([plant, envn, message_type, lpn_id_string]):
-                logging.info(f"Skipping entry due to missing data: {entry}")
-                continue
-
-            logging.info(f"Using LPNs from worksheet: '{lpn_id_string}'")
-            lpn_list = [lpn.strip() for lpn in lpn_id_string.split(';')]
+            # lpn_id_string = str(lpn_id) if pd.notna(lpn_id) and lpn_id != '' else None
+            #
+            # if not all([plant, envn, message_type, lpn_id_string]):
+            #     logging.info(f"Skipping entry due to missing data: {entry}")
+            #     continue
+            #
+            # logging.info(f"Using LPNs from worksheet: '{lpn_id_string}'")
+            # lpn_list = [lpn.strip() for lpn in lpn_id_string.split(';')]
+            current_date_str = datetime.date.today().strftime('%d %b %Y')
+            seven_days = (datetime.date.today() - pd.Timedelta(days=9)).strftime('%d %b %Y')
 
             for message in message_type:
                 mhe_journal_each_payload = {
-                      "ViewName": "MessageJournal",
-                      "Filters": [
+                    "ViewName": "MessageJournal",
+                    "Filters": [
                         {
-                          "AttributeId": "MessageType",
-                          "FilterValues": [
-                            message
-                          ]
+                            "AttributeId": "MessageType",
+                            "FilterValues": [
+                                message
+                            ]
+                        },
+                        {
+                            "ViewName": "MessageJournal",
+                            "AttributeId": "RAW_IN_TIMESTAMP",
+                            "DataType": "date",
+                            "Operator": "=",
+                            "FilterValues":
+                                [
+                                    {
+                                        "filter":
+                                            {
+                                                "date":
+                                                    {
+                                                        "from": seven_days,
+                                                        "to": current_date_str
+                                                    },
+                                                "time":
+                                                    {
+                                                        "from": "00:00",
+                                                        "to": "23:59"
+                                                    }
+                                            }
+                                    }
+                                ]
                         }
-                      ],
-                      "TimeZone": "Japan",
-                      "ComponentName": "com-manh-cp-dmui-search"
-                    }
+                    ],
+                    "TimeZone": "Japan",
+                    "ComponentName": "com-manh-cp-dmui-search"
+                }
 
                 mhe_journal_payload = {
                     'environment': envn,
                     'plant': plant,
-                    'lpn_list': lpn_list,
+                    # 'lpn_list': lpn_list,
                     'MHEJournalPayload': mhe_journal_each_payload
                 }
 
