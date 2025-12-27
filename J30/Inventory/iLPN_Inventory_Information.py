@@ -1,12 +1,19 @@
 import pandas as pd
 import requests
 import logging
-
+import sys
+from pathlib import Path
 from collections import defaultdict
+
+# Ensure project root is on sys.path so `Inventory` and `Environment` packages can be imported
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent  # .../Nike/J30
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from Inventory.Inventory_Payload_Generation.iLPN_Information_Payloads import iLPN_Search_Payload
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from pathlib import Path
 
 # Set up Logging level and format.
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

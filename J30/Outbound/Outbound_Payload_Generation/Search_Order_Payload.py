@@ -1,5 +1,13 @@
 import logging
 from typing import Any
+from pathlib import Path
+import sys
+
+# Ensure the J30 project root is on sys.path so the `Outbound` package can be imported
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent.parent  # .../Nike/J30
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from Outbound.Outbound_Payload_Generation.Outbound_Worksheet_Extract import Outbound_Worksheet
 
