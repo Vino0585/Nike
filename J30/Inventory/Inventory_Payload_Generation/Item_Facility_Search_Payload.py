@@ -6,11 +6,11 @@ from click import style
 from Inventory.Inventory_Payload_Generation.Inventory_WorkSheet_Extract import Inventory_WorkSheet_Extract
 import pandas as pd
 
-class ItemPayload():
+class ItemFacilityPayload():
     def __init__(self):
         self.worksheet = Inventory_WorkSheet_Extract()
 
-    def create_item_search_payloads(self) -> list:
+    def create_item_facility_search_payloads(self) -> list:
         """
         Reads item search parameters from the worksheet and creates a list of API payloads.
         Handles multiple rows and multiple items per row (separated by ';').
@@ -22,13 +22,6 @@ class ItemPayload():
             return []
 
         all_payloads = []
-        template_structure = {
-            "ItemId": None, "WeightUomId": None, "Weight": None, "VolumeUomId": None,
-            "Volume": None, "Height": None, "Length": None, "Width": None, "PrimaryBarCode": None,
-            "DimensionUomId": None, "CriticalDimension1": None,
-            "CriticalDimension2": None, "CriticalDimension3": None, "ProductClass": None,
-            "Extended": {"MarkForCubiscan": None, "DivisionCode": None}
-        }
 
         PRODUCT_CODE_MAP = {
             'Apparel': 10,
@@ -38,11 +31,6 @@ class ItemPayload():
 
         for params in all_item_parameters:
             item_ids_string = params.get("search_by_item")
-            num_of_items = params.get("num_of_items_to_search")
-            item_no_dims = params.get("search_by_missing_dims")
-            product_type = params.get("search_by_product_type")
-            style = str(params.get("search_by_style"))
-            color = str(params.get("search_by_color"))
             size = 0
 
             # Helper function to create the final packaged payload
@@ -52,13 +40,29 @@ class ItemPayload():
                     page = random.randint(1, 5)
 
                 payload = {
-                    "Query": query_string,
-                    "Template": template_structure,
-                    "Size": size,
-                    "Page": page,
-                    "MaxCountLimit": size,
-                    "EnableMaxCountLimit": "True",
-                }
+                        "ViewName": "ItemFacility",
+                        "Filters": [
+                                {
+                                "ViewName": "ItemFacility",
+                                "AttributeId": "ItemId",
+                                "Operator": "=",
+                                "FilterValues": [
+                                    query_string,
+                                ]
+                                }
+                            ],
+                        "Page": 0,
+                        "TotalCount": -1,
+                        "SortOrder": "asc",
+                        "SortIndicator": "chevron-up",
+                        "TimeZone": "Japan",
+                        "EnableMaxCountLimit": "true",
+                        "MaxCountLimit": 500,
+                        "ComponentName": "com-manh-cp-item-master",
+                        "Size": 25,
+                        "Sort": "ItemId"
+                    }
+
                 return {
                     "envn": params.get("environment"),
                     "plant": params.get("plant"),
@@ -76,58 +80,46 @@ class ItemPayload():
                         continue
 
                     # Consistently create the full package for every payload
-                    query = f"ItemId = '{item_id}'"
+                    query = item_id
+
                     all_payloads.append(create_package(query, size, page))
                 continue
 
-            # --- Priority 2: Search by other criteria ---
-            query_string = None
-
-
-            if pd.notna(item_no_dims) and pd.notna(num_of_items):
-                if pd.notna(product_type):
-                    product_code = PRODUCT_CODE_MAP.get(product_type)
-                    query_string = (f"Extended.DivisionCode = {product_code} AND Extended.MarkForCubiscan = NULL AND "
-                                    f"Length = NULL AND Width = NULL AND Height = NULL AND Volume = NULL")
-                    size = int(num_of_items)
-                else:
-                    query_string = (f"Extended.MarkForCubiscan = NULL AND Length = NULL AND Width = NULL AND "
-                                    f"Height = NULL AND Volume = NULL")
-                    size = int(num_of_items)
-
-
-            elif pd.notna(product_type) and pd.notna(num_of_items):
-                product_code = PRODUCT_CODE_MAP.get(product_type)
-                if product_code is not None:
-                    query_string = (f"Extended.DivisionCode = {product_code} AND Length != NULL AND "
-                                    f"Extended.MarkForCubiscan != NULL")
-                    size = int(num_of_items)
-
-            elif pd.notna(num_of_items):
-                size = int(num_of_items)
-                query_string = (f"Length != NULL AND Width != NULL AND Height != NULL AND Volume != NULL")
-
-            elif pd.notna(style) and color == 'nan':
-                if not style:
-                    logging.error(f"Style {style} not found.")
-                    continue
-                # Consistently create the full package for every payload
-                query_string = f"Style = '{style}'"
-                size = 300
-                page = 5
-
-            elif pd.notna(style) and pd.notna(color):
-                if not style and color:
-                    logging.error("Style or Color is required and one of them is missing or incorrect")
-                    continue
-
-                query_string = f"Style = {style} AND Color = {color}"
-                size = 300
-                page = 0
+            # # --- Priority 2: Search by other criteria ---
+            # query_string = None
+            #
+            # if pd.notna(product_type) and pd.notna(num_of_items):
+            #     product_code = PRODUCT_CODE_MAP.get(product_type)
+            #     if product_code is not None:
+            #         query_string = (f"Extended.DivisionCode = {product_code} AND Length != NULL AND "
+            #                         f"Extended.MarkForCubiscan != NULL")
+            #         size = int(num_of_items)
+            #
+            # elif pd.notna(num_of_items):
+            #     size = int(num_of_items)
+            #     query_string = (f"Length != NULL AND Width != NULL AND Height != NULL AND Volume != NULL")
+            #
+            # elif pd.notna(style) and color == 'nan':
+            #     if not style:
+            #         logging.error(f"Style {style} not found.")
+            #         continue
+            #     # Consistently create the full package for every payload
+            #     query_string = f"Style = '{style}'"
+            #     size = 300
+            #     page = 5
+            #
+            # elif pd.notna(style) and pd.notna(color):
+            #     if not style and color:
+            #         logging.error("Style or Color is required and one of them is missing or incorrect")
+            #         continue
+            #
+            #     query_string = f"Style = {style} AND Color = {color}"
+            #     size = 300
+            #     page = 0
 
             # If any of the criteria above created a query, build the payload
-            if query_string:
-                all_payloads.append(create_package(query_string, size, page))
+            # if query_string:
+            #     all_payloads.append(create_package(query_string, size, page))
 
         return all_payloads
 

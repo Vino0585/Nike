@@ -1,17 +1,17 @@
 import pandas as pd
 from Environment.Get_Token import Get_Token
-from Inventory.Inventory_Payload_Generation.Item_Search_Payload import ItemPayload
+from Inventory.Inventory_Payload_Generation.Item_Facility_Search_Payload import ItemFacilityPayload
 from collections import defaultdict
 from Environment.WM_Environment import AWM_Env
 import requests
 from pathlib import Path
 
-def item_search():
+def item_facility_search():
     # 1. Create an instance of the generator
-    item_payload_gen = ItemPayload()
+    item_payload_gen = ItemFacilityPayload()
 
     # 2. Generate the list from item payload.
-    item_payload_package = item_payload_gen.create_item_search_payloads()
+    item_payload_package = item_payload_gen.create_item_facility_search_payloads()
     if not item_payload_package:
         print("\nNo payloads were generated. Please check your Excel input and generator logic.")
         return
@@ -74,7 +74,8 @@ def item_search():
                     response_data = response.json()
 
                     # 11. Process and collect the results from the response
-                    item_list = response_data.get('data', [])
+                    data = response_data.get('data', [])
+                    item_list = data.get('Results', [])
                     if not item_list:
                         print("-> Success, but no items were returned in the response.")
                         continue
@@ -82,16 +83,8 @@ def item_search():
                     print(f"-> Success: Found {len(item_list)} item(s) in response.")
                     for response_payload in item_list:
                         extended_data = response_payload.get('Extended', {})
-                        PRODUCT_CODE_MAP = {
-                            '10': 'Apparel',
-                            '20': 'Footwear',
-                            '30': 'Equipment'
-                        }
-                        product_code = PRODUCT_CODE_MAP.get(extended_data.get('DivisionCode'))
-                        product_class = PRODUCT_CODE_MAP.get(response_payload.get('ProductClass'))
-
                         result_row = {
-                            'Environment': environment.upper(),
+                            'Envn': environment.upper(),
                             'Plant': plant_id,
                             'ItemId': response_payload.get('ItemId'),
                             'Length': response_payload.get('Length'),
@@ -103,11 +96,11 @@ def item_search():
                             'Weight': response_payload.get('Weight'),
                             'WeightUOM': response_payload.get('WeightUomId'),
                             'PrimaryBarCode': response_payload.get('PrimaryBarCode'),
-                            'DivisionCode': product_code,
-                            'ProductClass': product_class,
                             'MarkforCubiScan': extended_data.get('MarkForCubiscan'),
                             'Conveyable': response_payload.get('Conveyable'),
-                            'PickingMHEConveyable': extended_data.get('AutoStoreCaseConveyable')
+                            'NonFragile': extended_data.get('AutoStoreCaseConveyable'),
+                            'UpdatedBy': response_payload.get('UpdatedBy'),
+                            'last_update_time': response_payload.get('UpdatedTimestamp'),
                         }
                         all_results_data.append(result_row)
 
@@ -154,4 +147,4 @@ def item_search():
         print(f"\n--> ERROR: Failed to generate or export the final report: {e}")
 
 if __name__ == "__main__":
-    item_search()
+    item_facility_search()

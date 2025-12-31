@@ -2,8 +2,6 @@ import logging
 import pandas as pd
 from pathlib import Path
 
-from git.index.fun import entry_key
-
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 

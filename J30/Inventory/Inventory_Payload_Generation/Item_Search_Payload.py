@@ -127,7 +127,8 @@ class ItemPayload():
 
             # If any of the criteria above created a query, build the payload
             if query_string:
-                all_payloads.append(create_package(query_string, size, page))
+                page_num = random.randint(0, 9)
+                all_payloads.append(create_package(query_string, size, page=page_num))
 
         return all_payloads
 

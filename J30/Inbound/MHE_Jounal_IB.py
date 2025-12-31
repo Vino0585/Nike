@@ -137,7 +137,7 @@ class MHE_Journal_Inbound:
             results_df = pd.DataFrame(all_result_data)
 
             # Sort the DataFrame by the 'Created_on' column chronologically
-            results_df = results_df.sort_values(by=['LPN_ID', 'Created_on'])
+            results_df = results_df.sort_values(by=['LPN_ID', 'Created_on'], ascending=True)
 
             # 1. Print the results to the console in a clean table format
             print(results_df.to_string(index=False))

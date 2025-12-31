@@ -3,8 +3,16 @@ import logging
 import pandas as pd
 from pathlib import Path
 import json
-
+import sys
 from collections import defaultdict
+
+# Ensure project root is on sys.path so `Environment` and other top-level
+# packages can be imported when this script is run directly.
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 from Inventory.Inventory_Payload_Generation.Troubleshoot_MHE_Journal_Payload import Troubleshoot_MHE_Journal_Payload
@@ -117,7 +125,7 @@ class MHE_Journal_Troubleshoot:
             results_df = pd.DataFrame(all_result_data)
 
             # Sort the DataFrame by the 'Created_on' column chronologically
-            results_df = results_df.sort_values(by=['Created_on'], ascending=False)
+            results_df = results_df.sort_values(by=['Created_on', 'LPN_ID'], ascending=[False, True])
 
             # 1. Print the results to the console in a clean table format
             print(results_df.to_string(index=False))

@@ -91,7 +91,7 @@ def item_search():
                         product_class = PRODUCT_CODE_MAP.get(response_payload.get('ProductClass'))
 
                         result_row = {
-                            'Environment': environment.upper(),
+                            'Envn': environment.upper(),
                             'Plant': plant_id,
                             'ItemId': response_payload.get('ItemId'),
                             'Length': response_payload.get('Length'),
@@ -104,7 +104,6 @@ def item_search():
                             'WeightUOM': response_payload.get('WeightUomId'),
                             'PrimaryBarCode': response_payload.get('PrimaryBarCode'),
                             'DivisionCode': product_code,
-                            'ProductClass': product_class,
                             'MarkforCubiScan': extended_data.get('MarkForCubiscan'),
                             'Conveyable': response_payload.get('Conveyable'),
                             'PickingMHEConveyable': extended_data.get('AutoStoreCaseConveyable')
