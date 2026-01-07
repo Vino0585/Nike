@@ -1,12 +1,19 @@
 import requests
 import pandas as pd
 import logging
+import sys
+from pathlib import Path
+from collections import defaultdict
+
+# Ensure project root is on sys.path so `Outbound` and `Environment` packages can be imported
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent  # .../Nike/J30
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from Outbound.Outbound_Payload_Generation.Order_Creation_Payload import Order_Creation_Payload
 from Environment.Get_Token import Get_Token
 from Environment.WM_Outbound_API_EndPoint import AWM_OB_Env
-from collections import defaultdict
-from pathlib import Path
 
 
 # Setup basic logging to provide better feedback than print()
@@ -151,7 +158,9 @@ class Order_Creation:
                 output_dir.mkdir(parents=True, exist_ok=True)
                 output_filepath = output_dir / "Outbound_Worksheet.xlsx"
 
-                with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                # Use 'a' mode if file exists, otherwise use 'w' mode to create it
+                file_mode = 'a' if output_filepath.exists() else 'w'
+                with pd.ExcelWriter(output_filepath, engine='openpyxl', mode=file_mode, if_sheet_exists='replace') as writer:
                     order_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ORDER_ID": "OrderID"})
                     order_df.to_excel(writer, sheet_name='OriginalOrderInput', index=False)
                     logging.info(f"Successfully created original order report: {output_filepath}")
