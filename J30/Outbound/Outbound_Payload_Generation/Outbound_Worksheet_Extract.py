@@ -17,6 +17,8 @@ class Outbound_Worksheet:
         self.list_of_entry = []
         self.all_order_create_parameters = []
         self.all_order_search_parameters = []
+        self.all_tran_log_worksheet_parameters = []
+        self.all_mhe_parameters_parameters = []
 
 
     def _excel_open(self, input_sheet_name):
@@ -34,9 +36,9 @@ class Outbound_Worksheet:
 
             df = ''
             if input_sheet_name == 'CreateOrder':
-                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1, dtype={'D_Facility': str})
+                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1, dtype={'D_Facility': str, 'Sold_Facility': str, 'Phone': str})
             else:
-                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, dtype={'D_Facility': str})
+                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, dtype={'D_Facility': str, 'Sold_Facility': str, 'Phone': str})
             if not df.empty:
                 data_dict_index = df.to_dict(orient='index')
                 for key, value in data_dict_index.items():
@@ -85,33 +87,32 @@ class Outbound_Worksheet:
             city = entry_dict.get("City")
             state = entry_dict.get("State")
             postal_code = entry_dict.get("Postal Code")
-            first_name = entry_dict.get("First Name")
-            email = entry_dict.get("Email")
+            first_name = entry_dict.get("First Name", "null")
+            email = entry_dict.get("Email", "null")
+            phone_raw = entry_dict.get("Phone")
+            # Ensure phone is read as string to preserve "+" symbol, handle None/NaN
+            phone = '' if (phone_raw is None or pd.isna(phone_raw)) else str(phone_raw)
+            carrier_code = entry_dict.get("CarrierCode")
+            hub_code = entry_dict.get("HUBCode")
+            route_number = entry_dict.get("Route_nbr")
+            mark_for_customer_id = entry_dict.get("Mark_for")
+            sold_to_facility_id_raw = entry_dict.get("Sold_Facility")
+            # Convert to string and pad with leading zeros to ensure 10 digits (e.g., 0005005401)
+            sold_to_facility_id = str(sold_to_facility_id_raw).zfill(10) if sold_to_facility_id_raw is not None else ''
             country = ''
 
             if plant == 1081:
-                country = 'Japan'
+                country = 'JP'
 
             order_params = {
-                "plant": plant,
-                "environment": envn,
-                "initial": user_initial,
-                "number_of_Orders": num_of_order,
-                "order_Type": order_type,
-                "item": item,
-                "qty": qty,
-                "d_facility": d_facility,
-                "pre_pack_Code": pre_pack_code,
-                "vas_code_service_id": vas_code_service_id,
-                "vas_code_service_uom": vas_code_service_uom,
-                "service_level": service_level,
-                "address_1": address_1,
-                "city": city,
-                "state": state,
-                "postal_code": postal_code,
-                "country": country,
-                "first_name": first_name,
-                "email": email,
+                "plant": plant, "environment": envn, "initial": user_initial, "number_of_Orders": num_of_order,
+                "order_Type": order_type, "item": item, "qty": qty, "d_facility": d_facility,
+                "pre_pack_Code": pre_pack_code, "vas_code_service_id": vas_code_service_id,
+                "vas_code_service_uom": vas_code_service_uom, "service_level": service_level,
+                "address_1": address_1, "city": city, "state": state, "postal_code": postal_code,
+                "country": country, "first_name": first_name, "email": email, "phone": phone,
+                "carrier_code": carrier_code, "hub_code": hub_code, "route_number": route_number,
+                "mark_for_customer_id": mark_for_customer_id, "sold_to_facility_id": sold_to_facility_id
                 }
             self.all_order_create_parameters.append(order_params)  # Add to our new list
 
@@ -160,7 +161,8 @@ class Outbound_Worksheet:
         original_order_entry = self.list_of_entry
         order_ids = []
         for entry in original_order_entry:
-            order_ids.append(entry.get('OrderID'))
+            order_id = str(entry.get('OrderID'))
+            order_ids.append(order_id.zfill(10))
 
         if not self._excel_open(input_sheet_name='Shipment_ID'):
             logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
@@ -212,14 +214,74 @@ class Outbound_Worksheet:
         self.all_search_order.append(search_order)
         return self.all_search_order
 
+    def tran_log_worksheet_extract_parameter(self):
+        self.all_tran_log_worksheet_parameters = []
+        if not self._excel_open(input_sheet_name='TranLog'):
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            return False
+
+        if not self.list_of_entry:
+            logging.error("No TranLog entries found to extract parameters.")
+            return False
+
+        for i, entry_dict in enumerate(self.list_of_entry):
+
+            plant = entry_dict.get("Plant")
+            envn = entry_dict.get("Environment")
+            msg_type = entry_dict.get("MessageType")
+            order = entry_dict.get("OrderID")
+            olpn = entry_dict.get("oLPN")
+
+            tran_log_entry = {
+                "plant": plant, "environment": envn, "message_type": msg_type, "order_id": order, "olpn": olpn
+            }
+            self.all_tran_log_worksheet_parameters.append(tran_log_entry)
+        return self.all_tran_log_worksheet_parameters
+
+    def mhe_journal_worksheet_extract_parameter(self):
+        self.all_mhe_parameters_parameters = []
+        if not self._excel_open(input_sheet_name='MHE_Journal'):
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            return False
+
+        if not self.list_of_entry:
+            logging.error("No MHE entries found to extract parameters.")
+            return False
+
+        for i, entry_dict in enumerate(self.list_of_entry):
+
+            plant = entry_dict.get("Plant")
+            envn = entry_dict.get("Environment")
+            iLPN = entry_dict.get("JournalType")
+            journal_name = entry_dict.get("JournalName")
+            journal_line_type = entry_dict.get("JournalLineType")
+            item = entry_dict.get("Item")
+            qty = entry_dict.get("Quantity")
+            location = entry_dict.get("Location")
+            license_plate = entry_dict.get("LicensePlate")
+
+            mhe_entry = {
+                "plant": plant,
+                "environment": envn,
+                "journal_type": journal_type,
+                "journal_name": journal_name,
+                "journal_line_type": journal_line_type,
+                "item": item,
+                "qty": qty,
+                "location": location,
+                "license_plate": license_plate
+            }
+            self.all_mhe_parameters.append(mhe_entry)
+        return self.all_mhe_parameters
 
 if __name__ == '__main__':
+    from pprint import pprint
     Work = Outbound_Worksheet()
-    # payload = Work.create_order_extract_parameters()
-    # print(payload)
+    tran_log_detail = Work.tran_log_worksheet_extract_parameter()
+    pprint(tran_log_detail)
     # create_shipment = Work.create_new_shipment_extract_parameter()
     # print(create_shipment)
     # add_order_to_shipment = Work.add_order_to_shipment_extract_parameter()
     # print(add_order_to_shipment)
-    search_parent_order = Work.search_parent_order()
-    print(search_parent_order)
+    # search_parent_order = Work.search_parent_order()
+    # print(search_parent_order)

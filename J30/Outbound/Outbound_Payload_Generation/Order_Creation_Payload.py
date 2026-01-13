@@ -1,6 +1,15 @@
 import logging
 from typing import Any
 from datetime import datetime, timedelta
+import pandas as pd
+import sys
+from pathlib import Path
+
+# Ensure project root is on sys.path so `Outbound` and `Payload_generation` packages can be imported
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent.parent  # .../Nike/J30
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from Outbound.Outbound_Payload_Generation.Outbound_Worksheet_Extract import Outbound_Worksheet
 from Payload_generation.Number_Generation import NumberGeneration
@@ -35,7 +44,7 @@ class Order_Creation_Payload:
                 "PurchaseOrderNumber": "TOC65312052", "DivisionCode": "20", "AlwaysAvailableIndicator": False,
                 "ProductLifeCycleCode": "ACT", "LaunchCode": "N", "PromotionalIndicator": False,
                 "MaterialAvailableDate": "2025-04-05T13:28:11", "PurchaseOrderLineNumber": "1",
-                "SalesOrderLineNumber": "1", "BatchNumber": "065312052"
+                "SalesOrderLineNumber": "1", "BatchNumber": "084077890"
                 }
 
             vas_code_service_ids = [vas_id.strip() for vas_id in current_vas_id_group.split('@') if vas_id.strip()]
@@ -45,6 +54,7 @@ class Order_Creation_Payload:
                 logging.error(f"Mismatch in '@' in vase code service id and service uom in row {row_num_in_sheet}. Skipping this row's order lines.")
                 return []
 
+            # Use this line in future for VAS details to be included in OriginalOrderLineRequestedServices for now it is mentioned as empty list []
             vas_detail = []
             sequence_nbr = 1
             for vas_code_service_id, vas_code_service_uom in zip(vas_code_service_ids, vas_code_service_uoms):
@@ -56,11 +66,12 @@ class Order_Creation_Payload:
                 sequence_nbr += 1
 
             order_line = {
-                     "OriginalOrderLineId": order_line_id,
+                     "CountryOfOriginId": "",
+                     "OriginalOrderLineId": str(order_line_id),
                      "ItemId": current_item,
                      "OrderedQuantity": current_qty,
                      "QuantityUomId": "Unit", "ItemAttribute1": "01000", "UnitPrice": "32.5",
-                     "Extended": extended, "OriginalOrderLineRequestedService": vas_detail
+                     "Extended": extended, "OriginalOrderLineRequestedServices": []
                          }
 
             order_line_list.append(order_line)
@@ -97,20 +108,39 @@ class Order_Creation_Payload:
             city = data_row.get("city")
             state = data_row.get("state")
             postal_code = data_row.get("postal_code")
+            phone = data_row.get("phone")
             country = data_row.get("country")
             first_name = data_row.get("first_name")
+            if pd.isna(first_name):
+                first_name = None
             email = data_row.get("email")
+            if pd.isna(email):
+                email = None
             item = data_row.get("item")
             qty = str(data_row.get("qty"))
             d_facility = data_row.get("d_facility")
             pre_pack_code = data_row.get("pre_pack_code")
             vas_code_service_id = data_row.get("vas_code_service_id", 'BOX')
             vas_code_service_uom = data_row.get("vas_code_service_uom", 'oLPN')
+            carrier_code = data_row.get("carrier_code")
+            hub_code = data_row.get("hub_code")
+            route_number_raw = data_row.get("route_number")
+            # Default to empty string if None or NaN
+            route_number = '' if (route_number_raw is None or pd.isna(route_number_raw)) else str(route_number_raw)
+            mark_for_customer_id_raw = data_row.get("mark_for_customer_id")
+            # Default to empty string if None or NaN
+            mark_for_customer_id = '' if (mark_for_customer_id_raw is None or pd.isna(mark_for_customer_id_raw)) else str(mark_for_customer_id_raw)
+            sold_to_facility_id = data_row.get("sold_to_facility_id")
 
             now = datetime.now()
             now_iso = now.isoformat(timespec='seconds')
-            future = now + timedelta(days=5)
+            now_end = now + timedelta(days=4)
+            now_end_iso = now_end.isoformat(timespec='seconds')
+            future = now + timedelta(days=10)
             future_iso = future.isoformat(timespec='seconds')
+            future_end = future + timedelta(days=20)
+            future_end_iso = future_end.isoformat(timespec='seconds')
+            scheduled_delivery_date = None
 
             order_ids = self.number_gen.order_number_generation(num_of_order, envn, user_initial)
 
@@ -123,38 +153,68 @@ class Order_Creation_Payload:
 
                 dest_address = {
                     "Address1": address_1, "City": city, "State": state, "PostalCode": postal_code,
-                    "Country": country, "FirstName": first_name, "Email": email
+                    "Country": country, "FirstName": first_name, "Email": email, "Phone": phone
                 }
 
-                extended = {
-                    "FulfillmentRequestType": "ZLF", "ServiceLevelCode": service_level, "ShippingPointCode": plant,
-                    "RouteNumber": "103002", "TransitTime": "01", "SalesOrganisationCode": "2000",
-                    "ExportIndicator": False, "ShipToAddressOverrideIndicator": False,
-                    "CustomerDocumentRequiredIndicator": False, "PoRequiredIndicator": False,
-                    "AppointmentSchedulingIndicator": True, "SalesDeliveryPriority": "2", "TotalVasTime": "0.0",
-                    "ConsolFlag": False, "CarrierServiceCode": "ZTRA", "ScheduledDeliveryEndDate": future_iso,
-                    "DeliveryByTheHour": "00000000", "CustomerRequestedTimestamp": future_iso,
-                    "SoldToFacilityId": "8000035", "CarrierHubCode": "H590",
-                    "SoldToBillingAccountNumber": "300597", "MarkForCustomerId": "314896",
-                    "DestinationFacilityName": "CHOCOLADE ECLAIRTJE",
-                    "MarkForCustomerName": "CHOCOLADE ECLAIRTJE", "DestinationContactName": "",
-                    "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": "EO8365566199",
-                    "CustomerBusinessTypeCode": "4", "CustomerAccountType": "9", "ChannelClassCode": "28",
-                    "DeliveryEndDateTime": future_iso, "Priority": 10, "CarrierCode": "UPSY",
-                    "ShipToPartyIdentifierType": "DIGITAL", "LastShipmentTimestamp": future_iso,
-                    "DeliveryStartDateTime": future_iso, "PackSlipRequired": "N", "ReturnsLabelRequired": "N"
+                bill_address = {
+                    "Address1": address_1, "City": city, "State": state, "PostalCode": postal_code,
+                    "Country": country,  "Phone": phone
                 }
+
+                # Default ShippingPointCode to empty string if plant is None or NaN
+                shipping_point_code = '' if (plant is None or pd.isna(plant)) else str(plant)
+                if order_type == 'Z033':
+                    extended = {
+                        "FulfillmentRequestType": "ZLF", "ServiceLevelCode": service_level, "ShippingPointCode": shipping_point_code,
+                        "RouteNumber": route_number, "TransitTime": "01", "SalesOrganisationCode": "2000",
+                        "ExportIndicator": False, "ShipToAddressOverrideIndicator": False,
+                        "CustomerDocumentRequiredIndicator": False, "PoRequiredIndicator": False,
+                        "AppointmentSchedulingIndicator": False, "SalesDeliveryPriority": "2", "TotalVasTime": "0.0",
+                        "ConsolFlag": False, "CarrierServiceCode": carrier_code,  "CarrierHubCode": hub_code,
+                        "ScheduledDeliveryEndDate": future_end_iso,
+                        "DeliveryByTheHour": "00000000", "CustomerRequestedTimestamp": future_iso,
+                        "SoldToFacilityId": sold_to_facility_id,
+                        "SoldToBillingAccountNumber": sold_to_facility_id, "MarkForCustomerId": f"{mark_for_customer_id}",
+                        "DestinationFacilityName": "NIKE STORE LE MARAIS",
+                        "MarkForCustomerName": "NIKE STORE LE MARAIS", "DestinationContactName": "",
+                        "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": "EO8365566199",
+                        "CustomerBusinessTypeCode": "4", "CustomerAccountType": "9", "ChannelClassCode": "26",
+                        "DeliveryEndDateTime": future_end_iso, "Priority": 10, "CarrierCode": carrier_code,
+                        "ShipToPartyIdentifierType": "WHOLE_SALE_DC", "LastShipmentTimestamp": future_iso,
+                        "DeliveryStartDateTime": future_iso, "PackSlipRequired": "N", "ReturnsLabelRequired": "N"
+                    }
+                else:
+                    extended = {
+                        "FulfillmentRequestType": "ZLF", "ServiceLevelCode": service_level, "ShippingPointCode": shipping_point_code,
+                        "RouteNumber": route_number, "TransitTime": "01", "SalesOrganisationCode": "2000",
+                        "ExportIndicator": False, "ShipToAddressOverrideIndicator": False,
+                        "CustomerDocumentRequiredIndicator": False, "PoRequiredIndicator": False,
+                        "AppointmentSchedulingIndicator": False, "SalesDeliveryPriority": "2", "TotalVasTime": "0.0",
+                        "ConsolFlag": False, "CarrierServiceCode": carrier_code,  "CarrierHubCode": hub_code,
+                        "DeliveryByTheHour": "00000000", "CustomerRequestedTimestamp": future_iso,
+                        "SoldToFacilityId": sold_to_facility_id,
+                        "SoldToBillingAccountNumber": sold_to_facility_id, "MarkForCustomerId": f"{mark_for_customer_id}",
+                        "DestinationFacilityName": "NIKE STORE LE MARAIS",
+                        "MarkForCustomerName": "NIKE STORE LE MARAIS", "DestinationContactName": "",
+                        "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": "EO8365566199",
+                        "CustomerBusinessTypeCode": "4", "CustomerAccountType": "9", "ChannelClassCode": "26",
+                        "DeliveryEndDateTime": future_end_iso, "Priority": 10, "CarrierCode": carrier_code,
+                        "ShipToPartyIdentifierType": "WHOLE_SALE_DC", "LastShipmentTimestamp": future_iso,
+                        "DeliveryStartDateTime": future_iso, "PackSlipRequired": "N", "ReturnsLabelRequired": "N"
+                    }
 
                 order_line_info = self._parse_order_line_item(item, qty, vas_code_service_id, vas_code_service_uom, row_num_in_sheet)
 
+                origin_facility_id = '' if (plant is None or pd.isna(plant)) else str(plant)
                 order_payload = {
-                    "OrderType": order_type, "OriginFacilityId": plant, "OriginalOrderId": current_order_id,
+                    "OrderType": order_type, "OriginFacilityId": origin_facility_id, "OriginalOrderId": current_order_id,
                     "IncotermId": "DDP", "ResidentialDestination": True,
                     "MaximumStatus": "0500", "MinimumStatus": "0500",
-                    "PickupEndDateTime": now_iso, "PickupStartDateTime": now_iso,
-                    "DeliveryEndDateTime": future_iso, "DeliveryStartDateTime": future_iso,
+                    "PickupStartDateTime": now_iso, "PickupEndDateTime": now_end_iso,
+                    "DeliveryStartDateTime": future_iso, "DeliveryEndDateTime": future_end_iso,
                     "DestinationFacilityId": d_facility, "DestinationAddress":  dest_address,
-                    "BillToFacilityId": d_facility, "BillToName": "CHOCOLADE ECLAIRTJE", "BillToAddress": dest_address,
+                    "BillToFacilityId": sold_to_facility_id, "BillToName": "NIKE STORE LE MARAIS", 
+                    "BillToAddress": bill_address,
                     "Extended": extended,
                     "OriginalOrderLine": order_line_info
                 }

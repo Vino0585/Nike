@@ -3,6 +3,7 @@ import requests
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
+from Inventory_Payload_Generation.Task_Search_Payload import Task_Search_Payload
 
 class Recall_Retrieval_Task_Payload():
 
@@ -60,7 +61,8 @@ class Recall_Retrieval_Task_Payload():
                         resp = response_data['data']['Results']
                         response_result.append(response_data.get('success'))
                         logging.info(f"SUCCESS: Payload {i + 1} processed successfully.")
+                        pass;
+                    except Exception as e:
 
-                        for entry in resp:
-                            pass
+
 

@@ -75,7 +75,9 @@ class Item_Inventory_By_Location:
 
 if __name__ == "__main__":
     response = Item_Inventory_By_Location()
-    print(response.item_inventory_by_location())
+    from pprint import pprint
+    pprint(response.item_inventory_by_location())
+
 
 
 
