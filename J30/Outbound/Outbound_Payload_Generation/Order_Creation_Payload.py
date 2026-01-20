@@ -22,6 +22,7 @@ class Order_Creation_Payload:
         self.worksheet = Outbound_Worksheet()
         self.number_gen = NumberGeneration()
         self.all_order_payloads = []
+        self.po_nbr = self.number_gen.purchase_order_number()
 
     def _parse_order_line_item(self, item, qty, vas_code_service_id, vas_code_service_uom, row_num_in_sheet) -> list:
         item_grp = item.split(';')
@@ -37,11 +38,13 @@ class Order_Creation_Payload:
             )
             return []
 
+
+
         order_line_list = []
         order_line_id = 1  # Initialize the line ID *before* the loop.
         for current_item, current_qty, current_vas_id_group, current_vas_uom_group in zip(item_grp, qty_grp, vas_code_service_id_grp, vas_code_service_uom_grp):
             extended = {
-                "PurchaseOrderNumber": "TOC65312052", "DivisionCode": "20", "AlwaysAvailableIndicator": False,
+                "PurchaseOrderNumber": self.po_nbr, "DivisionCode": "20", "AlwaysAvailableIndicator": False,
                 "ProductLifeCycleCode": "ACT", "LaunchCode": "N", "PromotionalIndicator": False,
                 "MaterialAvailableDate": "2025-04-05T13:28:11", "PurchaseOrderLineNumber": "1",
                 "SalesOrderLineNumber": "1", "BatchNumber": "084077890"
@@ -177,7 +180,7 @@ class Order_Creation_Payload:
                         "SoldToBillingAccountNumber": sold_to_facility_id, "MarkForCustomerId": f"{mark_for_customer_id}",
                         "DestinationFacilityName": "NIKE STORE LE MARAIS",
                         "MarkForCustomerName": "NIKE STORE LE MARAIS", "DestinationContactName": "",
-                        "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": "EO8365566199",
+                        "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": self.po_nbr,
                         "CustomerBusinessTypeCode": "4", "CustomerAccountType": "9", "ChannelClassCode": "26",
                         "DeliveryEndDateTime": future_end_iso, "Priority": 10, "CarrierCode": carrier_code,
                         "ShipToPartyIdentifierType": "WHOLE_SALE_DC", "LastShipmentTimestamp": future_iso,
@@ -196,7 +199,7 @@ class Order_Creation_Payload:
                         "SoldToBillingAccountNumber": sold_to_facility_id, "MarkForCustomerId": f"{mark_for_customer_id}",
                         "DestinationFacilityName": "NIKE STORE LE MARAIS",
                         "MarkForCustomerName": "NIKE STORE LE MARAIS", "DestinationContactName": "",
-                        "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": "EO8365566199",
+                        "SalesOrderNumber": "8365566199", "ExternalPurchaseOrderNumber": self.po_nbr,
                         "CustomerBusinessTypeCode": "4", "CustomerAccountType": "9", "ChannelClassCode": "26",
                         "DeliveryEndDateTime": future_end_iso, "Priority": 10, "CarrierCode": carrier_code,
                         "ShipToPartyIdentifierType": "WHOLE_SALE_DC", "LastShipmentTimestamp": future_iso,

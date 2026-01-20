@@ -95,6 +95,63 @@ class Search_Order_Payload:
         return parent_order_data
 
 
+    def parse_mhe_parent_order_search(self) -> list[Any]:
+        try:
+            list_of_datadict = self.worksheet.mhe_journal_worksheet_extract_parameter()
+            if list_of_datadict is None:
+                logging.error("Error: Outbound Worksheet Extract method returned None. Halting generation")
+                return []
+
+            logging.info(f"Successfully extracted {len(list_of_datadict)} data row(s) for search order processing.")
+
+            self.all_search_order_payload = []
+
+            for i, data_row in enumerate(list_of_datadict):
+                row_num_in_sheet = i + 1
+                logging.info(f"Processing row {row_num_in_sheet}: {data_row}")
+
+                plant = data_row.get("Plant")
+                environment = data_row.get("Environment")
+                order_ids = data_row.get("order_ids")
+
+                if not plant or not environment or not order_ids:
+                    logging.error(f"INFO: Skipping row {row_num_in_sheet} as 'Plant' or 'Environment', or" 
+                                  f"'Order_ID' is missing")
+                    return []
+
+                order_id_query_value = "','".join(order_ids)
+                payload = {
+                              "ViewName": "Order",
+                              "Filters": [
+                                {
+                                  "ViewName": "orders",
+                                  "AttributeId": "OrderLine.OriginalOrderId",
+                                  "Operator": "=",
+                                  "FilterValues": [
+                                    order_id_query_value
+                                  ]
+                                }
+                              ],
+                              "SortIndicator": None,
+                              "TimeZone": "Japan",
+                              "MaxCountLimit": 100,
+                              "ComponentName": "com-manh-cp-dcorder",
+                              "Size": 10,
+                              "Sort": "CreatedTimestamp"
+                            }
+
+                final_payload = {
+                    'Plant': plant,
+                    'Environment': environment,
+                    'Payload': payload
+                }
+                self.all_search_order_payload.append(final_payload)
+            return self.all_search_order_payload
+
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+
+
 if __name__ == '__main__':
     final_search_order_payload = Search_Order_Payload().parse_parent_order_search()
     if final_search_order_payload:

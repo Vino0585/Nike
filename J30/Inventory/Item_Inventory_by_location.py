@@ -65,19 +65,15 @@ class Item_Inventory_By_Location:
                 response = requests.post(url=url_value, headers=headers, json=payload)
                 response.raise_for_status()
                 response_data.append(response.json())
-
+                extracted_data = response_data[0]['data']['Results']
 
         except Exception as e:
             logging.error(f"--> FATAL: {e}")
             return None
 
-        return response_data
+        return extracted_data
 
 if __name__ == "__main__":
     response = Item_Inventory_By_Location()
     from pprint import pprint
     pprint(response.item_inventory_by_location())
-
-
-
-

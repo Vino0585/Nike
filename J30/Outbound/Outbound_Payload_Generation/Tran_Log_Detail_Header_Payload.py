@@ -1,6 +1,6 @@
 from math import isnan
 
-from Outbound.Outbound_Payload_Generation.Outbound_WorkSheet_Extract import Outbound_Worksheet
+from Outbound.Outbound_Payload_Generation.Outbound_Worksheet_Extract import Outbound_Worksheet
 import logging
 import pandas as pd
 import datetime as datetime
@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 class Tran_log_detail_header:
     
     def __init__(self):
-        self.outbound_worksheet = Outbound_WorkSheet_Extract()
+        self.outbound_worksheet = Outbound_Worksheet()
         self.all_iLPN_search_payload = []
         self.all_search_iLPN_parameters = self.inventory_worksheet.search_iLPN_parameters()
         

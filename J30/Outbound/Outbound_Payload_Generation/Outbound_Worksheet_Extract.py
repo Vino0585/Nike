@@ -252,24 +252,20 @@ class Outbound_Worksheet:
 
             plant = entry_dict.get("Plant")
             envn = entry_dict.get("Environment")
-            iLPN = entry_dict.get("JournalType")
-            journal_name = entry_dict.get("JournalName")
-            journal_line_type = entry_dict.get("JournalLineType")
-            item = entry_dict.get("Item")
-            qty = entry_dict.get("Quantity")
-            location = entry_dict.get("Location")
-            license_plate = entry_dict.get("LicensePlate")
+            wave_number = entry_dict.get("WaveNumber")
+            task_ids = entry_dict.get("TaskID")
+            ilpns = entry_dict.get("iLPN")
+            olpns = entry_dict.get("oLPN")
+            order_ids = entry_dict.get("OrderID")
 
             mhe_entry = {
                 "plant": plant,
                 "environment": envn,
-                "journal_type": journal_type,
-                "journal_name": journal_name,
-                "journal_line_type": journal_line_type,
-                "item": item,
-                "qty": qty,
-                "location": location,
-                "license_plate": license_plate
+                "wave_number": wave_number,
+                "task_ids": task_ids,
+                "ilpns": ilpns,
+                "olpns": olpns,
+                "order_ids": order_ids
             }
             self.all_mhe_parameters.append(mhe_entry)
         return self.all_mhe_parameters

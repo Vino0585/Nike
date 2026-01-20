@@ -352,6 +352,7 @@ class iLPN_Search:
         except Exception as e:
             logging.error(f"Failed to generate or export the final report: {e}")
 
+
 if __name__ == "__main__":
     query = iLPN_Search()
     query.iLPN_query()

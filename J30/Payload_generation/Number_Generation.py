@@ -73,7 +73,7 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         for i in range(num_of_order_to_generate):
             # Using a wider random range and the loop index for better uniqueness
             unique_part = f"{random.randint(100, 999)}{i}"
-            id_ = f"{initial}ORD{timestamp}{envn.upper()}{unique_part}"
+            id_ = f"{initial}{timestamp}{unique_part}"
             self.generated_order_ids.append(id_)
         return self.generated_order_ids
 
@@ -106,8 +106,8 @@ if __name__ == '__main__':
     # print(lpn)
     # bol, pro, trailer, seal = number_generation.misc_nbr('dev')
     # print(bol, pro, trailer, seal)
-    # order = number_generation.order_number_generation(2, 'QA', 'VG')
-    # print(order)
+    order = number_generation.order_number_generation(2, 'QA', 'VG')
+    print(order)
     # shipment = number_generation.create_shipment_number()
     # print(shipment)
     # loading = number_generation.loading_group_number()

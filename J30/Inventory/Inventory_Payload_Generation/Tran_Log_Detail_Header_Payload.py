@@ -24,7 +24,7 @@ class Tran_log_detail_header:
 
         all_payloads = []
         # Get today's date and format it to 'DD Mon YYYY' (e.g., '26 Oct 2023')
-        todays_date_str = datetime.date.today().strftime('%d %b %Y')
+        todays_date_str = (datetime.date.today() + pd.Timedelta(days=1)).strftime('%d %b %Y')
         yesterday_date_str = (datetime.date.today() - pd.Timedelta(days=1)).strftime('%d %b %Y')
         seven_days = (datetime.date.today() - pd.Timedelta(days=7)).strftime('%d %b %Y')
         tomorrow_date_str = (datetime.date.today() + pd.Timedelta(days=1)).strftime('%d %b %Y')
