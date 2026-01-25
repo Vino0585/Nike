@@ -24,10 +24,10 @@ class Order_Creation_Payload:
         self.all_order_payloads = []
         self.po_nbr = self.number_gen.purchase_order_number()
 
-    def _parse_order_line_item(self, item, qty, vas_code_service_id, vas_code_service_uom, row_num_in_sheet) -> list:
+    def _parse_order_line_item(self, item, qty, provider_service_id, vas_code_service_uom, row_num_in_sheet) -> list:
         item_grp = item.split(';')
         qty_grp = qty.split(';')
-        vas_code_service_id_grp = vas_code_service_id.split(';')
+        vas_code_service_id_grp = provider_service_id.split(';')
         vas_code_service_uom_grp = vas_code_service_uom.split(';')
 
         if not (len(item_grp) == len(qty_grp) == len(vas_code_service_id_grp) == len(vas_code_service_uom_grp)):
@@ -61,8 +61,8 @@ class Order_Creation_Payload:
             vas_detail = []
             sequence_nbr = 1
             for vas_code_service_id, vas_code_service_uom in zip(vas_code_service_ids, vas_code_service_uoms):
-                original_order_line_requested_service =  {
-                        "ServiceTypeId": 'VAS', "ProvidedServiceId": vas_code_service_id,
+                original_order_line_requested_service = {
+                        "ServiceTypeId": 'VAS', "ProvidedServiceId": provider_service_id,
                         "Sequence": sequence_nbr, "ServiceUomId": vas_code_service_uom
                     }
                 vas_detail.append(original_order_line_requested_service)
@@ -73,7 +73,8 @@ class Order_Creation_Payload:
                      "OriginalOrderLineId": str(order_line_id),
                      "ItemId": current_item,
                      "OrderedQuantity": current_qty,
-                     "QuantityUomId": "Unit", "ItemAttribute1": "01000", "UnitPrice": "32.5",
+                     "QuantityUomId": " Unit", "ItemAttribute1": "01000", "UnitPrice": "32.5",
+                    # Add the vas_detail here without the list parameter as it is already a list in RequestedServices
                      "Extended": extended, "OriginalOrderLineRequestedServices": []
                          }
 
@@ -123,7 +124,7 @@ class Order_Creation_Payload:
             qty = str(data_row.get("qty"))
             d_facility = data_row.get("d_facility")
             pre_pack_code = data_row.get("pre_pack_code")
-            vas_code_service_id = data_row.get("vas_code_service_id", 'BOX')
+            provider_service_id = data_row.get("provider_service_id", 'BOX')
             vas_code_service_uom = data_row.get("vas_code_service_uom", 'oLPN')
             carrier_code = data_row.get("carrier_code")
             hub_code = data_row.get("hub_code")
@@ -206,7 +207,7 @@ class Order_Creation_Payload:
                         "DeliveryStartDateTime": future_iso, "PackSlipRequired": "N", "ReturnsLabelRequired": "N"
                     }
 
-                order_line_info = self._parse_order_line_item(item, qty, vas_code_service_id, vas_code_service_uom, row_num_in_sheet)
+                order_line_info = self._parse_order_line_item(item, qty, provider_service_id, vas_code_service_uom, row_num_in_sheet)
 
                 origin_facility_id = '' if (plant is None or pd.isna(plant)) else str(plant)
                 order_payload = {

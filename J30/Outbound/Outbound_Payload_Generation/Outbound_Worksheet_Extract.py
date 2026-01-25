@@ -18,7 +18,7 @@ class Outbound_Worksheet:
         self.all_order_create_parameters = []
         self.all_order_search_parameters = []
         self.all_tran_log_worksheet_parameters = []
-        self.all_mhe_parameters_parameters = []
+        self.all_mhe_journal_parameter = []
 
 
     def _excel_open(self, input_sheet_name):
@@ -80,7 +80,7 @@ class Outbound_Worksheet:
             qty = entry_dict.get('Quantity')
             d_facility = str(entry_dict.get("D_Facility", '0005005401'))
             pre_pack_code = entry_dict.get("PrePack Code")
-            vas_code_service_id = entry_dict.get("VAS Code Service ID")
+            provider_service_id = entry_dict.get("Provider Service ID")
             vas_code_service_uom = entry_dict.get("VAS Code Service UOM")
             service_level = entry_dict.get("Service Level")
             address_1 = entry_dict.get("Address1")
@@ -107,12 +107,12 @@ class Outbound_Worksheet:
             order_params = {
                 "plant": plant, "environment": envn, "initial": user_initial, "number_of_Orders": num_of_order,
                 "order_Type": order_type, "item": item, "qty": qty, "d_facility": d_facility,
-                "pre_pack_Code": pre_pack_code, "vas_code_service_id": vas_code_service_id,
-                "vas_code_service_uom": vas_code_service_uom, "service_level": service_level,
-                "address_1": address_1, "city": city, "state": state, "postal_code": postal_code,
-                "country": country, "first_name": first_name, "email": email, "phone": phone,
-                "carrier_code": carrier_code, "hub_code": hub_code, "route_number": route_number,
-                "mark_for_customer_id": mark_for_customer_id, "sold_to_facility_id": sold_to_facility_id
+                "pre_pack_Code": pre_pack_code, "provider_service_id": provider_service_id,
+                "vas_code_service_uom": vas_code_service_uom, "service_level": service_level, "address_1": address_1,
+                "city": city, "state": state, "postal_code": postal_code, "country": country, "first_name": first_name,
+                "email": email, "phone": phone, "carrier_code": carrier_code, "hub_code": hub_code,
+                "route_number": route_number, "mark_for_customer_id": mark_for_customer_id,
+                "sold_to_facility_id": sold_to_facility_id
                 }
             self.all_order_create_parameters.append(order_params)  # Add to our new list
 
@@ -231,15 +231,16 @@ class Outbound_Worksheet:
             msg_type = entry_dict.get("MessageType")
             order = entry_dict.get("OrderID")
             olpn = entry_dict.get("oLPN")
+            wave_nbr = entry_dict.get("WaveNumber")
 
             tran_log_entry = {
-                "plant": plant, "environment": envn, "message_type": msg_type, "order_id": order, "olpn": olpn
+                "plant": plant, "environment": envn, "message_type": msg_type, "order_id": order, "olpn": olpn, "wave_number": wave_nbr
             }
             self.all_tran_log_worksheet_parameters.append(tran_log_entry)
         return self.all_tran_log_worksheet_parameters
 
     def mhe_journal_worksheet_extract_parameter(self):
-        self.all_mhe_parameters_parameters = []
+        self.all_mhe_journal_parameter = []
         if not self._excel_open(input_sheet_name='MHE_Journal'):
             logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
             return False
@@ -253,10 +254,10 @@ class Outbound_Worksheet:
             plant = entry_dict.get("Plant")
             envn = entry_dict.get("Environment")
             wave_number = entry_dict.get("WaveNumber")
-            task_ids = entry_dict.get("TaskID")
-            ilpns = entry_dict.get("iLPN")
-            olpns = entry_dict.get("oLPN")
-            order_ids = entry_dict.get("OrderID")
+            task_ids = entry_dict.get("TaskIDs")
+            ilpns = entry_dict.get("iLPNs")
+            olpns = entry_dict.get("oLPNs")
+            order_ids = entry_dict.get("OrderIDs")
 
             mhe_entry = {
                 "plant": plant,
@@ -267,17 +268,19 @@ class Outbound_Worksheet:
                 "olpns": olpns,
                 "order_ids": order_ids
             }
-            self.all_mhe_parameters.append(mhe_entry)
-        return self.all_mhe_parameters
+            self.all_mhe_journal_parameter.append(mhe_entry)
+        return self.all_mhe_journal_parameter
 
 if __name__ == '__main__':
     from pprint import pprint
     Work = Outbound_Worksheet()
-    tran_log_detail = Work.tran_log_worksheet_extract_parameter()
-    pprint(tran_log_detail)
+    # tran_log_detail = Work.tran_log_worksheet_extract_parameter()
+    # pprint(tran_log_detail)
     # create_shipment = Work.create_new_shipment_extract_parameter()
     # print(create_shipment)
     # add_order_to_shipment = Work.add_order_to_shipment_extract_parameter()
     # print(add_order_to_shipment)
     # search_parent_order = Work.search_parent_order()
-    # print(search_parent_order)
+    # pprint(search_parent_order)
+    mhe_journal = Work.mhe_journal_worksheet_extract_parameter()
+    pprint(mhe_journal)

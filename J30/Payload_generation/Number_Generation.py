@@ -39,6 +39,7 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
             f'00081{datetime.today().strftime('%m%d%Y')}'
             f'{random.randint(10000, 99999)}{self.lpn_unique_counter:02d}'
         )
+
         self.lpn_unique_counter += 1
         return self.generated_lpn_ids
 
@@ -102,12 +103,12 @@ if __name__ == '__main__':
     number_generation = NumberGeneration()
     # asn = number_generation.asn_number_generation(2, 'dev')
     # print(asn)
-    # lpn = number_generation.lpn_number_generation(envn='qa')
-    # print(lpn)
+    lpn = number_generation.lpn_number_generation(envn='qa')
+    print(lpn)
     # bol, pro, trailer, seal = number_generation.misc_nbr('dev')
     # print(bol, pro, trailer, seal)
-    order = number_generation.order_number_generation(2, 'QA', 'VG')
-    print(order)
+    # order = number_generation.order_number_generation(2, 'QA', 'VG')
+    # print(order)
     # shipment = number_generation.create_shipment_number()
     # print(shipment)
     # loading = number_generation.loading_group_number()
