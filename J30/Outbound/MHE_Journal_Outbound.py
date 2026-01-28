@@ -90,13 +90,14 @@ class MHE_Journal_Inventory:
                                 goodsholder_id = message_payload_dict['data']['goodsholderId']
                             elif events == 'DCI_DEI_AddConditionCode':
                                 goodsholder_id = message_payload_dict["IlpnId"]
-                            elif events == 'Task_Update':
-                                goodsholder_id = message_payload_dict["Task"]["TaskDetail"][0][
-                                    "SourceContainerId"]
+                            elif events == 'PPK_DEI_TaskRelease':
+                                goodsholder_id = message_payload_dict["TaskData"]["data"][0]["TaskDetail"][0]["SourceContainerId"]
                             elif events == 'RETRIEVAL_TASK_COMPLETED':
                                 goodsholder_id = message_payload_dict['data']['requestedGoodsholderId']
                             elif events == 'PPK_DEI_PickingFeedback':
                                 goodsholder_id = message_payload_dict['feedback'][0]['ContainerId']
+                            elif events == 'PACK_TASK_FAILED':
+                                goodsholder_id = message_payload_dict['data']['sourceGoodsholderId']
                             elif events == 'PTW_DEI_AllocationCreated':
                                 goodsholder_id = message_payload_dict["PutawayTaskDetails"]["TaskDetailDTOs"][0]["SourceContainerId"]
                             elif events == 'GOODSHOLDER_DIVERTED_DUE_TO_EXCEPTION':
@@ -110,10 +111,10 @@ class MHE_Journal_Inventory:
                                 logging.info(f"Could not obtain the Carton information for {events}")
                                 continue
 
-                            try:
-                                lock_code = message_payload_dict["RemoveConditionCodes"][0]
-                            except (KeyError, IndexError):
-                                lock_code = 'NA'
+                            if events == 'PACK_TASK_FAILED':
+                                reason_code = message_payload_dict['data']['packTaskFailed']['reasonForFailureList'][0]['reasonForFailureReasoncode']
+                                vendor_code_desc = message_payload_dict['data']['packTaskFailed']['reasonForFailureList'][0]['reasonForFailureVendorDesc']
+                                divert_locn = message_payload_dict['data']['packTaskFailed']['divertedAtDestinationLocationId']
 
                             createdate = to_datetime(header_info.get('MessageTimeStamp'))
                             today_start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -125,9 +126,11 @@ class MHE_Journal_Inventory:
                                     'Plant': plant_id,
                                     'MessageID': entry.get('MessageId'),
                                     'LPN_ID': goodsholder_id,
-                                    "Lock": lock_code,
                                     'Message_Type': entry.get('MessageType'),
                                     'Status': entry.get('Status'),
+                                    "ReasonCode": reason_code if events == 'PACK_TASK_FAILED' else None,
+                                    "VendorCodeDesc": vendor_code_desc if events == 'PACK_TASK_FAILED' else None,
+                                    "DivertedLocation": divert_locn if events == 'PACK_TASK_FAILED' else None,
                                     'User': header_info.get('User'),
                                     'Created_on': header_info.get('MessageTimeStamp')
                                 }
@@ -167,7 +170,7 @@ class MHE_Journal_Inventory:
             # Check if directory exist.
             output_dir.mkdir(parents=True, exist_ok=True)
             # Define the full path to the output file.
-            output_filepath = output_dir / "MHE_Journal_Inbound_results.xlsx"
+            output_filepath = output_dir / "MHE_Journal_Outbound_results.xlsx"
             results_df.to_excel(output_filepath, sheet_name='MHEJournalResult', index=False)
 
             logging.info(f"Successfully exported {len(results_df)} results to '{output_filepath}'")
@@ -178,6 +181,7 @@ class MHE_Journal_Inventory:
 
         logging.info(f"MHE Journal Processing Finished")
         logging.info(f"Total of {len(response_result)} payloads were sent successfully.")
+
 
 if __name__ == "__main__":
     mhe_journal = MHE_Journal_Inventory()

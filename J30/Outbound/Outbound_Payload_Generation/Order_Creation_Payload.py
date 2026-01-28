@@ -75,7 +75,7 @@ class Order_Creation_Payload:
                      "OrderedQuantity": current_qty,
                      "QuantityUomId": " Unit", "ItemAttribute1": "01000", "UnitPrice": "32.5",
                     # Add the vas_detail here without the list parameter as it is already a list in RequestedServices
-                     "Extended": extended, "OriginalOrderLineRequestedServices": []
+                     "Extended": extended, "OriginalOrderLineRequestedServices": vas_detail
                          }
 
             order_line_list.append(order_line)

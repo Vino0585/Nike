@@ -3,6 +3,7 @@ import json
 import pandas as pd
 
 from Outbound.Outbound_Payload_Generation.Outbound_Worksheet_Extract import Outbound_Worksheet
+from Outbound.Outbound_Payload_Generation.Task_Detail_Search import Task_Search_Payload
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -12,6 +13,7 @@ class Outbound_MHE_Journal_Payload:
 
     def __init__(self):
         self.outbound_worksheet = Outbound_Worksheet()
+        self.task_search = Task_Search_Payload()
         self.all_mhe_journal_payloads = []
 
     def create_outbound_mhe_journal_payloads(self) -> list:
@@ -34,6 +36,9 @@ class Outbound_MHE_Journal_Payload:
                             'RoutingTaskResult', 'GoodsholderDivertedDueToException', ]
 
             filter_values = []
+            filter_value_ilpn = []
+            filter_value_olpn = []
+
             if wave_number:
                 filter_values.append(f'"waveNumber":"{wave_number}"')
             if task_ids:
@@ -43,7 +48,15 @@ class Outbound_MHE_Journal_Payload:
             if olpns:
                 filter_values.append(f'"olpn":"{olpns}"')
             if order_ids:
-                filter_values.append(f'"orderId":"{order_ids}"')
+                get_data = self.task_search.search_task_detail_fullcase_payloads_by_order(order_ids, envn, plant)
+                filter_value_ilpn = get_data["iLPN"]
+                for values in filter_value_ilpn:
+                    filter_values.append(values)
+                filter_value_olpn = get_data["oLPN"]
+                for values in filter_value_olpn:
+                    filter_values.append(values)
+                logging.info(f"{filter_values}")
+
 
             if not filter_values:
                 logging.error("No values are given either in wavenbr or task or ilpn or olpn or order. Halting generation")
@@ -72,7 +85,6 @@ class Outbound_MHE_Journal_Payload:
                 mhe_journal_payload = {
                     'environment': envn,
                     'plant': plant,
-                    'filter_values': filter_values,
                     'MHEJournalPayload': mhe_journal_each_payload
                 }
 

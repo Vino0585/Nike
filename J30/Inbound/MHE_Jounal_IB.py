@@ -83,7 +83,7 @@ class MHE_Journal_Inbound:
 
                             if events in ('GOODSHOLDER_ANNOUNCED', 'GOODSHOLDER_MEASURED', 'PUTAWAY_TASK_COMPLETED',
                                           'ROUTING_TASK_COMPLETED', 'GOODSHOLDER_DIVERTED_DUE_TO_EXCEPTION',
-                                          'PUTAWAY_TASK_FAILED'):
+                                          'PUTAWAY_TASK_FAILED', 'ROUTING_TASK_FAILED'):
                                 goodsholder_id = message_payload_dict['data']['goodsholderId']
                             elif events == 'PTW_DEI_AllocationCreated':
                                 goodsholder_id = message_payload_dict["PutawayTaskDetails"]["TaskDetailDTOs"][0]["SourceContainerId"]
