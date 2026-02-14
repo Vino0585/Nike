@@ -1,4 +1,5 @@
 from math import isnan
+from operator import is_not
 
 from Inventory.Inventory_Payload_Generation.Inventory_WorkSheet_Extract import Inventory_WorkSheet_Extract
 import logging
@@ -34,10 +35,15 @@ class Tran_log_detail_header:
             message_type = entry['MESSAGE_TYPE']
             user_id = entry['USER_ID']
             date = entry['Date']
+            item_id = entry['ITEM_IDS']
 
-            if lpn_id is None:
-                lpn_id = user_id
-
+            filter_value = ''
+            if pd.notna(lpn_id):
+                filter_value = lpn_id
+            elif pd.notna(item_id):
+                filter_value = item_id
+            else:
+                filter_value = user_id
 
             if date == 'Today':
                 msg_date = todays_date_str
@@ -50,11 +56,11 @@ class Tran_log_detail_header:
             else:
                 msg_date = todays_date_str
 
-            if pd.notna(lpn_id) and str(lpn_id).strip():
-                lpn_id_list = str(lpn_id).split(';')
-                for lpn in lpn_id_list:
-                    lpn_id = lpn.strip()
-                    if not lpn_id:
+            if pd.notna(filter_value) and str(filter_value).strip():
+                filter_value_list = str(filter_value).split(';')
+                for value in filter_value_list:
+                    filter_value = value.strip()
+                    if not filter_value:
                         continue
 
                     # 1. Build the payload as a Python dictionary
@@ -99,7 +105,7 @@ class Tran_log_detail_header:
                                 "ViewName": "tranlogdetails",
                                 "AttributeId": "TextSearch",
                                 "Operator": "=",
-                                "FilterValues": lpn_id
+                                "FilterValues": filter_value
                             }
                         ],
                         "Page": 0,
