@@ -2,7 +2,7 @@ import logging
 from typing import Any
 from pathlib import Path
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Ensure the J30 project root is on sys.path so the `Outbound` package can be imported
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -197,9 +197,13 @@ class Search_Order_Payload:
             return None
         try:
             # Parse ISO format (e.g., 2026-02-12T09:00:00)
-            dt = datetime.fromisoformat(date_str)
+            dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            
+            # Add 9 hours to convert UTC to JST
+            dt_jst = dt + timedelta(hours=9)
+            
             # Format to: February 12, 2026 9:00:00 PM GMT+9
-            formatted = dt.strftime("%B %d, %Y %I:%M:%S %p")
+            formatted = dt_jst.strftime("%B %d, %Y %I:%M:%S %p")
             return f"{formatted} GMT+9"
         except ValueError:
             return date_str
@@ -223,6 +227,7 @@ class Search_Order_Payload:
                         "Environment": 'QA',
                         "OrderId": order_data.get('OriginalOrderId'),
                         "OrderType": order_data.get('OrderType'),
+                        "LoadingGroup": order_data_extended.get('LoadingGroup'),
                         "PickupStartDate": self._format_date(order_data.get('PickupStartDateTime')),
                         "PickupEndDate": self._format_date(order_data.get('PickupEndDateTime')),
                         "DeliveryStartDate": self._format_date(order_data.get('DeliveryStartDateTime')),
