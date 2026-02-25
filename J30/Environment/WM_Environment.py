@@ -28,7 +28,8 @@ class AWM_Env():
         elif program == "Putaway_Task_Complete":
             self.url = f"https://{self.host_name}/device-integration/api/deviceintegration/process/NIKEPutawayTaskResultSRCEndpointV1"
         elif program == "Get_Inbound_Delivery":
-            self.url = f"https://{self.host_name}/receiving/api/receiving/generateShipmentId"
+            # self.url = f"https://{self.host_name}/receiving/api/receiving/generateShipmentId"
+            self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/receiving/generateShipmentId"
         elif program == "Add_ASN_To_Inbound_Delivery":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/receiving/shipmentAsnAssociation/bulkImport"
         elif program == "Pre_Allocate_Inbound_Delivery":

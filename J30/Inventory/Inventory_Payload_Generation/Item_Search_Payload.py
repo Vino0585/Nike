@@ -55,7 +55,7 @@ class ItemPayload():
                     "Query": query_string,
                     "Template": template_structure,
                     "Size": size,
-                    "Page": page,
+                    # "Page": page,
                     "MaxCountLimit": size,
                     "EnableMaxCountLimit": "True",
                 }

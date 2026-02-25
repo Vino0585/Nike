@@ -232,8 +232,11 @@ class Outbound_Order_Search:
                 if not order_search_df.empty:
                     order_search_df = order_search_df.sort_values(by=['OrderId'])
                 if not order_search_df.empty:
+                    # Adjust display options for better alignment
+                    pd.set_option('display.max_columns', None)
+                    pd.set_option('display.width', 1000)
+                    pd.set_option('display.colheader_justify', 'left')
                     print(order_search_df.to_string(index=False))
-
                 with pd.ExcelWriter(output_filepath, engine='openpyxl') as writer:
                     order_search_df.to_excel(writer, sheet_name='OriginalOrder', index=False)
                     logging.info(f"Successfully exported parent order to Excel file: {output_filepath}")
