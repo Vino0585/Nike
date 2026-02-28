@@ -27,6 +27,8 @@ class AWM_OB_Env():
             self.url = f"https://{self.host_name}/task/api/task/taskDetail/search"
         elif program == 'OriginalOrderSearch':
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/originalOrder/search"
+        elif program == 'ParentOrderLineSearch':
+            self.url = f"https://{self.host_name}/dcorder/api/dcorder/orderLine/search"
         else:
             self.url = None
 

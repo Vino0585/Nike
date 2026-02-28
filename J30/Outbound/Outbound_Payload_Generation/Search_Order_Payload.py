@@ -152,7 +152,7 @@ class Search_Order_Payload:
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
 
-    def order_search_custom(self):
+    def original_order_search(self):
         try:
             list_of_datadict = self.worksheet.search_parent_order()
             if list_of_datadict is None:
@@ -215,8 +215,18 @@ class Search_Order_Payload:
 
         result = response_data.get("data")
 
+        status_code= {
+            "0500": "Draft",
+            "1000": "Released",
+            "2090": "Allocated",
+            "7200": "Packed",
+            "7800": "Loaded",
+            "8000": "Shipped"
+        }
+
         original_order_data = []
         for order_data in result:
+            order_status = status_code.get(order_data.get('MaximumStatus'))
             order_data_extended = order_data.get('Extended')
             order_data_order_line = order_data.get('OriginalOrderLine')
             for line in order_data_order_line:
@@ -227,6 +237,7 @@ class Search_Order_Payload:
                         # "Environment": 'QA',
                         "OrderId": order_data.get('OriginalOrderId'),
                         "OrderType": order_data.get('OrderType'),
+                        "Status": order_status,
                         "LoadingGroup": order_data_extended.get('LoadingGroup'),
                         # "ShipTo": order_data.get('DestinationFacilityId'),
                         "Shipment": order_data.get("DesignatedShipmentId"),
@@ -252,6 +263,34 @@ class Search_Order_Payload:
                     }
                     original_order_data.append(row)
         return original_order_data
+
+    def parse_parent_order_line_response(self, parent_order_line_response_data: dict) -> list:
+        if not parent_order_line_response_data.get("data"):
+            logging.error(f"INFO: No data returned from search order payload generation.")
+            return []
+
+        result = parent_order_line_response_data.get("data")
+
+        status_code = {
+            "0500": "Draft",
+            "1000": "Released",
+            "2090": "Allocated",
+            "7200": "Packed",
+            "7800": "Loaded",
+            "8000": "Shipped"
+        }
+
+        parent_order_line_data = []
+        for order_data in result:
+            order_status = status_code.get(order_data.get('MaximumStatus'))
+            row = {
+                "OrderId": order_data.get("OrderId", "NA  as order is in draft status"),
+                "Original_Order_id": order_data.get("OriginalOrderId", '0'),
+                "WaveID": order_data.get("OrderPlanningRunId", 'NA as order is not waved yet')
+            }
+            parent_order_line_data.append(row)
+        return parent_order_line_data
+
 
 if __name__ == '__main__':
     # final_search_order_payload = Search_Order_Payload().parse_parent_order_search()
