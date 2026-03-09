@@ -2,7 +2,7 @@ import logging
 import pandas as pd
 from pathlib import Path
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.ERROR)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = (SCRIPT_DIR.parent).parent
@@ -38,7 +38,7 @@ class Outbound_Worksheet:
             if input_sheet_name == 'CreateOrder':
                 df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1, dtype={'D_Facility': str, 'Sold_Facility': str, 'Phone': str})
             else:
-                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, dtype={'D_Facility': str, 'Sold_Facility': str, 'Phone': str})
+                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, dtype={'D_Facility': str, 'Sold_Facility': str, 'Phone': str, 'OrderIDs': str})
             if not df.empty:
                 data_dict_index = df.to_dict(orient='index')
                 for key, value in data_dict_index.items():
@@ -257,16 +257,16 @@ class Outbound_Worksheet:
             task_ids = entry_dict.get("TaskIDs")
             ilpns = entry_dict.get("iLPNs")
             olpns = entry_dict.get("oLPNs")
-            order_ids = entry_dict.get("OrderIDs")
+            order_ids = str(entry_dict.get("OrderIDs")).zfill(10)
 
             mhe_entry = {
-                "plant": plant,
-                "environment": envn,
-                "wave_number": wave_number,
-                "task_ids": task_ids,
-                "ilpns": ilpns,
-                "olpns": olpns,
-                "order_ids": order_ids
+                "Plant": plant,
+                "Environment": envn,
+                "Wave_number": wave_number,
+                "Task_ids": task_ids,
+                "iLPNs": ilpns,
+                "oLPNs": olpns,
+                "Order_ids": order_ids
             }
             self.all_mhe_journal_parameter.append(mhe_entry)
         return self.all_mhe_journal_parameter

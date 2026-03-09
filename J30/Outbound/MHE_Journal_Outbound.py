@@ -93,7 +93,7 @@ class MHE_Journal_Inventory:
                             elif events == 'PPK_DEI_TaskRelease':
                                 goodsholder_id = message_payload_dict["TaskData"]["data"][0]["TaskDetail"][0]["SourceContainerId"]
                             elif events == 'RETRIEVAL_TASK_COMPLETED':
-                                goodsholder_id = message_payload_dict['data']['requestedGoodsholderId']
+                                goodsholder_id = message_payload_dict['data']['retrievalTaskCompleted']['retrievedGoodsholderId']
                             elif events == 'PPK_DEI_PickingFeedback':
                                 goodsholder_id = message_payload_dict['feedback'][0]['ContainerId']
                             elif events == 'PACK_TASK_FAILED':

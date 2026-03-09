@@ -84,75 +84,48 @@ class Search_Order_Payload:
             logging.error(f"INFO: No data returned from search order payload generation.")
             return []
 
-        parent_order_data = []
-        results = response_data.get("data", {}).get("Results", [])
+        results = response_data.get("data")
+        plant = None
+        environment = None
+        order_id = []
         for order_data in results:
-            row = {
-                "OrderId": order_data.get('OrderId'),
-                "Plant": order_data.get('OriginFacilityId'),
-                "Environment": 'QA'
-            }
-            parent_order_data.append(row)
-        return parent_order_data
+            plant = order_data.get('OriginFacilityId')
+            environment = 'QA'
+            order_id.append(order_data.get('OrderId'))
+
+        row = {
+            "Plant": plant,
+            "Environment": environment,
+            "OrderId": order_id
+        }
+        return row
 
 
-    def parse_mhe_parent_order_search(self) -> list[Any]:
-        try:
-            list_of_datadict = self.worksheet.mhe_journal_worksheet_extract_parameter()
-            if list_of_datadict is None:
-                logging.error("Error: Outbound Worksheet Extract method returned None. Halting generation")
-                return []
+    def parse_mhe_parent_order_search(self, environemnt, plant_id, order_ids) -> list[Any]:
+        self.all_search_order_payload = []
 
-            logging.info(f"Successfully extracted {len(list_of_datadict)} data row(s) for search order processing.")
+        plant = plant_id
+        environment = environemnt
+        order_ids = order_ids
 
-            self.all_search_order_payload = []
+        if not plant or not environment or not order_ids:
+            logging.error(f"INFO: Skipping as 'Plant' or 'Environment', or" 
+                          f"'Order_ID' is missing")
+            return []
 
-            for i, data_row in enumerate(list_of_datadict):
-                row_num_in_sheet = i + 1
-                logging.info(f"Processing row {row_num_in_sheet}: {data_row}")
+        order_id_query_value = ','.join(order_ids.split(';'))
+        payload = {
+            "Query": f"OriginalOrderId in ('{order_id_query_value}')"""
+        }
+        final_payload = {
+            'Plant': plant,
+            'Environment': environment,
+            'Payload': payload
+        }
+        self.all_search_order_payload.append(final_payload)
+        return self.all_search_order_payload
 
-                plant = data_row.get("Plant")
-                environment = data_row.get("Environment")
-                order_ids = data_row.get("order_ids")
-
-                if not plant or not environment or not order_ids:
-                    logging.error(f"INFO: Skipping row {row_num_in_sheet} as 'Plant' or 'Environment', or" 
-                                  f"'Order_ID' is missing")
-                    return []
-
-                order_id_query_value = "','".join(order_ids)
-                payload = {
-                              "ViewName": "Order",
-                              "Filters": [
-                                {
-                                  "ViewName": "orders",
-                                  "AttributeId": "OrderLine.OriginalOrderId",
-                                  "Operator": "=",
-                                  "FilterValues": [
-                                    order_id_query_value
-                                  ]
-                                }
-                              ],
-                              "SortIndicator": None,
-                              "TimeZone": "Japan",
-                              "MaxCountLimit": 100,
-                              "ComponentName": "com-manh-cp-dcorder",
-                              "Size": 10,
-                              "Sort": "CreatedTimestamp"
-                            }
-
-                final_payload = {
-                    'Plant': plant,
-                    'Environment': environment,
-                    'Payload': payload
-                }
-                self.all_search_order_payload.append(final_payload)
-            return self.all_search_order_payload
-
-        except Exception as e:
-            logging.error(f"An unexpected error occurred: {e}")
-
-    def original_order_search(self):
+    def order_search(self):
         try:
             list_of_datadict = self.worksheet.search_parent_order()
             if list_of_datadict is None:
@@ -180,6 +153,47 @@ class Search_Order_Payload:
                 order_id_query_value = "','".join(order_id_split)
                 payload = {
                     "Query": f"OriginalOrderId in ('{order_id_query_value}')"""
+                }
+                final_payload = {
+                    'Plant': plant,
+                    'Environment': environment,
+                    'Payload': payload
+                }
+                self.all_search_order_payload.append(final_payload)
+            return self.all_search_order_payload
+
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+
+
+    def parent_order_search(self):
+        try:
+            list_of_datadict = self.worksheet.search_parent_order()
+            if list_of_datadict is None:
+                logging.error("Error: Outbound Worksheet Extract method returned None. Halting generation")
+                return []
+
+            logging.info(f"Successfully extracted {len(list_of_datadict)} data row(s) for search order processing.")
+
+            self.all_search_order_payload = []
+
+            for i, data_row in enumerate(list_of_datadict):
+                row_num_in_sheet = i + 1
+                logging.info(f"Processing row {row_num_in_sheet}: {data_row}")
+
+                plant = data_row.get("Plant")
+                environment = data_row.get("Environment")
+                raw_order_ids = data_row.get("Order_IDs")
+                order_ids = [str(oid).zfill(10) for oid in raw_order_ids] if isinstance(raw_order_ids, list) else []
+
+                if not plant or not environment or not order_ids:
+                    logging.error(f"INFO: Skipping row {row_num_in_sheet} as 'Plant' or 'Environment', or"
+                                  f"'Order_ID' is missing")
+                    return []
+                order_id_split = order_ids[0].split(';')
+                order_id_query_value = "','".join(order_id_split)
+                payload = {
+                    "Query": f"OrderLine.OriginalOrderId in ('{order_id_query_value}')"""
                 }
                 final_payload = {
                     'Plant': plant,
@@ -236,27 +250,29 @@ class Search_Order_Payload:
                         # "Plant": order_data.get('OrgId'),
                         # "Environment": 'QA',
                         "OrderId": order_data.get('OriginalOrderId'),
-                        "OrderType": order_data.get('OrderType'),
+                        # "OrderType": order_data.get('OrderType'),
+                        # "ApptIndic": order_data_extended.get("AppointmentSchedulingIndicator"),
                         "Status": order_status,
                         "LoadingGroup": order_data_extended.get('LoadingGroup'),
-                        # "ShipTo": order_data.get('DestinationFacilityId'),
+                        "ShipTo": order_data.get('DestinationFacilityId'),
                         "Shipment": order_data.get("DesignatedShipmentId"),
                         "Stop": order_data.get("DesignatedStopId"),
-                        "Carrier": order_data_extended.get("CarrierCode"),
+                        "Carrier": order_data_extended.get("AssignedCarrierId"),
                         "HUB": order_data_extended.get("CarrierHubCode"),
                         "SUB_HUB": order_data_extended.get("CarrierSubHubCode"),
                         # "SO_NBR": order_data_extended.get("SalesOrderNumber"),
-                        # "PickupStartDate": order_data.get('PickupStartDateTime'),
-                        # "DeliveryStartDate": order_data.get('DeliveryStartDateTime'),
-                        # # "PickupStartDate": self._format_date(order_data.get('PickupStartDateTime')),
+                        # "PickupStartDate": self._format_date(order_data.get('PickupStartDateTime')),
                         # "PickupEndDate": self._format_date(order_data.get('PickupEndDateTime')),
                         # "DeliveryStartDate": self._format_date(order_data.get('DeliveryStartDateTime')),
                         # "DeliveryEndDate": self._format_date(order_data.get('DeliveryEndDateTime')),
                         # "IDPInstruction": order_data_extended.get('IDPInstruction'),
+                        # "Cancel_Date": self._format_date(order_data_extended.get("LastShipmentTimestamp")),
+                        # "TransitTime": order_data_extended.get("TransitTime"),
+                        # "LastShipmentTime": self._format_date(order_data_extended.get("LastShipmentTimestamp")),
                         "PrePackCode": line.get('PrePackGroupCode'),
                         "ItemName": line.get("ItemId"),
                         "Qty": line.get("OrderedQuantity"),
-                        # "Sequence": each_requested_service.get("Sequence"),
+                        "Sequence": each_requested_service.get("Sequence"),
                         "ServiceTypeID": each_requested_service.get("ServiceTypeId"),
                         "ProvidedServiceId": each_requested_service.get("ProvidedServiceId"),
                         "ServiceUomId": each_requested_service.get("ServiceUomId")
@@ -268,10 +284,9 @@ class Search_Order_Payload:
         if not parent_order_line_response_data.get("data"):
             logging.error(f"INFO: No data returned from search order payload generation.")
             return []
-
         result = parent_order_line_response_data.get("data")
 
-        status_code = {
+        status_code= {
             "0500": "Draft",
             "1000": "Released",
             "2090": "Allocated",
@@ -280,15 +295,20 @@ class Search_Order_Payload:
             "8000": "Shipped"
         }
 
+
         parent_order_line_data = []
         for order_data in result:
-            order_status = status_code.get(order_data.get('MaximumStatus'))
-            row = {
-                "OrderId": order_data.get("OrderId", "NA  as order is in draft status"),
-                "Original_Order_id": order_data.get("OriginalOrderId", '0'),
-                "WaveID": order_data.get("OrderPlanningRunId", 'NA as order is not waved yet')
-            }
-            parent_order_line_data.append(row)
+            order_data_order_line = order_data.get('OrderLine')
+            order_data_extended = order_data.get('Extended')
+            for line in order_data_order_line:
+                row = {
+                    "OrderId": order_data.get("OrderId", "NA as order is in draft status"),
+                    "Status": line.get("Status", "NA"),
+                    "Original_Order_id": line.get("OriginalOrderId", '0'),
+                    "WaveID": line.get("OriginalOrderPlanningRunId", 'NA as order is not waved yet'),
+                    "SpurID": order_data_extended.get('SpurId')
+                }
+                parent_order_line_data.append(row)
         return parent_order_line_data
 
 
@@ -300,7 +320,7 @@ if __name__ == '__main__':
     #         logging.info(f"No {num}: Generated payload")
     #         print(json.dumps(payload, indent=4))
 
-    final_search_order_payload = Search_Order_Payload().order_search_custom()
+    final_search_order_payload = Search_Order_Payload().parse_parent_order_line_response()
     if final_search_order_payload:
         import json
         for i, payload in enumerate(final_search_order_payload):

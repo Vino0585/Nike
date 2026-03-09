@@ -6,81 +6,53 @@ from Outbound.Outbound_Payload_Generation.Outbound_Worksheet_Extract import Outb
 from Outbound.Outbound_Payload_Generation.Task_Detail_Search import Task_Search_Payload
 
 # Setup basic logging to provide better feedback than print()
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class Outbound_MHE_Journal_Payload:
 
     def __init__(self):
-        self.outbound_worksheet = Outbound_Worksheet()
         self.task_search = Task_Search_Payload()
         self.all_mhe_journal_payloads = []
 
     def create_outbound_mhe_journal_payloads(self) -> list:
-        mhe_journal_data = self.outbound_worksheet.mhe_journal_worksheet_extract_parameter()
+        mhe_journal_data = self.task_search.search_task_detail_worksheet_info()
 
         if not mhe_journal_data:
             logging.info("No Valid MHE Journal parameters found, cannot create any payloads for MHE Journal task")
             return []
 
-        for entry in mhe_journal_data:
-            plant = str(entry.get("plant"))
-            envn = str(entry.get("environment"))
-            wave_number = str(entry.get("wave_number")) if pd.notna(entry.get("wave_number")) else None
-            task_ids = str(entry.get("task_ids")) if pd.notna(entry.get("task_ids")) else None
-            ilpns = str(entry.get("ilpns")) if pd.notna(entry.get("ilpns")) else None
-            olpns = str(entry.get("olpns")) if pd.notna(entry.get("olpns")) else None
-            order_ids = str(entry.get("order_ids")) if pd.notna(entry.get("order_ids")) else None
+        plant = mhe_journal_data[0]['Plant']
+        envn = mhe_journal_data[0]['Environment']
 
-            message_type = ['PPK_DEI_TaskRelease', 'RetrievalTaskResult', 'PPK_DEI_PickingFeedback', 'PackTaskResult', 'Pack_Complete',
-                            'RoutingTaskResult', 'GoodsholderDivertedDueToException', ]
+        for each_iLPN in mhe_journal_data[0].get('iLPN', []):
+            if len(each_iLPN) != 20:
+                logging.warning(f"iLPN '{each_iLPN}' is not 20 characters long and will be skipped.")
+                continue
 
-            filter_values = []
-            filter_value_ilpn = []
-            filter_value_olpn = []
+            message_types = ['PPK_DEI_TaskRelease', 'RetrievalTaskResult', 'RoutingTaskResult', 'PTW_DEI_AllocationCreated ',
+                             'ReplenTaskResult ', 'GoodsholderDivertedDueToException']
 
-            if wave_number:
-                filter_values.append(f'"waveNumber":"{wave_number}"')
-            if task_ids:
-                filter_values.append(f'"taskId":"{task_ids}"')
-            if ilpns:
-                filter_values.append(f'"ilpn":"{ilpns}"')
-            if olpns:
-                filter_values.append(f'"olpn":"{olpns}"')
-            if order_ids:
-                get_data = self.task_search.search_task_detail_fullcase_payloads_by_order(order_ids, envn, plant)
-                filter_value_ilpn = get_data["iLPN"]
-                for values in filter_value_ilpn:
-                    filter_values.append(values)
-                filter_value_olpn = get_data["oLPN"]
-                for values in filter_value_olpn:
-                    filter_values.append(values)
-                logging.info(f"{filter_values}")
-
-
-            if not filter_values:
-                logging.error("No values are given either in wavenbr or task or ilpn or olpn or order. Halting generation")
-                return []
-
-            for message in message_type:
+            # 'PackTaskResult', 'Pack_Complete',
+            for message in message_types:
                 mhe_journal_each_payload = {
                       "ViewName": "MessageJournal",
                       "Filters": [
                         {
                           "AttributeId": "MessageType",
                           "FilterValues": [
-                            message
+                              message
                           ]
                         },
                         {
                           "AttributeId": "Stage1.MessagePayload",
-                          "FilterValues": filter_values,
+                          "FilterValues": [each_iLPN],
                           "negativeFilter": False
                         }
                       ],
                       "TimeZone": "Japan",
                       "ComponentName": "com-manh-cp-dmui-search"
-                    }
+                }
 
                 mhe_journal_payload = {
                     'environment': envn,
@@ -89,6 +61,8 @@ class Outbound_MHE_Journal_Payload:
                 }
 
                 self.all_mhe_journal_payloads.append(mhe_journal_payload)
+
+
 
         logging.info(f"Successfully created {len(self.all_mhe_journal_payloads)} "
                      f"payload generation(s) and sent to the program that called this function")

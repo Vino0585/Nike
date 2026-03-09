@@ -19,8 +19,6 @@ class AWM_OB_Env():
             self.url = f"https://{self.host_name}/shipment/api/ServiceDefinition/invoke/NIKEINT10CreateShipmentCS"
         elif program == "AddOrderToShipment":
             self.url = f"https://{self.host_name}/dcorder/api/ServiceDefinition/invoke/NIKEINT10OriginalOrderUpdateCS"
-        elif program == "ParentOrderSearch":
-            self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/entity/search"
         elif program == "ParentOrderSearchBackup":
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/order/search"
         elif program == 'Search_Task_Detail':
@@ -29,6 +27,8 @@ class AWM_OB_Env():
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/originalOrder/search"
         elif program == 'ParentOrderLineSearch':
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/orderLine/search"
+        elif program == "ParentOrderSearch":
+            self.url = f"https://{self.host_name}/dcorder/api/dcorder/order/search"
         else:
             self.url = None
 
