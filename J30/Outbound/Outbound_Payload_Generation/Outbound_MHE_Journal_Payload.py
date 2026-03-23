@@ -31,7 +31,7 @@ class Outbound_MHE_Journal_Payload:
                 continue
 
             message_types = ['PPK_DEI_TaskRelease', 'RetrievalTaskResult', 'RoutingTaskResult', 'PTW_DEI_AllocationCreated ',
-                             'ReplenTaskResult ', 'GoodsholderDivertedDueToException']
+                                'ReplenTaskResult ', 'PackTaskResult', 'GoodsholderDivertedDueToException', 'Pack_Complete']
 
             # 'PackTaskResult', 'Pack_Complete',
             for message in message_types:

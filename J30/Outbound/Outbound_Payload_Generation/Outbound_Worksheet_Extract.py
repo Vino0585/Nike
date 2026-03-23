@@ -271,6 +271,32 @@ class Outbound_Worksheet:
             self.all_mhe_journal_parameter.append(mhe_entry)
         return self.all_mhe_journal_parameter
 
+    def wave_information_extract(self):
+        self.all_wave_information = []
+
+        if not self._excel_open(input_sheet_name='MHE_Journal'):
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            return False
+
+        if not self.list_of_entry:
+            logging.error("No MHE entries found to extract parameters.")
+            return False
+
+        for i, entry_dict in enumerate(self.list_of_entry):
+
+            plant = entry_dict.get("Plant")
+            envn = entry_dict.get("Environment")
+            wave_number = entry_dict.get("WaveNumber")
+
+            wave_entry = {
+                "Plant": plant,
+                "Environment": envn,
+                "Wave_number": wave_number,
+            }
+            self.all_wave_information.append(wave_entry)
+        return self.all_wave_information
+
+
 if __name__ == '__main__':
     from pprint import pprint
     Work = Outbound_Worksheet()

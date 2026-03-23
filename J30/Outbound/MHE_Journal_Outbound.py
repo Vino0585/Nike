@@ -84,14 +84,29 @@ class MHE_Journal_Inventory:
                             try:
                                 events = message_payload_dict['event']['type']
                             except:
-                                events = message_payload_dict['MessageType']
+                                events = message_payload_dict.get('MessageType')
 
-                            if events in ('GOODSHOLDER_ANNOUNCED', 'GOODSHOLDER_MEASURED', 'PUTAWAY_TASK_COMPLETED', 'ROUTING_TASK_COMPLETED'):
+                            goodsholder_id = None
+                            reason_code = None
+                            vendor_code_desc = None
+                            divert_locn = None
+
+                            if events in ('GOODSHOLDER_MEASURED', 'PUTAWAY_TASK_COMPLETED', 'ROUTING_TASK_COMPLETED'):
                                 goodsholder_id = message_payload_dict['data']['goodsholderId']
-                            elif events == 'DCI_DEI_AddConditionCode':
-                                goodsholder_id = message_payload_dict["IlpnId"]
                             elif events == 'PPK_DEI_TaskRelease':
-                                goodsholder_id = message_payload_dict["TaskData"]["data"][0]["TaskDetail"][0]["SourceContainerId"]
+                                task_data = message_payload_dict.get("TaskData", {})
+                                data_content = task_data.get("data")
+                                # Handle case where data might be a list or a dict
+                                if isinstance(data_content, list) and data_content:
+                                    task_details = data_content[0].get("TaskDetail", [])
+                                elif isinstance(data_content, dict):
+                                    task_details = data_content.get("TaskDetail", [])
+                                else:
+                                    task_details = []
+                                if task_details and isinstance(task_details, list):
+                                    goodsholder_id = task_details[0].get("SourceContainerId")
+                                if not goodsholder_id:
+                                    logging.error("The task release data is not correct or SourceContainerId missing")
                             elif events == 'RETRIEVAL_TASK_COMPLETED':
                                 goodsholder_id = message_payload_dict['data']['retrievalTaskCompleted']['retrievedGoodsholderId']
                             elif events == 'PPK_DEI_PickingFeedback':
@@ -100,10 +115,12 @@ class MHE_Journal_Inventory:
                                 goodsholder_id = message_payload_dict['data']['sourceGoodsholderId']
                             elif events == 'PTW_DEI_AllocationCreated':
                                 goodsholder_id = message_payload_dict["PutawayTaskDetails"]["TaskDetailDTOs"][0]["SourceContainerId"]
+                            elif events == 'PackTaskResult':
+                                goodsholder_id = message_payload_dict['data']['outboundGoodsholderId']
+                            elif events == 'Pack_Complete':
+                                goodsholder_id = message_payload_dict['oLPNDetails']['OlpnId']
                             elif events == 'GOODSHOLDER_DIVERTED_DUE_TO_EXCEPTION':
                                 goodsholder_id = message_payload_dict["data"]['goodsholderId']
-                            elif events == 'DCI_DEI_RemoveConditionCode':
-                                goodsholder_id = message_payload_dict["IlpnId"]
                             else:
                                 goodsholder_id = None
 
@@ -116,25 +133,29 @@ class MHE_Journal_Inventory:
                                 vendor_code_desc = message_payload_dict['data']['packTaskFailed']['reasonForFailureList'][0]['reasonForFailureVendorDesc']
                                 divert_locn = message_payload_dict['data']['packTaskFailed']['divertedAtDestinationLocationId']
 
+                            if events == 'RetrievalTaskResult':
+                                pass
+
                             createdate = to_datetime(header_info.get('MessageTimeStamp'))
                             today_start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
                             today_start_ts = to_datetime(today_start)
 
-                            if createdate > today_start_ts and entry.get('Status') != 'NO DESTINATION FOUND':
-                                result_row = {
-                                    'Envn': environment.upper(),
-                                    'Plant': plant_id,
-                                    'MessageID': entry.get('MessageId'),
-                                    'LPN_ID': goodsholder_id,
-                                    'Message_Type': entry.get('MessageType'),
-                                    'Status': entry.get('Status'),
-                                    "ReasonCode": reason_code if events == 'PACK_TASK_FAILED' else None,
-                                    "VendorCodeDesc": vendor_code_desc if events == 'PACK_TASK_FAILED' else None,
-                                    "DivertedLocation": divert_locn if events == 'PACK_TASK_FAILED' else None,
-                                    'User': header_info.get('User'),
-                                    'Created_on': header_info.get('MessageTimeStamp')
-                                }
-                                all_result_data.append(result_row)
+                            if entry.get('Status') != 'NO DESTINATION FOUND':
+                                if entry.get('Status') != 'SPLIT CREATED':
+                                    result_row = {
+                                        'Envn': environment.upper(),
+                                        'Plant': plant_id,
+                                        'MessageID': entry.get('MessageId'),
+                                        'LPN_ID': goodsholder_id,
+                                        'Message_Type': entry.get('MessageType'),
+                                        'Status': entry.get('Status'),
+                                        "ReasonCode": reason_code if events == 'PACK_TASK_FAILED' else None,
+                                        "VendorCodeDesc": vendor_code_desc if events == 'PACK_TASK_FAILED' else None,
+                                        "DivertedLocation": divert_locn if events == 'PACK_TASK_FAILED' else None,
+                                        'User': header_info.get('User'),
+                                        'Created_on': header_info.get('MessageTimeStamp')
+                                    }
+                                    all_result_data.append(result_row)
 
                     except requests.exceptions.JSONDecodeError:
                         logging.error(f"ERROR: Failed to decode JSON from response for payload {i + 1}.")
@@ -159,7 +180,7 @@ class MHE_Journal_Inventory:
             results_df = pd.DataFrame(all_result_data)
 
             # Sort the DataFrame by the 'Created_on' column chronologically
-            results_df = results_df.sort_values(by=['LPN_ID', 'Created_on'])
+            results_df = results_df.sort_values(by=['Created_on', 'LPN_ID'])
 
             # 1. Print the results to the console in a clean table format
             print(results_df.to_string(index=False))

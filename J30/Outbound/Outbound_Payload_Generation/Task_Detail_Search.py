@@ -102,7 +102,6 @@ class Task_Search_Payload:
 
         bearer_token = self.get_bearer_token(environment, plant_id)
 
-        template = {}
         payload = {
             "Query": f"SourceContainerId in ({self.search_by_ilpn}) AND TypeId = 'PICK/PACK' "
                      f"AND GenerationCodeId in ('Wave', 'Stream')",
@@ -137,7 +136,6 @@ class Task_Search_Payload:
 
         bearer_token = self.get_bearer_token(environment, plant_id)
 
-        template = {}
         payload = {
             "Query": f"GenerationNumberId in ({self.search_by_wavenbr})"
                      f"AND GenerationCodeId in ('Wave', 'Stream')"

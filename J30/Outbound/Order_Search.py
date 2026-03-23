@@ -2,8 +2,6 @@ import requests
 import logging
 from pathlib import Path
 
-from streamlit.logger import set_log_level
-
 from Environment.Get_Token import Get_Token
 from Environment.WM_Outbound_API_EndPoint import AWM_OB_Env
 import pandas as pd
@@ -150,8 +148,8 @@ class Outbound_Order_Search:
                 if extracted_data:
                     return extracted_data
                 else:
-                    logging.error("No data returned from search order payload generation"
-                                  " Check line 150 in Order Search")
+                    logging.error(f"No data returned from search order payload generation "
+                                  f"Check line 150 in Order Search")
                     return None
 
             except requests.exceptions.HTTPError as http_err:
@@ -339,7 +337,6 @@ class Outbound_Order_Search:
         else:
             logging.info("No parent order data available therefore didn't export any data")
             return None
-
 
 if __name__ == '__main__':
     search_order = Outbound_Order_Search()

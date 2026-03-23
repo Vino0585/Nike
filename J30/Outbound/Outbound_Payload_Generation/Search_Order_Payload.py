@@ -4,6 +4,8 @@ from pathlib import Path
 import sys
 from datetime import datetime, timedelta
 
+from Outbound.Outbound_Payload_Generation.Search_Order_Payload_Backup import Search_Order_Payload_BackUp
+
 # Ensure the J30 project root is on sys.path so the `Outbound` package can be imported
 CURRENT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CURRENT_DIR.parent.parent  # .../Nike/J30
@@ -245,44 +247,46 @@ class Search_Order_Payload:
             order_data_order_line = order_data.get('OriginalOrderLine')
             for line in order_data_order_line:
                 requested_service = line.get('OriginalOrderLineRequestedServices')
-                for each_requested_service in requested_service:
-                    row = {
-                        # "Plant": order_data.get('OrgId'),
-                        # "Environment": 'QA',
-                        "OrderId": order_data.get('OriginalOrderId'),
-                        # "OrderType": order_data.get('OrderType'),
-                        # "ApptIndic": order_data_extended.get("AppointmentSchedulingIndicator"),
-                        "Status": order_status,
-                        "LoadingGroup": order_data_extended.get('LoadingGroup'),
-                        "ShipTo": order_data.get('DestinationFacilityId'),
-                        "Shipment": order_data.get("DesignatedShipmentId"),
-                        "Stop": order_data.get("DesignatedStopId"),
-                        "Carrier": order_data_extended.get("AssignedCarrierId"),
-                        "HUB": order_data_extended.get("CarrierHubCode"),
-                        "SUB_HUB": order_data_extended.get("CarrierSubHubCode"),
-                        # "SO_NBR": order_data_extended.get("SalesOrderNumber"),
-                        # "PickupStartDate": self._format_date(order_data.get('PickupStartDateTime')),
-                        # "PickupEndDate": self._format_date(order_data.get('PickupEndDateTime')),
-                        # "DeliveryStartDate": self._format_date(order_data.get('DeliveryStartDateTime')),
-                        # "DeliveryEndDate": self._format_date(order_data.get('DeliveryEndDateTime')),
-                        # "IDPInstruction": order_data_extended.get('IDPInstruction'),
-                        # "Cancel_Date": self._format_date(order_data_extended.get("LastShipmentTimestamp")),
-                        # "TransitTime": order_data_extended.get("TransitTime"),
-                        # "LastShipmentTime": self._format_date(order_data_extended.get("LastShipmentTimestamp")),
-                        "PrePackCode": line.get('PrePackGroupCode'),
-                        "ItemName": line.get("ItemId"),
-                        "Qty": line.get("OrderedQuantity"),
-                        "Sequence": each_requested_service.get("Sequence"),
-                        "ServiceTypeID": each_requested_service.get("ServiceTypeId"),
-                        "ProvidedServiceId": each_requested_service.get("ProvidedServiceId"),
-                        "ServiceUomId": each_requested_service.get("ServiceUomId")
-                    }
-                    original_order_data.append(row)
+                # for each_requested_service in requested_service:
+                row = {
+                    # "Plant": order_data.get('OrgId'),
+                    # "Environment": 'QA',
+                    "OrderId": order_data.get('OriginalOrderId'),
+                    "OrderType": order_data.get('OrderType'),
+                    # "ApptIndic": order_data_extended.get("AppointmentSchedulingIndicator"),
+                    # "Load/Fill-in": order_data_extended.get("LoadInFillInIndicator"),
+                    "Status": order_status,
+                    "LoadingGroup": order_data_extended.get('LoadingGroup'),
+                    "ShipTo": order_data.get('DestinationFacilityId'),
+                    "Shipment": order_data.get("DesignatedShipmentId"),
+                    "Stop": order_data.get("DesignatedStopId"),
+                    "Carrier": order_data_extended.get("CarrierCode"),
+                    "HUB": order_data_extended.get("CarrierHubCode"),
+                    "SUB_HUB": order_data_extended.get("CarrierSubHubCode"),
+                    # "SO_NBR": order_data_extended.get("SalesOrderNumber"),
+                    # "PickupStartDate": self._format_date(order_data.get('PickupStartDateTime')),
+                    "PickupEndDate": self._format_date(order_data.get('PickupEndDateTime')),
+                    # "DeliveryStartDate": self._format_date(order_data.get('DeliveryStartDateTime')),
+                    # "DeliveryEndDate": self._format_date(order_data.get('DeliveryEndDateTime')),
+                    # "IDPInstruction": order_data_extended.get('IDPInstruction'),
+                    # "Cancel_Date": self._format_date(order_data_extended.get("LastShipmentTimestamp")),
+                    # "TransitTime": order_data_extended.get("TransitTime"),
+                    # "LastShipmentTime": self._format_date(order_data_extended.get("LastShipmentTimestamp")),
+                    # "PrePackCode": line.get('PrePackGroupCode'),
+                    "ItemName": line.get("ItemId"),
+                    "Qty": line.get("OrderedQuantity"),
+                    # "Sequence": each_requested_service.get("Sequence"),
+                    # "ServiceTypeID": each_requested_service.get("ServiceTypeId"),
+                    # "ProvidedServiceId": each_requested_service.get("ProvidedServiceId"),
+                    # "ServiceUomId": each_requested_service.get("ServiceUomId")
+                }
+                original_order_data.append(row)
         return original_order_data
 
     def parse_parent_order_line_response(self, parent_order_line_response_data: dict) -> list:
         if not parent_order_line_response_data.get("data"):
-            logging.error(f"INFO: No data returned from search order payload generation.")
+            logging.error(f"INFO: No parent order data returned from search order payload generation, "
+                          f"check if your order is shipment planned!")
             return []
         result = parent_order_line_response_data.get("data")
 
@@ -320,10 +324,13 @@ if __name__ == '__main__':
     #         logging.info(f"No {num}: Generated payload")
     #         print(json.dumps(payload, indent=4))
 
-    final_search_order_payload = Search_Order_Payload().parse_parent_order_line_response()
-    if final_search_order_payload:
-        import json
-        for i, payload in enumerate(final_search_order_payload):
-            num = i + 1
-            logging.info(f"No {num}: Generated payload")
-            print(json.dumps(payload, indent=4))
+    # final_search_order_payload = Search_Order_Payload().parse_parent_order_line_response()
+    # if final_search_order_payload:
+    #     import json
+    #     for i, payload in enumerate(final_search_order_payload):
+    #         num = i + 1
+    #         logging.info(f"No {num}: Generated payload")
+    #         print(json.dumps(payload, indent=4))
+
+    final_search_order_payload = Search_Order_Payload().order_search()
+    print(final_search_order_payload)

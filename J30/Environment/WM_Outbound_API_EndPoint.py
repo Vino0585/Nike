@@ -29,6 +29,8 @@ class AWM_OB_Env():
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/orderLine/search"
         elif program == "ParentOrderSearch":
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/order/search"
+        elif program == "oLPNSearch":
+            self.url = f"https://{self.host_name}/pickpack/api/pickpack/olpn/search"
         else:
             self.url = None
 
