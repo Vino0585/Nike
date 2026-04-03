@@ -185,7 +185,6 @@ class iLPN_Search_Payload:
                 'Not Allocated': 3000,
             }
 
-            LPN_STATUS = LPN_STATUS_MAP.get(status)
             if pd.notna(item_id) and str(item_id).strip():
                 item_id_list = str(item_id).split(';')
                 for item_id in item_id_list:
@@ -199,14 +198,6 @@ class iLPN_Search_Payload:
                             {
                                 "ViewName": "InventoryDetails", "AttributeId": "ItemId", "DataType": None,
                                 "requiredFilter": "False", "Operator": "=", "FilterValues": [f"{item_id}"]
-                            },
-                            {
-                                "ViewName": "InventoryGrid", "AttributeId": "Status", "DataType": None,
-                                "requiredFilter": "False", "Operator": "=", "FilterValues": [LPN_STATUS]
-                            },
-                            {
-                                "ViewName": "InventoryGrid", "AttributeId": "Zone", "DataType": None,
-                                "requiredFilter": "False", "Operator": "=", "FilterValues": ["24"]
                             }
                         ],
                         "Page": 0, "TotalCount": -1, "SortOrder": "asc", "TimeZone": "Japan"
@@ -224,7 +215,27 @@ class iLPN_Search_Payload:
 
 
     def extract_item_inventory_by_location(self, response_data):
-        pass
+        if not response_data:
+            logging.error("There are no entries for item inventory by location search query that's "
+                          "why I could not parse and provide you with result")
+        final_result = []
+        for entry in response_data:
+            each_row = {
+                'LocationId': entry['LocationId'],
+                'Zone': entry['Zone'],
+                'UnitCount': entry['UnitCount'],
+                'ItemId': entry['ItemId'],
+                'ItemBarCode': entry['ItemBarCode'],
+                'IlpnId': entry['IlpnId'],
+                'OnHandDisplay': entry['OnHandDisplay'],
+                'AllocatedDisplay': entry['AllocatedDisplay'],
+                'ToBeFilledDisplay': entry['ToBeFilledDisplay'],
+                'DisplayUOMId':  entry['DisplayUOMId'],
+                'LockCount': entry['LockCount'],
+                'IlpnStatusDescription': entry['IlpnStatusDescription']
+            }
+            final_result.append(each_row)
+        return final_result
 
     def extract_tran_log_header(self):
         if not self.all_search_iLPN_parameters:

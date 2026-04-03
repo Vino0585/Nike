@@ -228,13 +228,12 @@ class Outbound_Worksheet:
 
             plant = entry_dict.get("Plant")
             envn = entry_dict.get("Environment")
-            msg_type = entry_dict.get("MessageType")
             order = entry_dict.get("OrderID")
             olpn = entry_dict.get("oLPN")
             wave_nbr = entry_dict.get("WaveNumber")
 
             tran_log_entry = {
-                "plant": plant, "environment": envn, "message_type": msg_type, "order_id": order, "olpn": olpn, "wave_number": wave_nbr
+                "plant": plant, "environment": envn, "order_id": order, "olpn": olpn, "wave_number": wave_nbr
             }
             self.all_tran_log_worksheet_parameters.append(tran_log_entry)
         return self.all_tran_log_worksheet_parameters

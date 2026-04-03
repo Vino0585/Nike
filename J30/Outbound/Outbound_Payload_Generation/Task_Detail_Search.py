@@ -151,8 +151,10 @@ class Task_Search_Payload:
             ilpn = get_response[i]['SourceContainerId'] # This is the iLPN
             olpn = get_response[i]['OlpnId'] # This is the oLPN
 
-            iLPN_list.append(ilpn)
-            oLPN_list.append(olpn)
+            if ilpn and len(ilpn) == 20 and ilpn not in iLPN_list:
+                iLPN_list.append(ilpn)
+            if olpn and len(olpn) == 20 and olpn not in oLPN_list:
+                oLPN_list.append(olpn)
 
         data = {
             "Plant": plant_id,

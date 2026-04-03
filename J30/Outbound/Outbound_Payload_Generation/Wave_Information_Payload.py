@@ -65,6 +65,16 @@ class Wave_Information_Payload:
 
         result = response_data.get("data")
         lpn_data = []
+
+        lpn_status = {
+            '1000': 'Created',
+            '7000': 'Picked',
+            '7200': 'Packed',
+            '7800': 'Loaded',
+            '7900': 'Pending ShipConfirmation',
+            '8000': 'Shipped'
+        }
+
         for lpn in result:
             lpn_extended = lpn['Extended']
             lpn_detail = lpn['OlpnDetail']
@@ -72,7 +82,7 @@ class Wave_Information_Payload:
                 row = {
                     "OlpnId": detail['OlpnId'],
                     "Created_by": lpn['CreatedBy'],
-                    "Status": lpn["Status"],
+                    "Status": lpn_status[lpn["Status"]],
                     "Item": detail['ItemId'],
                     "Qty": detail['InitialQuantity'],
                     "Tracking_nbr": lpn['TrackingNumber'],

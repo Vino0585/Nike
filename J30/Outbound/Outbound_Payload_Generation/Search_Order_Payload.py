@@ -237,7 +237,8 @@ class Search_Order_Payload:
             "2090": "Allocated",
             "7200": "Packed",
             "7800": "Loaded",
-            "8000": "Shipped"
+            "8000": "Shipped",
+            "9000": "Cancelled"
         }
 
         original_order_data = []
@@ -245,6 +246,8 @@ class Search_Order_Payload:
             order_status = status_code.get(order_data.get('MaximumStatus'))
             order_data_extended = order_data.get('Extended')
             order_data_order_line = order_data.get('OriginalOrderLine')
+            order_delivery_address = order_data.get('DestinationAddress')
+            order_line_extended = order_data_order_line[0]['Extended']
             for line in order_data_order_line:
                 requested_service = line.get('OriginalOrderLineRequestedServices')
                 # for each_requested_service in requested_service:
@@ -252,22 +255,26 @@ class Search_Order_Payload:
                     # "Plant": order_data.get('OrgId'),
                     # "Environment": 'QA',
                     "OrderId": order_data.get('OriginalOrderId'),
-                    "OrderType": order_data.get('OrderType'),
+                    # "OrderType": order_data.get('OrderType'),
                     # "ApptIndic": order_data_extended.get("AppointmentSchedulingIndicator"),
                     # "Load/Fill-in": order_data_extended.get("LoadInFillInIndicator"),
                     "Status": order_status,
                     "LoadingGroup": order_data_extended.get('LoadingGroup'),
-                    "ShipTo": order_data.get('DestinationFacilityId'),
-                    "Shipment": order_data.get("DesignatedShipmentId"),
-                    "Stop": order_data.get("DesignatedStopId"),
-                    "Carrier": order_data_extended.get("CarrierCode"),
-                    "HUB": order_data_extended.get("CarrierHubCode"),
-                    "SUB_HUB": order_data_extended.get("CarrierSubHubCode"),
+                    # "ShipTo": order_data.get('DestinationFacilityId'),
+                    # "Shipment": order_data.get("DesignatedShipmentId"),
+                    # "Stop": order_data.get("DesignatedStopId"),
+                    # "Carrier": order_data_extended.get("CarrierCode"),
+                    # "HUB": order_data_extended.get("CarrierHubCode"),
+                    # "SUB_HUB": order_data_extended.get("CarrierSubHubCode"),
+                    "AssignedHub": order_data_extended.get('AssignedCarrierHubId'),
                     # "SO_NBR": order_data_extended.get("SalesOrderNumber"),
                     # "PickupStartDate": self._format_date(order_data.get('PickupStartDateTime')),
-                    "PickupEndDate": self._format_date(order_data.get('PickupEndDateTime')),
+                    # "PickupEndDate": self._format_date(order_data.get('PickupEndDateTime')),
                     # "DeliveryStartDate": self._format_date(order_data.get('DeliveryStartDateTime')),
                     # "DeliveryEndDate": self._format_date(order_data.get('DeliveryEndDateTime')),
+                    # "PostalCode": order_delivery_address['PostalCode'],
+                    # "ExtDeliverySDTM": self._format_date(order_data_extended.get("DeliveryStartDateTime")),
+                    # "ExtDeliveryEDTM": self._format_date(order_data_extended.get("DeliveryEndDateTime")),
                     # "IDPInstruction": order_data_extended.get('IDPInstruction'),
                     # "Cancel_Date": self._format_date(order_data_extended.get("LastShipmentTimestamp")),
                     # "TransitTime": order_data_extended.get("TransitTime"),
@@ -275,6 +282,11 @@ class Search_Order_Payload:
                     # "PrePackCode": line.get('PrePackGroupCode'),
                     "ItemName": line.get("ItemId"),
                     "Qty": line.get("OrderedQuantity"),
+                    # "FullPrice": order_line_extended.get("FullPrice"),
+                    # "DiscountPrice": order_line_extended.get("DiscountPrice"),
+                    # "GiftBag": order_data_extended.get("NikeGiftBagPrice"),
+                    # "ExternalGiftBagPrice": order_data_extended.get("ExternalGiftBagPrice"),
+                    # "ShippingCharge": order_data_extended.get("ShippingCharge")
                     # "Sequence": each_requested_service.get("Sequence"),
                     # "ServiceTypeID": each_requested_service.get("ServiceTypeId"),
                     # "ProvidedServiceId": each_requested_service.get("ProvidedServiceId"),

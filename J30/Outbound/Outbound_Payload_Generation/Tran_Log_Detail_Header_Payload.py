@@ -14,12 +14,12 @@ class Tran_log_detail_header:
     
     def __init__(self):
         self.outbound_worksheet = Outbound_Worksheet()
-        self.all_iLPN_search_payload = []
-        self.all_search_iLPN_parameters = self.inventory_worksheet.search_iLPN_parameters()
+        self.all_tran_log_header_search_payload = []
+        self.all_search_tran_log_parameters = self.outbound_worksheet.tran_log_worksheet_extract_parameter()
         
     def construct_tran_log_detail_header_payload(self):
-        if not self.all_search_iLPN_parameters:
-            logging.error("No valid iLPN parameters found, cannot create any payloads.")
+        if not self.all_search_tran_log_parameters:
+            logging.error("No valid information are there in worksheet check your worksheet.")
             return []
 
         all_payloads = []
@@ -28,6 +28,13 @@ class Tran_log_detail_header:
         yesterday_date_str = (datetime.date.today() - pd.Timedelta(days=1)).strftime('%d %b %Y')
         seven_days = (datetime.date.today() - pd.Timedelta(days=7)).strftime('%d %b %Y')
         tomorrow_date_str = (datetime.date.today() + pd.Timedelta(days=1)).strftime('%d %b %Y')
+
+        # With order the msg_type is as following
+        order_msg_type = ['XNT_DCO_MANIKEImportOrigOrder', 'DCO_XNT_NIKEINT10MAWMOODROP', 'XNT_DCO_MANIKEUPDATEORDER',
+                    'PPK_XIN_NIKEINT06V2ShipCreate', 'SHP_XNT_NIKEINT07TrailerLoadedMsg', 'SHC_ANY_NIKEShipConfirm']
+
+        # With LPN the msg_type is as following
+        lpn_msg_type = ['XNT_PPK_NIKELBL00GPSLABELCALLBACK']
 
         for entry in self.all_search_iLPN_parameters:
             lpn_id = entry['iLPN_ID']

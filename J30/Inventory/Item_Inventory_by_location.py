@@ -1,3 +1,4 @@
+import pandas as pd
 import requests
 import logging
 
@@ -34,6 +35,7 @@ class Item_Inventory_By_Location:
             logging.error(f"--> WARNING: Skipping malformed package: {item_inventory_payload}")
             return
 
+        get_result = []
         try:
             # 2. Get token once for the entire environment batch
             token_handler = Get_Token(env.lower(), plant=plant_id)
@@ -66,12 +68,21 @@ class Item_Inventory_By_Location:
                 response.raise_for_status()
                 response_data.append(response.json())
                 extracted_data = response_data[0]['data']['Results']
+                get_result = item_payload.extract_item_inventory_by_location(extracted_data)
 
         except Exception as e:
             logging.error(f"--> FATAL: {e}")
             return None
 
-        return extracted_data
+        # --- Final Step: Process all collected results after the loops are done ---
+        if not get_result:
+            logging.error('The payload did not give any result thats why the parsing also is null check your payload')
+            return None
+        try:
+            result_df = pd.DataFrame(get_result)
+            print(result_df.to_string(index=False))
+        except Exception as e:
+            print(f"\n--> ERROR: Failed to generate or export the final report: {e}")
 
 if __name__ == "__main__":
     response = Item_Inventory_By_Location()

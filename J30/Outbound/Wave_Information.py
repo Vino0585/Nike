@@ -191,4 +191,3 @@ class Wave_Information_Search:
 if __name__ == '__main__':
     search_olpn = Wave_Information_Search()
     search_olpn.search_olpn_payload()
-
