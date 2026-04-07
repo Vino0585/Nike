@@ -4,6 +4,14 @@ import requests
 import zlib
 from pathlib import Path
 
+try:
+    from google.cloud import translate_v2
+    GOOGLE_TRANSLATE_AVAILABLE = True
+except ImportError:
+    translate_v2 = None
+    GOOGLE_TRANSLATE_AVAILABLE = False
+    logging.warning("google-cloud-translate not installed. Falling back to character removal.")
+
 # Setup basic logging
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -57,26 +65,98 @@ class Base64ToZPL:
         except Exception as e:
             logging.error(f"An error occurred while saving ZPL file: {e}")
 
-    def preview_zpl_as_image(self, zpl_content, file_name="label_preview.png"):
+    def _translate_japanese_to_english(self, text):
+        """
+        Translates Japanese text to English using Google Cloud Translate API.
+        Falls back to character removal if Google Translate is not available.
+
+        Args:
+            text: The text containing Japanese characters to translate
+
+        Returns:
+            Text with Japanese characters translated to English
+        """
+        if not GOOGLE_TRANSLATE_AVAILABLE or translate_v2 is None:
+            logging.warning("Google Translate not available. Removing Japanese characters instead.")
+            return self._remove_japanese_characters(text)
+
+        try:
+            translate_client = translate_v2.Client()
+
+            # Extract only non-ASCII parts for translation (preserve ZPL commands)
+            import re
+
+            # Find all text segments that contain Japanese characters
+            # ZPL format: ^FD[text]^FS, so we'll extract and translate text content
+            def translate_segment(match):
+                segment = match.group(0)
+                if any(ord(c) > 127 for c in segment):
+                    try:
+                        result = translate_client.translate_text(
+                            segment,
+                            source_language='ja',
+                            target_language='en'
+                        )
+                        translated = result['translatedText']
+                        logging.info(f"Translated '{segment}' -> '{translated}'")
+                        return translated
+                    except Exception as e:
+                        logging.warning(f"Translation failed for '{segment}': {e}. Removing instead.")
+                        return self._remove_japanese_characters(segment)
+                return segment
+
+            # Pattern to match text between ZPL control sequences
+            # This captures text content while preserving ZPL commands
+            pattern = r'(?<=\^FD)[^^]*(?=\^FS)'
+            translated_text = re.sub(pattern, translate_segment, text)
+
+            return translated_text
+
+        except Exception as e:
+            logging.error(f"Translation error: {e}. Falling back to character removal.")
+            return self._remove_japanese_characters(text)
+
+    def _remove_japanese_characters(self, text):
+        """
+        Removes Japanese characters (Hiragana, Katakana, Kanji, and common symbols)
+        while preserving ASCII and other characters.
+        """
+        filtered_chars = []
+        for char in text:
+            code_point = ord(char)
+            # Check if character is in Japanese ranges
+            if not ((0x3040 <= code_point <= 0x309F) or  # Hiragana
+                    (0x30A0 <= code_point <= 0x30FF) or  # Katakana
+                    (0x4E00 <= code_point <= 0x9FFF) or  # Kanji
+                    (0xF900 <= code_point <= 0xFAFF)):   # CJK Compatibility
+                filtered_chars.append(char)
+
+        return ''.join(filtered_chars)
+
+    def preview_zpl_as_image(self, zpl_content, file_name="label_preview.png", translate_japanese=True):
         """
         Sends ZPL content to the Labelary API to generate a PNG preview.
         Saves the PNG to the Output_files directory.
+
+        Args:
+            zpl_content: The ZPL content to preview
+            file_name: Output filename for the preview image
+            translate_japanese: If True, translates Japanese to English. If False, removes Japanese characters.
         """
         if not zpl_content:
             logging.warning("No ZPL content provided for preview.")
             return
 
         # --- PRE-PROCESSING FOR JAPANESE CHARACTERS ---
-        # Check if there are non-ASCII characters and if a ^CI command is missing.
         has_non_ascii = any(ord(c) > 127 for c in zpl_content)
-        if has_non_ascii and "^CI" not in zpl_content.upper():
-            logging.warning("Non-ASCII characters detected. Injecting ^CI28 for Japanese character support.")
-            # Inject ^CI28 after the first ^XA (start of label)
-            if zpl_content.strip().startswith("^XA"):
-                zpl_content = zpl_content.replace("^XA", "^XA^CI28", 1)
+
+        if has_non_ascii:
+            if translate_japanese:
+                logging.warning("Japanese/non-ASCII characters detected. Attempting translation to English.")
+                zpl_content = self._translate_japanese_to_english(zpl_content)
             else:
-                # If no ^XA is found at the start, add it.
-                zpl_content = "^XA^CI28" + zpl_content
+                logging.warning("Japanese/non-ASCII characters detected. Removing them.")
+                zpl_content = self._remove_japanese_characters(zpl_content)
         # --- END PRE-PROCESSING ---
 
         try:

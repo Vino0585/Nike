@@ -338,8 +338,70 @@ class Outbound_Order_Search:
             logging.info("No parent order data available therefore didn't export any data")
             return None
 
+    def parent_order_search_for_tran_log_wave(self):
+        order_search_payload = Search_Order_Payload()
+        get_payload = order_search_payload.parent_order_search_for_tran_log()
+
+        if not get_payload:
+            logging.error("No payload returned from search order payload file")
+            return None
+
+        all_parent_order_line_result = []
+
+        for i, payload in enumerate(get_payload):
+            envn = payload['Environment']
+            plant_id = str(payload['Plant'])
+            order_payload = payload['Payload']
+
+            logging.info(f"Processing Task {i + 1}/{len(get_payload)}: Plant {plant_id} ({envn.upper()})")
+
+            try:
+                # --- 1. Authentication ---
+                token_handler = Get_Token(env=envn.lower(), plant=plant_id)
+                bearer_token = token_handler.get_bearer()
+                logging.info("Successfully retrieved token.")
+
+                # --- 2. URL Setup for original Order search---
+                awm_env = AWM_OB_Env()
+                awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
+
+                # --- 3. Request Headers & Payload ---
+                headers = {
+                    "Content-Type": "application/json",
+                    "organization": plant_id,  # Common practice is to use 'organization' and 'location'
+                    "location": plant_id,
+                    "Authorization": f"Bearer {bearer_token}"
+                }
+
+                # --- 4. URL Setup for parent order line search --
+                parent_order_api_url = awm_env.get_program_url(program='ParentOrderSearch')
+                logging.info(f"Sending parent order line payload to URL: {parent_order_api_url}")
+
+                response = requests.post(parent_order_api_url, json=order_payload, headers=headers, timeout=30)
+                response.raise_for_status()
+                parent_order_line_response_data = response.json()
+
+                # --- 5. Process and Collect Response ---
+                extracted_data = order_search_payload.parse_parent_order_line_response_for_tran_log_wave(parent_order_line_response_data)
+                if extracted_data:
+                    logging.info(f"Success: Found {len(extracted_data)} detail rows for this task.")
+                    all_parent_order_line_result.extend(extracted_data)  # Add results to the master list
+
+            except requests.exceptions.HTTPError as http_err:
+                logging.error(f"HTTP error occurred: {http_err}")
+                if http_err.response:
+                    logging.error(f"Response content: {http_err.response.text}")
+            except requests.exceptions.RequestException as req_err:
+                logging.error(f"A request error occurred: {req_err}")
+            except Exception as e:
+                logging.error(f"An unexpected error occurred: {e}")
+
+        return all_parent_order_line_result
+
+
 if __name__ == '__main__':
     search_order = Outbound_Order_Search()
     # search_order.search_parent_order_payload()
     search_order.original_order_search()
     search_order.parent_order_search()
+    # search_order.parent_order_search_for_tran_log_wave()

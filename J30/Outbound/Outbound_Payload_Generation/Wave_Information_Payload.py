@@ -149,6 +149,21 @@ class Wave_Information_Payload:
             logging.error(f"An unexpected error occurred: {e}")
             return []
 
+    def parse_wave_olpn_information_for_tran_log(self, response_data: dict) -> list:
+        if not response_data.get("data"):
+            logging.error(f"INFO: No data returned from search order payload generation.")
+            return []
+
+        result = response_data.get("data")
+        lpn_data = []
+
+        for lpn in result:
+            lpn_detail = lpn['OlpnDetail']
+            for detail in lpn_detail:
+                lpn_data.append(detail['OlpnId'])
+        return lpn_data
+
+
 
 if __name__ == '__main__':
     final_wave_information_payload = Wave_Information_Payload().extract_wave_olpn_information()

@@ -5,10 +5,17 @@ import logging
 import pandas as pd
 from pathlib import Path
 import json
+import sys
 
 from collections import defaultdict
 
 from pandas import to_datetime
+
+# Ensure project root is on sys.path so `Outbound` and `Environment` packages can be imported
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent  # .../Nike/J30
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env

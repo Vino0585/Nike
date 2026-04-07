@@ -188,6 +188,66 @@ class Wave_Information_Search:
             logging.info("No parent order data available therefore didn't export any data")
             return None
 
+
+    def search_olpn_info_for_tran_log(self):
+        olpn_search_payload = self.wave_information.extract_wave_olpn_information()
+
+        if not olpn_search_payload:
+            logging.error("No payload returned from search order payload file")
+            return
+
+        all_olpn_results = []
+
+        for i, payload in enumerate(olpn_search_payload):
+            envn = payload['Environment']
+            plant_id = str(payload['Plant'])
+            olpn_payload = payload['Payload']
+
+            logging.info(f"Processing Task {i + 1}/{len(olpn_search_payload)}: Plant {plant_id} ({envn.upper()})")
+
+            try:
+                # --- 1. Authentication ---
+                token_handler = Get_Token(env=envn.lower(), plant=plant_id)
+                bearer_token = token_handler.get_bearer()
+                logging.info("Successfully retrieved token.")
+
+                # --- 2. URL Setup ---
+                awm_env = AWM_OB_Env()
+                awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
+                api_url = awm_env.get_program_url(program='oLPNSearch')
+                logging.info(f"Sending payload to URL: {api_url}")
+
+                # --- 3. Request Headers ---
+                headers = {
+                    'Authorization': f'Bearer {bearer_token}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    "organization": plant_id,  # Common practice is to use 'organization' and 'location'
+                    "location": plant_id,
+                }
+
+                # --- 4. Make API Request Call ---
+                response = requests.post(api_url, headers=headers, json=olpn_payload)
+                response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+                logging.info(f"Successfully received response for Plant {plant_id} ({envn.upper()})")
+                raw_data = response.json()
+
+                # --- 5. Process and Collect Response ---
+                extracted_data = self.wave_information.parse_wave_olpn_information_for_tran_log(raw_data)
+                if extracted_data:
+                    logging.info(f"Success: Found {len(extracted_data)} detail rows for this task.")
+                    all_olpn_results.extend(extracted_data)
+                else:
+                    logging.info(f"No detail rows found for this task.")
+
+            except requests.exceptions.RequestException as e:
+                logging.error(f"Request failed for Plant {plant_id} ({envn.upper()}): {e}")
+            except Exception as e:
+                logging.error(f"An unexpected error occurred for Plant {plant_id} ({envn.upper()}): {e}")
+
+        return all_olpn_results
+
+
 if __name__ == '__main__':
     search_olpn = Wave_Information_Search()
     search_olpn.search_olpn_payload()

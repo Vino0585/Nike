@@ -264,6 +264,7 @@ class Search_Order_Payload:
                     # "Shipment": order_data.get("DesignatedShipmentId"),
                     # "Stop": order_data.get("DesignatedStopId"),
                     # "Carrier": order_data_extended.get("CarrierCode"),
+                    "ServiceLvl": order_data_extended.get("ServiceLevelCode"),
                     # "HUB": order_data_extended.get("CarrierHubCode"),
                     # "SUB_HUB": order_data_extended.get("CarrierSubHubCode"),
                     "AssignedHub": order_data_extended.get('AssignedCarrierHubId'),
@@ -275,6 +276,7 @@ class Search_Order_Payload:
                     # "PostalCode": order_delivery_address['PostalCode'],
                     # "ExtDeliverySDTM": self._format_date(order_data_extended.get("DeliveryStartDateTime")),
                     # "ExtDeliveryEDTM": self._format_date(order_data_extended.get("DeliveryEndDateTime")),
+                    "CRD": order_data_extended.get('CustomerRequestedTimestamp'),
                     # "IDPInstruction": order_data_extended.get('IDPInstruction'),
                     # "Cancel_Date": self._format_date(order_data_extended.get("LastShipmentTimestamp")),
                     # "TransitTime": order_data_extended.get("TransitTime"),
@@ -282,11 +284,11 @@ class Search_Order_Payload:
                     # "PrePackCode": line.get('PrePackGroupCode'),
                     "ItemName": line.get("ItemId"),
                     "Qty": line.get("OrderedQuantity"),
-                    # "FullPrice": order_line_extended.get("FullPrice"),
-                    # "DiscountPrice": order_line_extended.get("DiscountPrice"),
-                    # "GiftBag": order_data_extended.get("NikeGiftBagPrice"),
-                    # "ExternalGiftBagPrice": order_data_extended.get("ExternalGiftBagPrice"),
-                    # "ShippingCharge": order_data_extended.get("ShippingCharge")
+                    "FullPrice": order_line_extended.get("FullPrice"),
+                    "DiscountPrice": order_line_extended.get("DiscountPrice"),
+                    "GiftBag": order_data_extended.get("NikeGiftBagPrice"),
+                    "ExternalGiftBagPrice": order_data_extended.get("ExternalGiftBagPrice"),
+                    "ShippingCharge": order_data_extended.get("ShippingCharge")
                     # "Sequence": each_requested_service.get("Sequence"),
                     # "ServiceTypeID": each_requested_service.get("ServiceTypeId"),
                     # "ProvidedServiceId": each_requested_service.get("ProvidedServiceId"),
@@ -327,6 +329,63 @@ class Search_Order_Payload:
                 parent_order_line_data.append(row)
         return parent_order_line_data
 
+    def parent_order_search_for_tran_log(self):
+        try:
+            list_of_datadict = self.worksheet.wave_information_extract()
+            if list_of_datadict is None:
+                logging.error("Error: Outbound Worksheet Extract method returned None. Halting generation")
+                return []
+
+            logging.info(f"Successfully extracted {len(list_of_datadict)} data row(s) for search order processing.")
+
+            self.all_search_order_payload = []
+
+            for i, data_row in enumerate(list_of_datadict):
+                row_num_in_sheet = i + 1
+                logging.info(f"Processing row {row_num_in_sheet}: {data_row}")
+
+                plant = data_row.get("Plant")
+                environment = data_row.get("Environment")
+                wave_id = data_row.get("Wave_number")
+                if not plant or not environment or not wave_id:
+                    logging.error(
+                        f"INFO: Skipping row {row_num_in_sheet} due to missing Plant, Environment, or Wave_number.")
+                    return []
+
+                wave_id_split = wave_id.split(';')
+                wave_id_query_value = "','".join(wave_id_split)
+
+                payload = {
+                    "Query": f"OrderLine.OrderPlanningRunId in ('{wave_id_query_value}')"
+                }
+                final_payload = {
+                    'Plant': plant,
+                    'Environment': environment,
+                    'Payload': payload
+                }
+                self.all_search_order_payload.append(final_payload)
+            return self.all_search_order_payload
+
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+
+    def parse_parent_order_line_response_for_tran_log_wave(self, parent_order_line_response_data: dict) -> list:
+        if not parent_order_line_response_data.get("data"):
+            logging.error(f"INFO: No parent order data returned from search order payload generation, "
+                          f"check if your order is shipment planned!")
+            return []
+        result = parent_order_line_response_data.get("data")
+
+        parent_order_line_data = []
+        for order_data in result:
+            order_data_order_line = order_data.get('OrderLine')
+            for line in order_data_order_line:
+                row = {
+                    "OrderId": order_data.get("OrderId", "NA as order is in draft status"),
+                    "Original_Order_id": line.get("OriginalOrderId", '0'),
+                }
+                parent_order_line_data.append(row)
+        return parent_order_line_data
 
 if __name__ == '__main__':
     # final_search_order_payload = Search_Order_Payload().parse_parent_order_search()
