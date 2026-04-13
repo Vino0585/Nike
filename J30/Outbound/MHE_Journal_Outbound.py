@@ -380,7 +380,6 @@ class MHE_Journal_Inventory:
             logging.info(f"Total of {len(response_result)} payloads were sent successfully.")
 
 
-
 if __name__ == "__main__":
     mhe_journal = MHE_Journal_Inventory()
     mhe_journal.create_mhe_journal_iLPN_outbound()

@@ -1,8 +1,18 @@
 import base64
+import html
 import logging
+import re
 import requests
 import zlib
 from pathlib import Path
+
+try:
+    from translate import Translator
+    TRANSLATE_AVAILABLE = True
+except ImportError:
+    Translator = None
+    TRANSLATE_AVAILABLE = False
+    logging.warning("translate package not installed. Install with: pip install translate")
 
 try:
     from google.cloud import translate_v2
@@ -10,13 +20,15 @@ try:
 except ImportError:
     translate_v2 = None
     GOOGLE_TRANSLATE_AVAILABLE = False
-    logging.warning("google-cloud-translate not installed. Falling back to character removal.")
 
 # Setup basic logging
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 class Base64ToZPL:
     """Utility class to handle Base64 to ZPL conversions."""
+
+    def __init__(self):
+        self._cloud_translate_unavailable_logged = False
 
     def decode_base64_to_zpl(self, b64_string):
         """Decodes a base64 string (handling potential compression) and returns the ZPL string."""
@@ -65,10 +77,100 @@ class Base64ToZPL:
         except Exception as e:
             logging.error(f"An error occurred while saving ZPL file: {e}")
 
+    def _contains_japanese(self, text):
+        """Returns True if text contains Hiragana, Katakana, or Kanji."""
+        for char in text:
+            code_point = ord(char)
+            if ((0x3040 <= code_point <= 0x309F) or   # Hiragana
+                (0x30A0 <= code_point <= 0x30FF) or   # Katakana
+                (0x4E00 <= code_point <= 0x9FFF) or   # Kanji
+                (0xF900 <= code_point <= 0xFAFF)):    # CJK Compatibility
+                return True
+        return False
+
+    def _translate_segment_with_providers(self, segment):
+        """Translate a single field segment from Japanese to English with fallback."""
+        cleaned_segment = segment.strip()
+        if not cleaned_segment or not self._contains_japanese(cleaned_segment):
+            return segment
+
+        # 1) Try translate package first (no ADC required)
+        if TRANSLATE_AVAILABLE:
+            try:
+                translator = Translator(from_lang='ja', to_lang='en')
+                translated = translator.translate(cleaned_segment)
+                if translated and translated != cleaned_segment:
+                    logging.info(f"Translated via translate package: '{cleaned_segment}' -> '{translated}'")
+                    return translated
+            except Exception as e:
+                logging.debug(f"translate package failed for '{cleaned_segment}': {e}")
+
+        # 2) Try Google Cloud Translate if configured
+        if GOOGLE_TRANSLATE_AVAILABLE and translate_v2 is not None:
+            try:
+                translate_client = translate_v2.Client()
+                result = translate_client.translate(
+                    cleaned_segment,
+                    source_language='ja',
+                    target_language='en',
+                    format_='text'
+                )
+                translated = html.unescape(result.get('translatedText', '')).strip()
+                if translated:
+                    logging.info(f"Translated via Google Cloud: '{cleaned_segment}' -> '{translated}'")
+                    return translated
+            except Exception as e:
+                if not self._cloud_translate_unavailable_logged:
+                    logging.warning(
+                        "Google Cloud Translate unavailable (%s). Falling back to smart replacement.",
+                        e
+                    )
+                    self._cloud_translate_unavailable_logged = True
+
+        # 3) Fallback to transliteration/mapping and remove remaining Japanese
+        replaced = self._smart_japanese_replacement(cleaned_segment)
+        return self._remove_japanese_characters(replaced)
+
+    def _smart_japanese_replacement(self, text):
+        """
+        Replaces Japanese characters with intelligent English placeholders.
+        Preserves text length and formatting.
+        """
+        # Common Japanese characters mapping
+        japanese_replacements = {
+            'サ': 'Sa', 'ン': 'N', 'プ': 'pu',
+            'テ': 'Te', 'ス': 'su', 'ト': 'to',
+            'ダ': 'Da', 'デ': 'De', 'ド': 'Do',
+            'ア': 'A', 'イ': 'I', 'ウ': 'U', 'エ': 'E', 'オ': 'O',
+            'カ': 'Ka', 'キ': 'Ki', 'ク': 'Ku', 'ケ': 'Ke', 'コ': 'Ko',
+            'ハ': 'Ha', 'ヒ': 'Hi', 'フ': 'Fu', 'ヘ': 'He', 'ホ': 'Ho',
+            'マ': 'Ma', 'ミ': 'Mi', 'ム': 'Mu', 'メ': 'Me', 'モ': 'Mo',
+            'ナ': 'Na', 'ニ': 'Ni', 'ヌ': 'Nu', 'ネ': 'Ne', 'ノ': 'No',
+            'ヤ': 'Ya', 'ユ': 'Yu', 'ヨ': 'Yo',
+            'ラ': 'Ra', 'リ': 'Ri', 'ル': 'Ru', 'レ': 'Re', 'ロ': 'Ro',
+            'ワ': 'Wa', 'ヲ': 'Wo',
+            '商': 'Shop', '品': 'Item', '注': 'Order', '文': 'Doc', '番': 'No',
+            '数': 'Qty', '量': 'Amt', '金': 'Money', '額': 'Amount',
+            '日': 'Day', '月': 'Mon', '年': 'Year', '時': 'Time',
+            '箱': 'Box', '個': 'pc', '組': 'set', 'ヶ': 'x',
+        }
+
+        result = text
+        for jp_char, en_char in japanese_replacements.items():
+            result = result.replace(jp_char, en_char)
+
+        # Remove any remaining Japanese characters
+        result = self._remove_japanese_characters(result)
+
+        logging.info(f"Smart replacement: '{text}' -> '{result}'")
+        return result
+
+
     def _translate_japanese_to_english(self, text):
         """
-        Translates Japanese text to English using Google Cloud Translate API.
-        Falls back to character removal if Google Translate is not available.
+        Translates Japanese text to English.
+        Tries translate package first (offline, no auth), then Google Cloud if available.
+        Finally falls back to character removal.
 
         Args:
             text: The text containing Japanese characters to translate
@@ -76,45 +178,19 @@ class Base64ToZPL:
         Returns:
             Text with Japanese characters translated to English
         """
-        if not GOOGLE_TRANSLATE_AVAILABLE or translate_v2 is None:
-            logging.warning("Google Translate not available. Removing Japanese characters instead.")
-            return self._remove_japanese_characters(text)
+        # Translate only printable field data to avoid touching ZPL commands.
+        field_pattern = re.compile(r'(\^FD)(.*?)(\^FS)', re.DOTALL)
 
-        try:
-            translate_client = translate_v2.Client()
+        def replace_field(match):
+            prefix, field_text, suffix = match.groups()
+            translated_field = self._translate_segment_with_providers(field_text)
+            translated_field = self._remove_japanese_characters(translated_field)
+            return f"{prefix}{translated_field}{suffix}"
 
-            # Extract only non-ASCII parts for translation (preserve ZPL commands)
-            import re
+        translated_text = field_pattern.sub(replace_field, text)
 
-            # Find all text segments that contain Japanese characters
-            # ZPL format: ^FD[text]^FS, so we'll extract and translate text content
-            def translate_segment(match):
-                segment = match.group(0)
-                if any(ord(c) > 127 for c in segment):
-                    try:
-                        result = translate_client.translate_text(
-                            segment,
-                            source_language='ja',
-                            target_language='en'
-                        )
-                        translated = result['translatedText']
-                        logging.info(f"Translated '{segment}' -> '{translated}'")
-                        return translated
-                    except Exception as e:
-                        logging.warning(f"Translation failed for '{segment}': {e}. Removing instead.")
-                        return self._remove_japanese_characters(segment)
-                return segment
-
-            # Pattern to match text between ZPL control sequences
-            # This captures text content while preserving ZPL commands
-            pattern = r'(?<=\^FD)[^^]*(?=\^FS)'
-            translated_text = re.sub(pattern, translate_segment, text)
-
-            return translated_text
-
-        except Exception as e:
-            logging.error(f"Translation error: {e}. Falling back to character removal.")
-            return self._remove_japanese_characters(text)
+        # Safety cleanup for any Japanese characters outside ^FD blocks.
+        return self._remove_japanese_characters(translated_text)
 
     def _remove_japanese_characters(self, text):
         """

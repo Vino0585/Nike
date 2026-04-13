@@ -17,8 +17,6 @@ class Item_Inventory_By_Location:
         item_payload = iLPN_Search_Payload()
 
         item_inventory_payload = item_payload.create_item_inventory_by_location_payload()
-        bearer_token = ''
-        all_item_inventory_data = []
 
         if not item_inventory_payload:
             logging.error("No payloads were generated. Please check your payload generator logic and excel"
