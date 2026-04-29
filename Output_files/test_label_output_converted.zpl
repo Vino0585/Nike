@@ -1,0 +1,1 @@
+^XA^FO50,50^FDOrderDocNo: 12345^FS^XZ
