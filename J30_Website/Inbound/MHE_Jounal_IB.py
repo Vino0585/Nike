@@ -7,7 +7,7 @@ import json
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Payload_generation.IB_MHE_Journal_Payload import IB_MHE_Journal_Payload
+from Inbound.Inbound_payload_generation.IB_MHE_Journal_Payload import IB_MHE_Journal_Payload
 
 # Setup basic logging to provide better feedback than logging.info()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

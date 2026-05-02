@@ -3,7 +3,7 @@ import logging
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Payload_generation.Putaway_Complete_Payload import Payload_Complete_Payload
+from Inbound.Inbound_payload_generation.Putaway_Complete_Payload import Payload_Complete_Payload
 
 # Setup basic logging to provide better feedback than logging.info()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
