@@ -1,4 +1,4 @@
-from Payload_generation.ASN_Verify_Payload import ASN_Verify_Payload
+from Inbound.Inbound_payload_generation.ASN_Verify_Payload import ASN_Verify_Payload
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 
