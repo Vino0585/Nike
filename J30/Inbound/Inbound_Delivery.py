@@ -4,7 +4,7 @@ import json
 from typing import Dict, Any
 
 # Assuming these are the correct import paths
-from Payload_generation.Inbound_Delivery_Payload import Inbound_Delivery_Payload
+from Inbound.Payload_generation.Inbound_Delivery_Payload import Inbound_Delivery_Payload
 from Environment.WM_Environment import AWM_Env
 
 # Use the logging module for better, more consistent output

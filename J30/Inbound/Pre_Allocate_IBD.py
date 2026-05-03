@@ -3,7 +3,7 @@ import logging
 import json
 from typing import Dict, Any
 
-from Payload_generation.Pre_Receipt_Payload import Pre_Reciept_Payload
+from Inbound.Payload_generation.Pre_Receipt_Payload import Pre_Reciept_Payload
 from Environment.WM_Environment import AWM_Env
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

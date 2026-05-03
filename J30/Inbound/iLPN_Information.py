@@ -6,7 +6,7 @@ import pandas as pd
 
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Payload_generation.iLPN_Information_Payload import iLPN_Information_Payload
+from Inbound.Payload_generation.iLPN_Information_Payload import iLPN_Information_Payload
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

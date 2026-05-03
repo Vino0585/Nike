@@ -1,7 +1,7 @@
 import datetime
 import logging
-from Payload_generation.Worksheet_extract import Worksheet
-from Payload_generation.Number_Generation import NumberGeneration
+from Inbound.Payload_generation.Worksheet_extract import Worksheet
+from Inbound.Payload_generation.Number_Generation import NumberGeneration
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

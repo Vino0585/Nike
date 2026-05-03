@@ -6,7 +6,7 @@ from collections import defaultdict
 from pathlib import Path
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Payload_generation.ASN_Creation_Payload import Asn_Payload_Generator
+from Inbound.Payload_generation.ASN_Creation_Payload import Asn_Payload_Generator
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
