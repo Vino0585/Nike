@@ -5,7 +5,7 @@ from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
 from pathlib import Path
 import pandas as pd
-from Inbound.Payload_generation.ASN_Search_Payload import ASN_Search_Payload
+from Inbound.Inbound_payload_generation.ASN_Search_Payload import ASN_Search_Payload
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

@@ -5,14 +5,14 @@ import pandas as pd
 import sys
 from pathlib import Path
 
-# Ensure project root is on sys.path so `Outbound` and `Payload_generation` packages can be imported
+# Ensure project root is on sys.path so `Outbound` and `Inbound_payload_generation` packages can be imported
 CURRENT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CURRENT_DIR.parent.parent  # .../Nike/J30
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from Outbound.Outbound_Payload_Generation.Outbound_Worksheet_Extract import Outbound_Worksheet
-from Inbound.Payload_generation.Number_Generation import NumberGeneration
+from Inbound.Inbound_payload_generation.Number_Generation import NumberGeneration
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 

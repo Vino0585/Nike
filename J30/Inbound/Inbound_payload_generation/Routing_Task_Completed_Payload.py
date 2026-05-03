@@ -3,7 +3,7 @@ import uuid
 import datetime as dt
 import logging
 
-from Inbound.Payload_generation.Worksheet_extract import Worksheet
+from Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

@@ -4,8 +4,8 @@ import datetime as dt
 import pandas as pd
 import logging
 
-from Inbound.Payload_generation.Worksheet_extract import Worksheet
-from Inbound.Payload_generation.Get_LPN_List_From_ASN import lpn_list_from_asn
+from Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
+from Inbound.Inbound_payload_generation.Get_LPN_List_From_ASN import lpn_list_from_asn
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

@@ -1,4 +1,4 @@
-from Inbound.Payload_generation.Worksheet_extract import Worksheet
+from Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
 
 
 class ASN_Verify_Payload:

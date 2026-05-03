@@ -3,7 +3,7 @@ import logging
 from collections import defaultdict
 from Environment.Get_Token import Get_Token
 from Environment.WM_Environment import AWM_Env
-from Inbound.Payload_generation.Goods_Holder_Payload import Goods_Holder_Measured_Payload
+from Inbound.Inbound_payload_generation.Goods_Holder_Payload import Goods_Holder_Measured_Payload
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

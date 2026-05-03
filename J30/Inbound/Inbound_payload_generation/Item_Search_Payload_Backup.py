@@ -1,6 +1,6 @@
 import logging
 
-from Inbound.Payload_generation.Worksheet_extract import Worksheet
+from Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
 import pandas as pd
 
 # Setting up logging.

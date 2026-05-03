@@ -7,8 +7,8 @@ import json
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-from Inbound.Payload_generation.Get_LPN_List_From_ASN import lpn_list_from_asn
-from Inbound.Payload_generation.Worksheet_extract import Worksheet
+from Inbound.Inbound_payload_generation.Get_LPN_List_From_ASN import lpn_list_from_asn
+from Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
 
 
 class Payload_Complete_Payload:
@@ -178,8 +178,8 @@ if __name__ == "__main__":
 # import datetime as dt
 #
 # from ASN_Search import create_from_asn_list_of_lpn
-# from Payload_generation.Worksheet_extract import Worksheet
-# from Payload_generation.Task_Search_Payload import Task_Search_Payload
+# from Inbound_payload_generation.Worksheet_extract import Worksheet
+# from Inbound_payload_generation.Task_Search_Payload import Task_Search_Payload
 #
 #
 # class Payload_Complete_Payload:

@@ -2,7 +2,7 @@ import logging
 import pandas as pd
 import time
 
-from Inbound.Payload_generation.Worksheet_extract import Worksheet
+from Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
 from ASN_Creation import ASN_Creation
 from Inbound_Delivery import Inbound_Delivery
 # from iLPN_Information import iLPN_Information
@@ -178,7 +178,7 @@ if __name__ == "__main__":
 # import pandas as pd
 # import time
 #
-# from Payload_generation.Worksheet_extract import Worksheet
+# from Inbound_payload_generation.Worksheet_extract import Worksheet
 # from ASN_Creation import ASN_Creation
 # from Inbound_Delivery import Inbound_Delivery
 # from Good_Holder_Announced import Goods_Holder_Announced
