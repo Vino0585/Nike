@@ -12,11 +12,11 @@ def _parse_semicolon_values(raw_value: str) -> list[str]:
 
 
 st.set_page_config(page_title="Outbound Utilities", page_icon="📦", layout="wide")
-st.title("J30 AWM Outbound Utilities")
-st.write("Use tabs for MHE Journal Outbound, Order Search, and Wave Information.")
+st.title("AWM Outbound Utilities")
+st.write("Use tabs for the tools user wants to utilize.")
 
 tab_mhe, tab_order, tab_wave = st.tabs(
-	["MHE_Journal_Outbound", "Order_Search", "Wave_Information"]
+	["MHE Journal Outbound", "Order Search", "Wave Information"]
 )
 
 
