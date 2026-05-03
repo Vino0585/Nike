@@ -81,9 +81,9 @@ with tab_order:
 		horizontal=True,
 	)
 	if order_search_mode == "original_order_search":
-		st.write("Enter one or more original order IDs separated by `;`.")
+		st.write("Enter one or more original order IDs separated by `;`to retrieve original-order information.")
 	else:
-		st.write("Enter one or more original order IDs separated by `;` to retrieve parent-order results.")
+		st.write("Enter one or more original order IDs separated by `;` to retrieve parent-order information.")
 
 	with st.form("order_search_form"):
 		order_text = st.text_area(
