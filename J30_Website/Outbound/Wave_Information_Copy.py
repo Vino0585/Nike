@@ -83,6 +83,7 @@ class WaveInformationCopy:
                         "OriginalOrderId": detail.get("OriginalOrderId"),
                         "AggregatedOrder": detail.get("OrderId"),
                         "LoadingGroup": lpn_extended.get("LoadingGroup"),
+                        "oLPNType": lpn.get("ContainerTypeId")
                     }
                 )
         return rows

@@ -92,8 +92,7 @@ class Wave_Information_Payload:
                     "Carrier": lpn['CarrierId'],
                     "OriginalOrderId": detail['OriginalOrderId'],
                     "AggregatedOrder": detail['OrderId'],
-                    "LoadingGroup": lpn_extended['LoadingGroup'] if lpn_extended.get('LoadingGroup') else None,
-                    "oLPNType": lpn['ContainerTypeId']
+                    "LoadingGroup": lpn_extended['LoadingGroup']
                 }
                 lpn_data.append(row)
         return lpn_data

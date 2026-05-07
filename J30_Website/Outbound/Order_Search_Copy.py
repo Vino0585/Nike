@@ -5,6 +5,7 @@ import sys
 
 import pandas as pd
 import requests
+from pip._internal.models import index
 
 # Ensure project root is on sys.path so package imports resolve when run via Streamlit.
 CURRENT_DIR = Path(__file__).resolve().parent
