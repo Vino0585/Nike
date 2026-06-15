@@ -16,6 +16,7 @@ class Outbound_Worksheet:
         # self.master_file_path = master_path
         self.list_of_entry = []
         self.all_order_create_parameters = []
+        self.all_fr_order_create_parameters = []
         self.all_order_search_parameters = []
         self.all_tran_log_worksheet_parameters = []
         self.all_mhe_journal_parameter = []
@@ -37,6 +38,8 @@ class Outbound_Worksheet:
             df = ''
             if input_sheet_name == 'CreateOrder':
                 df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1, dtype={'D_Facility': str, 'Sold_Facility': str, 'Phone': str})
+            elif input_sheet_name == 'Parent_Order':
+                df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, skiprows=1)
             else:
                 df = pd.read_excel(self.excel_file_path, sheet_name=input_sheet_name, dtype={'D_Facility': str, 'Sold_Facility': str, 'Phone': str, 'OrderIDs': str})
             if not df.empty:
@@ -117,6 +120,77 @@ class Outbound_Worksheet:
             self.all_order_create_parameters.append(order_params)  # Add to our new list
 
         return self.all_order_create_parameters
+
+    def create_fr_order_extract_parameters(self):
+        self.all_fr_order_create_parameters = []
+
+        if not self._excel_open(input_sheet_name='Parent_Order'):
+            logging.error(f"Error: The file '{self.excel_file_path}' was not found.")
+            return False
+
+        if not self.list_of_entry:
+            logging.error("No Order entries found to extract parameters.")
+            return False
+
+        for i, entry_dict in enumerate(self.list_of_entry):
+            # Extract parameters for the each row/entry
+            plant = entry_dict.get("Plant")
+            envn = entry_dict.get("Environment")
+            user_initial = entry_dict.get("Initial")
+            order_type = entry_dict.get("Order Type")
+            num_of_order = int(entry_dict.get("Number of Orders", 0))
+            item = entry_dict.get("Item(s)")
+            gtin = f"00{entry_dict.get('GTIN')}"
+            qty = entry_dict.get('Quantity')
+            ship_to = str(entry_dict.get("Ship_Facility"))
+            d_facility = str(ship_to).zfill(10) if ship_to is not None else ''
+            pre_pack_code = entry_dict.get("PrePack Code")
+            instruction_code = entry_dict.get("Instruction_Code")
+            instruction_text = entry_dict.get("Instruction_Text")
+            service_level = entry_dict.get("Service Level")
+            address_1 = entry_dict.get("Address1")
+            city = entry_dict.get("City")
+            state = str(entry_dict.get("State")).zfill(2)
+            postal_code = entry_dict.get("Postal Code")
+            first_name = entry_dict.get("First Name", "null")
+            email = entry_dict.get("Email", "null")
+            phone_raw = entry_dict.get("Phone")
+            # Ensure phone is read as string to preserve "+" symbol, handle None/NaN
+            phone = '' if (phone_raw is None or pd.isna(phone_raw)) else str(phone_raw)
+            address_2 = entry_dict.get("Address2")
+            street_address1 = entry_dict.get("StreetAddress1")
+            street_address2 = entry_dict.get("StreetAddress2")
+            carrier_code = entry_dict.get("CarrierCode")
+            hub_code = entry_dict.get("HUBCode")
+            sub_hub = entry_dict.get("SUBHUB")
+            route_number = entry_dict.get("Route_nbr")
+            mark_for_customer_id = entry_dict.get("Mark_for")
+            sold_to_facility_id_raw = entry_dict.get("Sold_Facility")
+            pickup_dttm = entry_dict.get("PickupDTTM")
+            delivery_dttm = entry_dict.get("DeliveryDTTM")
+            DLVD = entry_dict.get("DLVD")
+            # Convert to string and pad with leading zeros to ensure 10 digits (e.g., 0005005401)
+            sold_to_facility_id = str(sold_to_facility_id_raw).zfill(10) if sold_to_facility_id_raw is not None else ''
+            country = ''
+
+            if plant == 1081:
+                country = 'JP'
+
+            order_params = {
+                "plant": plant, "environment": envn, "initial": user_initial, "number_of_Orders": num_of_order,
+                "order_Type": order_type, "item": item, "qty": qty, "d_facility": d_facility,
+                "pre_pack_Code": pre_pack_code, "instruction_code": instruction_code,
+                "instruction_text": instruction_text, "service_level": service_level, "address_1": address_1,
+                "city": city, "state": state, "postal_code": postal_code, "country": country, "first_name": first_name,
+                "email": email, "phone": phone, "carrier_code": carrier_code, "hub_code": hub_code,
+                "route_number": route_number, "mark_for_customer_id": mark_for_customer_id,
+                "sold_to_facility_id": sold_to_facility_id, "sub_hub": sub_hub, "pickup_dttm": pickup_dttm,
+                "delivery_dttm": delivery_dttm, "dlvd": DLVD, 'gtin': gtin, "address_2": address_2,
+                "street_address1": street_address1, "street_address2": street_address2
+                }
+            self.all_fr_order_create_parameters.append(order_params)  # Add to our new list
+
+        return self.all_fr_order_create_parameters
 
 
     def create_new_shipment_extract_parameter(self):
@@ -307,5 +381,7 @@ if __name__ == '__main__':
     # print(add_order_to_shipment)
     # search_parent_order = Work.search_parent_order()
     # pprint(search_parent_order)
-    mhe_journal = Work.mhe_journal_worksheet_extract_parameter()
-    pprint(mhe_journal)
+    # mhe_journal = Work.mhe_journal_worksheet_extract_parameter()
+    # pprint(mhe_journal)
+    fr_order_creation = Work.create_fr_order_extract_parameters()
+    pprint(fr_order_creation)

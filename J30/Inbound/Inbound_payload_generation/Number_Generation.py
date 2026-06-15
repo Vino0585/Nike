@@ -13,6 +13,7 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         # --- Counters moved to instance level ---
         self.lpn_unique_counter = 0
         self.misc_unique_counter = 0
+        self.generated_fr_order_ids = []
 
     def asn_number_generation(self, num_of_asn_to_generate: int, envn: str, initial: str) -> list:
         if not isinstance(num_of_asn_to_generate, int) or num_of_asn_to_generate <= 0:
@@ -77,6 +78,21 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
             id_ = f"{initial}{timestamp}{unique_part}"
             self.generated_order_ids.append(id_)
         return self.generated_order_ids
+
+    def fr_order_number_generation(self, num_of_order_to_generate: int, envn: str, initial: str):
+        if not isinstance(num_of_order_to_generate, int) or num_of_order_to_generate <= 0:
+            print("Warning: Number of ASN is zero or invalid. No ASN IDs will be generated for this data row.")
+            return []
+
+        # Clear previous results for new generation batch
+        self.generated_fr_order_ids = []
+        timestamp = datetime.now().strftime('%m%d')
+        for i in range(num_of_order_to_generate):
+            # Using a wider random range and the loop index for better uniqueness
+            unique_part = f"{random.randint(100, 999)}{i}"
+            id_ = f"{initial}{timestamp}{unique_part}"
+            self.generated_fr_order_ids.append(id_)
+        return self.generated_fr_order_ids
 
     def purchase_order_number(self):
         self.generated_po_ids = (
