@@ -31,6 +31,8 @@ class AWM_OB_Env():
             self.url = f"https://{self.host_name}/dcorder/api/dcorder/order/search"
         elif program == "oLPNSearch":
             self.url = f"https://{self.host_name}/pickpack/api/pickpack/olpn/search"
+        elif program == 'PackComplete':
+            self.url = f"https://{self.host_name}/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackGoodsHolderCS"
         else:
             self.url = None
 

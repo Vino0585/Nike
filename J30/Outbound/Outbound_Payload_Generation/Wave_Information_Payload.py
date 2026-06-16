@@ -163,9 +163,71 @@ class Wave_Information_Payload:
                 lpn_data.append(detail['OlpnId'])
         return lpn_data
 
+    def extract_wave_olpn_information_for_pack_message(self) -> list[Any]:
+        try:
+            list_of_datadict = self.worksheet.wave_information_extract()
+            if list_of_datadict is None:
+                logging.error("Error: Outbound Worksheet wave_information_extract method returned None. Halting generation")
+                return []
+            logging.info(f"Successfully extracted {len(list_of_datadict)} data row(s) for wave information processing.")
 
+            self.all_wave_information_payload = []
+            for i, data_row in enumerate(list_of_datadict):
+                row_num_in_sheet = i + 1
+                logging.info(f"Processing row {row_num_in_sheet}: {data_row}")
+
+                plant = data_row.get("Plant")
+                environment = data_row.get("Environment")
+                wave_id = str(data_row.get("Wave_number"))
+
+                if not plant or not environment or not wave_id:
+                    logging.error(f"INFO: Skipping row {row_num_in_sheet} due to missing Plant, Environment, or Wave_number.")
+                    return []
+
+                wave_id_split = wave_id.split(';')
+                wave_id_query_value = "','".join(wave_id_split)
+
+                payload = {
+                    "Query": f"OrderPlanningRunId in ('{wave_id_query_value}') AND Status = '8000'"
+                }
+                final_payload = {
+                    'Plant': plant,
+                    'Environment': environment,
+                    'Payload': payload
+                }
+                self.all_wave_information_payload.append(final_payload)
+            return self.all_wave_information_payload
+
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+            return []
+
+    def parse_wave_olpn_information_for_pack_complete(self, response_data: dict) -> list:
+        if not response_data.get("data"):
+            logging.error(f"INFO: No data returned from search order payload generation.")
+            return []
+
+        result = response_data.get("data")
+        lpn_data = []
+
+        for lpn in result:
+            lpn_extended = lpn['Extended']
+            lpn_detail = lpn['OlpnDetail']
+            for detail in lpn_detail:
+                row = {
+                    "OlpnId": detail['OlpnId'],
+                    "Item": detail['ItemId'],
+                    "Qty": detail['InitialQuantity'],
+                    "AggregatedOrder": detail['OrderId'],
+                }
+                lpn_data.append(row)
+        return lpn_data
 
 if __name__ == '__main__':
-    final_wave_information_payload = Wave_Information_Payload().extract_wave_olpn_information()
+    # final_wave_information_payload = Wave_Information_Payload().extract_wave_olpn_information()
+    # import json
+    # print(json.dumps(final_wave_information_payload, indent=2))
+
+    pack_olpn_payload = Wave_Information_Payload().extract_wave_olpn_information_for_pack_message()
     import json
-    print(json.dumps(final_wave_information_payload, indent=2))
+    print(json.dumps(pack_olpn_payload, indent=4))
