@@ -59,6 +59,15 @@ class FR_Order_Creation_Payload:
         order_line_list = []
         order_line_id = 900001  # Initialize the line ID *before* the loop.
         for current_item, current_qty, current_gtin, current_instruction_code, current_instruction_text in zip(item_grp, qty_grp, gtin_grp, instruction_code_grp, instruction_text_grp):
+            
+            fulfillment_request_item_reference_order = [
+                {"referenceItemTypeCode": "SALES_DOCUMENT_NUMBER", "referenceItemValue": "000010"},
+                {"referenceItemTypeCode": "PURCHASE_ORDER_ITEM_NUMBER", "referenceItemValue": "1"}
+            ]
+            if reference_ItemType_Description != '':
+                for reference_order_entry in fulfillment_request_item_reference_order:
+                    reference_order_entry["referenceItemTypeDescription"] = reference_ItemType_Description
+
             fulfillment_request_Item = {
                 "fulfilmentRequestItemNbr": str(order_line_id), "gtin": current_gtin, "shippingPointCode": plant,
                 "materialNumber": current_item.rsplit('-', 1)[0], "divisionCode": "10", "poRequiredIndicator": False,
@@ -69,10 +78,7 @@ class FR_Order_Creation_Payload:
                 "salesUnitQuantity": 3, "salesUnitQuantityUOM": "EA", "baseUnitQuantity": 3, "baseUnitQuantityUOM": "EA",
                 "grossWeight": 1.104, "netWeight": 1.104, "weightUOM": "KG", "sizeCode": current_item.rsplit('-', 1)[1],
                 "stockCategoryCode": "01000", "materialAvailableDate": "2026-06-16", "assortmentNumber": "0043754328",
-                "fulfillmentRequestItemReferenceOrder": [
-                    {"referenceItemTypeCode": "SALES_DOCUMENT_NUMBER", "referenceItemValue": "000010", "referenceItemTypeDescription": reference_ItemType_Description},
-                    {"referenceItemTypeCode": "PURCHASE_ORDER_ITEM_NUMBER", "referenceItemValue": "1", "referenceItemTypeDescription": reference_ItemType_Description}
-                ],
+                "fulfillmentRequestItemReferenceOrder": fulfillment_request_item_reference_order,
                 "fulfillmentRequestItemDate": [
                     { "lastShipmentTimestamp": fr_request_delivery_date, "scheduledDeliveryEndTimestamp": fr_request_delivery_date,
                        "materialAvailableDate": "2026-06-19" }
