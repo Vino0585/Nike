@@ -191,3 +191,5 @@ with tab_wave:
 				except Exception as exc:
 					st.error(f"Failed to run Wave Information: {exc}")
 
+
+# To start run the following command in terminal: streamlit run streamlit_app_outbound.py

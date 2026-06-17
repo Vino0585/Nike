@@ -63,7 +63,7 @@ class Pack_Complete:
                     response.raise_for_status()
 
                     response_data = response.json()
-                    print(f"Success: {response_data.get('success', 'N/A')}")
+                    print(response_data)
 
                 except KeyError as e:
                     logging.error(f"ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
@@ -78,22 +78,24 @@ class Pack_Complete:
             logging.error(f"FATAL ERROR: Could not process batch for environment {envn.upper()}. Error: {e}")
 
 
-def run_pack_complete_every(interval_seconds=20):
-    logging.info(
-        f"Starting Pack Complete scheduler. Running every {interval_seconds} seconds. Press Ctrl+C to stop."
-    )
-    try:
-        while True:
-            logging.info("Starting Pack Complete run...")
-            Pack_Complete().send_pack_complete_payload()
-            logging.info(f"Run complete. Waiting {interval_seconds} seconds for next run...")
-            time.sleep(interval_seconds)
-    except KeyboardInterrupt:
-        logging.info("Hard stop received (Ctrl+C). Pack Complete scheduler stopped.")
+# def run_pack_complete_every(interval_seconds=20):
+#     logging.info(
+#         f"Starting Pack Complete scheduler. Running every {interval_seconds} seconds. Press Ctrl+C to stop."
+#     )
+#     try:
+#         while True:
+#             logging.info("Starting Pack Complete run...")
+#             Pack_Complete().send_pack_complete_payload()
+#             logging.info(f"Run complete. Waiting {interval_seconds} seconds for next run...")
+#             time.sleep(interval_seconds)
+#     except KeyboardInterrupt:
+#         logging.info("Hard stop received (Ctrl+C). Pack Complete scheduler stopped.")
 
 
 if __name__ == '__main__':
-    run_pack_complete_every(interval_seconds=20)
+    # run_pack_complete_every(interval_seconds=20)
+    initiate = Pack_Complete()
+    initiate.send_pack_complete_payload()
 
 
 # How to run

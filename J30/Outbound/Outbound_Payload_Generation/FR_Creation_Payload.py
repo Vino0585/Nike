@@ -27,11 +27,11 @@ class FR_Order_Creation_Payload:
                                order_type, row_num_in_sheet, plant, gtin, formatted_dlvd, fr_request_delivery_date, ) -> list:
         item_grp = item.split(';')
         qty_grp = qty.split(';')
+        gtin_grp = gtin.split(';')
         instruction_code_grp = instruction_code.split(';')
         instruction_text_grp = instruction_text.split(';')
         order_type = order_type
         plant = plant
-        gtin = gtin
         product_life_cycle = ''
         if order_type != 'Z033':
             product_life_cycle = 'ACT'
@@ -48,19 +48,19 @@ class FR_Order_Creation_Payload:
             instruction_code_type = 'AIS'
             reference_ItemType_Description = 'DTCJ'
 
-        if not (len(item_grp) == len(qty_grp) == len(instruction_code_grp) == len(instruction_text_grp)):
+        if not (len(item_grp) == len(qty_grp) == len(gtin_grp) == len(instruction_code_grp) == len(instruction_text_grp)):
             logging.error(
                 f"WARNING: Mismatch in ';' -separated groups in row {row_num_in_sheet}. "
-                f"Items: {len(item_grp)}, Qtys: {len(qty_grp)}, VAS IDs: {len(instruction_code_grp)}, "
+                f"Items: {len(item_grp)}, Qtys: {len(qty_grp)}, GTINs: {len(gtin_grp)} VAS IDs: {len(instruction_code_grp)}, "
                 f"VAS UOMs: {len(instruction_text_grp)}. Skipping this row's order lines."
             )
             return []
 
         order_line_list = []
         order_line_id = 900001  # Initialize the line ID *before* the loop.
-        for current_item, current_qty, current_instruction_code, current_instruction_text in zip(item_grp, qty_grp, instruction_code_grp, instruction_text_grp):
+        for current_item, current_qty, current_gtin, current_instruction_code, current_instruction_text in zip(item_grp, qty_grp, gtin_grp, instruction_code_grp, instruction_text_grp):
             fulfillment_request_Item = {
-                "fulfilmentRequestItemNbr": str(order_line_id), "gtin": gtin, "shippingPointCode": plant,
+                "fulfilmentRequestItemNbr": str(order_line_id), "gtin": current_gtin, "shippingPointCode": plant,
                 "materialNumber": current_item.rsplit('-', 1)[0], "divisionCode": "10", "poRequiredIndicator": False,
                 "alwaysAvailableIndicator": False, "productLifecycleCode": product_life_cycle, "launchCode": "N",
                 "materialGroupCode": "03", "storageLocationCode": "1000", "batchNumber": "0043754328", "prepackCode": "0",
@@ -89,51 +89,69 @@ class FR_Order_Creation_Payload:
             # Use this line in future for VAS details to be included in OriginalOrderLineRequestedServices for now it is mentioned as empty list []
             vas_detail = []
             sequence_nbr = 1
+
+            def has_text_value(value):
+                if value is None:
+                    return False
+                if isinstance(value, str):
+                    return value.strip() != ''
+                return True
+
             for instruction_code_id, instruction_text_id in zip(current_instruction_code_id, current_instruction_text_id):
+                has_formatted_dlvd = has_text_value(formatted_dlvd)
+                if instruction_code_id == 'ZIDP' and not has_formatted_dlvd:
+                    continue
 
-                instr_code_3 = ''
-                if instruction_code_id in ('LBL', 'CST', 'PRI'):
-                    instr_code_3 = instruction_text_id
+                instr_text_3 = ''
+                if instruction_code_id in ('LBL', 'CST', 'PRI', 'COI'):
+                    instr_text_3 = instruction_text_id
                 else:
-                    instr_code_3 = ''
+                    instr_text_3 = ''
 
-                instr_code_1 = ''
+                instr_text_1 = ''
                 if instruction_code_id == 'PUP':
-                    instr_code_1 = instruction_text_id
+                    instr_text_1 = instruction_text_id
                 elif instruction_code_id == 'ZIDP':
-                    instr_code_1 = formatted_dlvd
+                    instr_text_1 = formatted_dlvd
                 else:
-                    instr_code_1 = '0.00'
+                    instr_text_1 = ''
 
-                if order_type == 'Z033':
-                    fulfillmentrequest_item_instruction = {
-                                "instructionCode": instruction_code_id,
-                                "instructionTypeCode": instruction_code_type,
-                                "instruction1Text": instr_code_1,
-                                "instruction2Text": "JPY",
-                                "vasIndicator": True
-                            }
-                    vas_detail.append(fulfillmentrequest_item_instruction)
-                    sequence_nbr += 1
-                else:
-                    fulfillmentrequest_item_instruction = {
-                        "instructionCode": instruction_code_id,
-                        "instructionTypeCode": instruction_code_type,
-                        "instruction1Text": instr_code_1,
-                        "instruction2Text": "JPY",
-                        "instruction3Text": instr_code_3,
-                        "vasIndicator": True
-                    }
-                    vas_detail.append(fulfillmentrequest_item_instruction)
-                    sequence_nbr += 1
+                if instruction_code_id in ('BOX', 'CTL', 'COI') and instruction_text_id == '0':
+                    instr_text_1 = None
+                    instr_text_3 = None
+
+
+                skip_instruction_text_1_2 = instruction_code_id in ('BOX', 'CTL', 'COI')
+                fulfillmentrequest_item_instruction = {
+                    "instructionCode": instruction_code_id,
+                    "instructionTypeCode": instruction_code_type,
+                    "vasIndicator": True
+                }
+
+                if not skip_instruction_text_1_2:
+                    if has_text_value(instr_text_1):
+                        fulfillmentrequest_item_instruction["instruction1Text"] = instr_text_1
+                    instruction2_text = "JPY"
+                    if has_text_value(instruction2_text):
+                        fulfillmentrequest_item_instruction["instruction2Text"] = instruction2_text
+
+                if order_type != 'Z033':
+                    if has_text_value(instr_text_3):
+                        fulfillmentrequest_item_instruction["instruction3Text"] = instr_text_3
+
+                vas_detail.append(fulfillmentrequest_item_instruction)
+                sequence_nbr += 1
 
             nondigital_extra_fulfillmentrequest_item_instruction = [
                 {"instructionCode": "0001", "instruction1Text": "ｾｲﾙ/ｲｴﾛｰｵｰｶｰ/ｺﾞﾙｼﾞｭｸﾞﾘｰﾝ", "vasIndicator": False},
                 {"instructionCode": "0001", "instruction1Text": "ｾｲﾙ/ｲｴﾛｰｵｰｶｰ/", "vasIndicator": False},
                 {"instructionCode": "0001", "instruction1Text": "ﾅｲｷ ｺｰﾄ ﾎﾞﾛｰ LOW PREM", "vasIndicator": False},
-                {"instructionCode": "0001", "instruction1Text": "ﾅｲｷ ｺｰﾄ ﾎﾞﾛｰ", "vasIndicator": False},
-                {"instructionCode": "ZIDP", "instruction1Text": "６／１５", "vasIndicator": False}
+                {"instructionCode": "0001", "instruction1Text": "ﾅｲｷ ｺｰﾄ ﾎﾞﾛｰ", "vasIndicator": False}
                 ]
+            if has_text_value(formatted_dlvd):
+                nondigital_extra_fulfillmentrequest_item_instruction.append(
+                    {"instructionCode": "ZIDP", "instruction1Text": formatted_dlvd, "vasIndicator": False}
+                )
 
             digital_extra_fulfillmentrequest_item_instruction = [
                 {"instruction1Text": "ﾌﾞﾗｯｸ", "instructionCode": "0001", "vasIndicator": False},
@@ -284,9 +302,10 @@ class FR_Order_Creation_Payload:
                         "partyTypeCode": "SOLD_TO", "partyIdentifierType": party_identifier,
                         "partyIdentifier": f"{sold_to_facility_id}", "partyName1": first_name,
                         "fulfillmentRequestLocationAddress": {
-                            "addressLine1Text": address_1, "stateProvinceCode": state, "postalCode": postal_code,
-                            "countryCode": country, "languageCode": "JA", "addressLine2Text": address_2,
-                            "streetAddress1": street_address_1, "streetAddress2": street_address_2
+                            "addressLine1Text": address_1, "cityName": city, "stateProvinceCode": state,
+                            "postalCode": postal_code, "countryCode": country, "languageCode": "JA",
+                            "addressLine2Text": address_2, "streetAddress1": street_address_1,
+                            "streetAddress2": street_address_2
                         },
                         "fulfillmentRequestContact": {"dayPhoneNumber": phone}
                     },
@@ -301,9 +320,10 @@ class FR_Order_Creation_Payload:
                         "partyTypeCode": "SHIP_TO", "partyIdentifierType": party_identifier,
                         "partyIdentifier": f"{d_facility}", "partyName1": first_name,
                         "fulfillmentRequestLocationAddress": {
-                            "addressLine1Text": address_1, "stateProvinceCode": state, "postalCode": postal_code,
-                            "countryCode": country, "languageCode": "JA", "addressLine2Text": address_2,
-                            "streetAddress1": street_address_1, "streetAddress2": street_address_2
+                            "addressLine1Text": address_1, "cityName": city, "stateProvinceCode": state,
+                            "postalCode": postal_code, "countryCode": country,  "languageCode": "JA",
+                            "addressLine2Text": address_2, "streetAddress1": street_address_1,
+                            "streetAddress2": street_address_2
                         },
                         "fulfillmentRequestContact": {"dayPhoneNumber": phone}
                     },
@@ -361,9 +381,12 @@ class FR_Order_Creation_Payload:
                 {"instructionCode": "0001", "instruction1Text": "ｾｲﾙ/ｲｴﾛｰｵｰｶｰ/ｺﾞﾙｼﾞｭｸﾞﾘｰﾝ", "vasIndicator": False},
                 {"instructionCode": "0001", "instruction1Text": "ｾｲﾙ/ｲｴﾛｰｵｰｶｰ/", "vasIndicator": False},
                 {"instructionCode": "0001", "instruction1Text": "ﾅｲｷ ｺｰﾄ ﾎﾞﾛｰ LOW PREM", "vasIndicator": False},
-                {"instructionCode": "0001", "instruction1Text": "ﾅｲｷ ｺｰﾄ ﾎﾞﾛｰ", "vasIndicator": False},
-                {"instructionCode": "ZIDP", "instruction1Text": formatted_dlvd, "vasIndicator": False}
+                {"instructionCode": "0001", "instruction1Text": "ﾅｲｷ ｺｰﾄ ﾎﾞﾛｰ", "vasIndicator": False}
             ]
+            if isinstance(formatted_dlvd, str) and formatted_dlvd.strip():
+                nondigital_fulfillment_Request_Instruction.append(
+                    {"instructionCode": "ZIDP", "instruction1Text": formatted_dlvd, "vasIndicator": False}
+                )
 
             digital_fulfillment_Request_Instruction = [
                 {"instructionCode": 'ZGFR', "instruction1Text": 'N', "vasIndicator": False},
