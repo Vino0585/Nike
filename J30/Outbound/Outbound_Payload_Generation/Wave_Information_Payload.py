@@ -187,15 +187,20 @@ class Wave_Information_Payload:
                 wave_id_split = wave_id.split(';')
                 wave_id_query_value = "','".join(wave_id_split)
 
-                payload = {
-                    "Query": f"OrderPlanningRunId in ('{wave_id_query_value}') AND Status = '8000'"
-                }
-                final_payload = {
-                    'Plant': plant,
-                    'Environment': environment,
-                    'Payload': payload
-                }
-                self.all_wave_information_payload.append(final_payload)
+                query_list = [
+                    f"OrderPlanningRunId in ('{wave_id_query_value}') AND Status = '7000'",
+                    f"OrderPlanningRunId in ('{wave_id_query_value}') AND CrossReferenceLpnId != 'null' AND Status = '1000'"
+                ]
+                for query in query_list:
+                    payload = {
+                        "Query": query
+                    }
+                    final_payload = {
+                        'Plant': plant,
+                        'Environment': environment,
+                        'Payload': payload
+                    }
+                    self.all_wave_information_payload.append(final_payload)
             return self.all_wave_information_payload
 
         except Exception as e:
@@ -204,7 +209,7 @@ class Wave_Information_Payload:
 
     def parse_wave_olpn_information_for_pack_complete(self, response_data: dict) -> list:
         if not response_data.get("data"):
-            logging.error(f"INFO: No data returned from search order payload generation.")
+            logging.info("No data returned from search order payload generation.")
             return []
 
         result = response_data.get("data")

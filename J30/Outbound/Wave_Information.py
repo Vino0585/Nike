@@ -1,6 +1,13 @@
 import requests
 import logging
+import sys
 from pathlib import Path
+
+# Ensure project root is on sys.path so `Environment` and `Outbound` packages can be imported
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent  # .../Nike/J30
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from Environment.Get_Token import Get_Token
 from Environment.WM_Outbound_API_EndPoint import AWM_OB_Env
@@ -304,13 +311,13 @@ class Wave_Information_Search:
             except Exception as e:
                 logging.error(f"An unexpected error occurred for Plant {plant_id} ({envn.upper()}): {e}")
 
-            final_payload = {
-                "Plant": plant_id,
-                "Env": envn,
-                "Result": all_olpn_results
-            }
+        final_payload = {
+            "Plant": plant_id,
+            "Env": envn,
+            "Result": all_olpn_results
+        }
 
-            return final_payload
+        return final_payload
 
 if __name__ == '__main__':
     search_olpn = Wave_Information_Search()
