@@ -75,7 +75,7 @@ class FR_Order_Creation_Payload:
                 "materialGroupCode": "03", "storageLocationCode": "1000", "batchNumber": "0043754328", "prepackCode": "0",
                 "promotionalIndicator": False, "customerBusinessTypeCode": "001", "customerAccountType": "009",
                 "channelClassCode": "26", "netPriceAmount": 0, "manufacturersSuggestedRetailPrice": 48,
-                "salesUnitQuantity": 3, "salesUnitQuantityUOM": "EA", "baseUnitQuantity": 3, "baseUnitQuantityUOM": "EA",
+                "salesUnitQuantity": current_qty, "salesUnitQuantityUOM": "EA", "baseUnitQuantity": current_qty, "baseUnitQuantityUOM": "EA",
                 "grossWeight": 1.104, "netWeight": 1.104, "weightUOM": "KG", "sizeCode": current_item.rsplit('-', 1)[1],
                 "stockCategoryCode": "01000", "materialAvailableDate": "2026-06-16", "assortmentNumber": "0043754328",
                 "fulfillmentRequestItemReferenceOrder": fulfillment_request_item_reference_order,

@@ -1,3 +1,4 @@
+import json
 import requests
 import logging
 import sys
@@ -63,7 +64,7 @@ class Pack_Complete:
                     response.raise_for_status()
 
                     response_data = response.json()
-                    print(response_data)
+                    print(json.dumps(response_data, indent=4))
 
                 except KeyError as e:
                     logging.error(f"ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")

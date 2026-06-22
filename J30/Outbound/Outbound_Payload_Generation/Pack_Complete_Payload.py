@@ -1,8 +1,10 @@
 import logging
+import random
 from pathlib import Path
 import sys
 import uuid
 import datetime
+import json
 
 # Ensure the J30 project root is on sys.path so the `Outbound` package can be imported
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -29,7 +31,8 @@ class Pack_Complete_Payload:
         env = self.olpn_search_payload['Env']
         payloads = self.olpn_search_payload['Result']
         now = datetime.datetime.today()
-        event_identifier = f"{plant}_{now.strftime('%Y%m%d')}-{uuid.uuid4()}"
+        event_identifier = f"{plant}-{now.strftime('%Y%m%d')}-{uuid.uuid1()}"
+        # event_identifier = f"{plant}-{now.strftime('%Y%m%d')}-{now.strftime('%H%M%S')}-525-{random.randrange(10000000000, 99999999999)}"
         event_time_stamp = now.isoformat(timespec='seconds')
         pack_complete_payload = []
         for i, payload in enumerate(payloads):
@@ -37,18 +40,19 @@ class Pack_Complete_Payload:
                     "nodeAPI": {
                         "sourceSystemName": "NODE_PACK_AUDIT_AND_VAS_1081", "eventTypeCode": "PACKGOODSHOLDER",
                         "eventIdentifier": event_identifier, "eventTimestamp": event_time_stamp,
-                        "eventTimeZoneCode": "UTC+09:00",
+                        "eventTimeZoneCode": "UTCZ",
                         "businessKeyStructureText": "distributionCenterCd|transportgoodsholderId",
                         "businessKeyValueText": f"{plant}|{payload['OlpnId']}",
                         "packGoodsHolderRequest": {
                             "distributionCenterCd": str(plant), "nodeDistributionOrderId": str(payload['AggregatedOrder']),
                             "transportGoodsHolderId": str(payload['OlpnId']),
                             "laborActivityId": "", "transactionId": "", "containerTypeId": "", "criteriaID": "",
+                            "toteId": None,
                             "items": [
                                     {
                                     "productCode": str(payload['Item']),
                                     "countryOfOrigin": None,
-                                    "quantity": int(payload['Qty']),
+                                    "packedQuantity": int(payload['Qty']),
                                     "shortedQuantity": 0
                                     }
                                     ]
@@ -65,4 +69,4 @@ class Pack_Complete_Payload:
 
 if __name__ == '__main__':
     pack_olpns = Pack_Complete_Payload().pack_complete_payload()
-    print(pack_olpns)
+    print(json.dumps(pack_olpns, indent=4))

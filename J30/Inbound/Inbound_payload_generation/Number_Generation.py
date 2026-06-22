@@ -1,7 +1,11 @@
 import random
+import json
 from datetime import datetime
+from pathlib import Path
 
 class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
+    # Persist LPN sequence across separate script runs.
+    _LPN_STATE_FILE = Path(__file__).resolve().with_name(".lpn_sequence_state.json")
 
     def __init__(self):
         self.generated_asn_ids = []
@@ -10,10 +14,49 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         self.pro_nbr = None
         self.trailer_nbr = None
         self.seal_nbr = None
-        # --- Counters moved to instance level ---
-        self.lpn_unique_counter = 0
         self.misc_unique_counter = 0
         self.generated_fr_order_ids = []
+
+    @classmethod
+    def _next_lpn_sequence(cls, date_key: str) -> int:
+        state = {}
+        if cls._LPN_STATE_FILE.exists():
+            try:
+                state = json.loads(cls._LPN_STATE_FILE.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                state = {}
+
+        # State format:
+        # {"date_key": "MMDDYYYY", "counter": <int>}
+        # Also supports legacy format: {"MMDDYYYY": <int>}
+        stored_date = None
+        stored_counter = 0
+
+        if isinstance(state, dict):
+            if "date_key" in state and "counter" in state:
+                stored_date = str(state.get("date_key"))
+                stored_counter = int(state.get("counter", 0))
+            elif date_key in state:
+                stored_date = date_key
+                stored_counter = int(state.get(date_key, 0))
+
+        if stored_date != date_key:
+            next_sequence = 1
+        else:
+            next_sequence = stored_counter + 1
+
+        state = {
+            "date_key": date_key,
+            "counter": next_sequence
+        }
+
+        try:
+            cls._LPN_STATE_FILE.write_text(json.dumps(state), encoding="utf-8")
+        except OSError:
+            # If persistence fails, still return the computed value for this call.
+            pass
+
+        return next_sequence
 
     def asn_number_generation(self, num_of_asn_to_generate: int, envn: str, initial: str) -> list:
         if not isinstance(num_of_asn_to_generate, int) or num_of_asn_to_generate <= 0:
@@ -35,13 +78,14 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
             print("Warning: Environment not provided. Cannot generate LPN.")
             return None
 
-        # Generate the LPN and then increment the counter for the next call {envn.upper()}
-        self.generated_lpn_ids = (
-            f'00081{datetime.today().strftime('%m%d%Y')}'
-            f'{random.randint(10000, 99999)}{self.lpn_unique_counter:02d}'
-        )
+        # Keep format length intact: 00081 + MMDDYYYY + 7-digit sequential number
+        date_key = datetime.today().strftime('%m%d%Y')
+        next_sequence = self._next_lpn_sequence(date_key)
 
-        self.lpn_unique_counter += 1
+        self.generated_lpn_ids = (
+            f'00081{date_key}'
+            f'{next_sequence:07d}'
+        )
         return self.generated_lpn_ids
 
     def misc_nbr(self, envn: str):
