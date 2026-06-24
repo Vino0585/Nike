@@ -196,7 +196,7 @@ class Wave_Information_Payload:
                     return []
 
                 get_fc_eligible_olpn = self.task_search.search_task_detail_by_wave_nbr_FC_packcomplete(
-                    search_by_wave_nbr=wave_id,
+                    # search_by_wave_nbr=wave_id,
                     environment=str(environment),
                     plant_id=str(plant)
                 )
@@ -278,14 +278,14 @@ if __name__ == '__main__':
     # import json
     # print(json.dumps(final_wave_information_payload, indent=2))
 
-    # pack_olpn_payload = Wave_Information_Payload().extract_wave_olpn_information_for_pack_message()
-    # import json
-    # print(json.dumps(pack_olpn_payload, indent=4))
+    pack_olpn_payload = Wave_Information_Payload().extract_wave_olpn_information_for_pack_message()
+    import json
+    print(json.dumps(pack_olpn_payload, indent=4))
 
     # task_information = Wave_Information_Payload().extract_wave_task_detail_information()
     # import json
     # print(json.dumps(task_information, indent=4))
 
-    fc_olpn = Wave_Information_Payload().extract_wave_olpn_information_for_FC_packcomplete()
-    import json
-    print(json.dumps(fc_olpn, indent=4))
+    # fc_olpn = Wave_Information_Payload().extract_wave_olpn_information_for_FC_packcomplete()
+    # import json
+    # print(json.dumps(fc_olpn, indent=4))

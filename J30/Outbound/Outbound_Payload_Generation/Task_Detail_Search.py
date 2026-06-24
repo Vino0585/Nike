@@ -173,34 +173,34 @@ class Task_Search_Payload:
 
         return data
 
-    def search_task_detail_by_wave_nbr_FC_packcomplete(self, search_by_wave_nbr, environment, plant_id):
-        self.search_by_wavenbr = ",".join(search_by_wave_nbr.split(';'))
+    # def sample_search_task_detail_by_wave_nbr_FC_packcomplete(self, search_by_wave_nbr, environment, plant_id):
+    #     self.search_by_wavenbr = ",".join(search_by_wave_nbr.split(';'))
+    #
+    #     if not self.search_by_wavenbr:
+    #         logging.info("No valid search by iLPN found, cannot create any payloads, check self.search_by_iLPN in task_search_payload")
+    #
+    #     bearer_token = self.get_bearer_token(environment, plant_id)
+    #
+    #     # Search the oLPN that are in created status and then pass that into the payload.
+    #     payload = {
+    #         "Query": f"GenerationNumberId in ({self.search_by_wavenbr})"
+    #                  f" AND GenerationCodeId in ('Wave', 'Stream')"
+    #                  f" AND Status in ('8000')",
+    #         "Template": self.template_structure1
+    #     }
+    #
+    #     get_response = self.get_task_detail_api_response(bearer_token, environment, plant_id, payload)
+    #     oLPN_list = []
+    #
+    #     for i, item in enumerate(get_response):
+    #         olpn = get_response[i]['OlpnId'] # This is the oLPN
+    #
+    #         if olpn and len(olpn) == 20 and olpn not in oLPN_list:
+    #             oLPN_list.append(olpn)
+    #
+    #     return oLPN_list
 
-        if not self.search_by_wavenbr:
-            logging.info("No valid search by iLPN found, cannot create any payloads, check self.search_by_iLPN in task_search_payload")
-
-        bearer_token = self.get_bearer_token(environment, plant_id)
-
-        # Search the oLPN that are in created status and then pass that into the payload.
-        payload = {
-            "Query": f"GenerationNumberId in ({self.search_by_wavenbr})"
-                     f" AND GenerationCodeId in ('Wave', 'Stream')"
-                     f" AND Status in ('8000')",
-            "Template": self.template_structure1
-        }
-
-        get_response = self.get_task_detail_api_response(bearer_token, environment, plant_id, payload)
-        oLPN_list = []
-
-        for i, item in enumerate(get_response):
-            olpn = get_response[i]['OlpnId'] # This is the oLPN
-
-            if olpn and len(olpn) == 20 and olpn not in oLPN_list:
-                oLPN_list.append(olpn)
-
-        return oLPN_list
-
-    def sample_search_task_detail_by_wave_nbr_FC_packcomplete(self, environment, plant_id):
+    def search_task_detail_by_wave_nbr_FC_packcomplete(self, environment, plant_id):
         from Outbound.Wave_Information import Wave_Information_Search
 
         fc_olpn_search = Wave_Information_Search().search_FC_olpn()
@@ -331,5 +331,5 @@ if __name__ == "__main__":
     # generated_payloads = task_search.search_task_detail_by_wave_nbr_FC_packcomplete('W06172026000000000021', 'QA', '1081')
     # print(generated_payloads)
     #
-    generated_payloads = task_search.sample_search_task_detail_by_wave_nbr_FC_packcomplete('QA', '1081')
+    generated_payloads = task_search.search_task_detail_by_wave_nbr_FC_packcomplete('QA', '1081')
     print(generated_payloads)
