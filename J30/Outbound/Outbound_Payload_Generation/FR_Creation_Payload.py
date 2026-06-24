@@ -25,11 +25,26 @@ class FR_Order_Creation_Payload:
 
     def _parse_order_line_item(self, item, qty, instruction_code, instruction_text,
                                order_type, row_num_in_sheet, plant, gtin, formatted_dlvd, fr_request_delivery_date, ) -> list:
+        def normalize_text(value):
+            if value is None:
+                return ''
+            if pd.isna(value):
+                return ''
+            return str(value)
+
         item_grp = item.split(';')
         qty_grp = qty.split(';')
         gtin_grp = gtin.split(';')
-        instruction_code_grp = instruction_code.split(';')
-        instruction_text_grp = instruction_text.split(';')
+        instruction_code = normalize_text(instruction_code)
+        instruction_text = normalize_text(instruction_text)
+
+        # Z033 can legitimately come without instruction code/text.
+        if order_type == 'Z033' and not instruction_code.strip() and not instruction_text.strip():
+            instruction_code_grp = [''] * len(item_grp)
+            instruction_text_grp = [''] * len(item_grp)
+        else:
+            instruction_code_grp = instruction_code.split(';')
+            instruction_text_grp = instruction_text.split(';')
         order_type = order_type
         plant = plant
         product_life_cycle = ''
@@ -249,8 +264,14 @@ class FR_Order_Creation_Payload:
             qty = str(data_row.get("qty"))
             d_facility = data_row.get("d_facility")
             pre_pack_code = data_row.get("pre_pack_code")
-            instruction_code = data_row.get("instruction_code", 'BOX')
-            instruction_text = data_row.get("instruction_text", 'oLPN')
+            instruction_code_raw = data_row.get("instruction_code")
+            instruction_text_raw = data_row.get("instruction_text")
+            if order_type == "Z033":
+                instruction_code = '' if (instruction_code_raw is None or pd.isna(instruction_code_raw)) else str(instruction_code_raw)
+                instruction_text = '' if (instruction_text_raw is None or pd.isna(instruction_text_raw)) else str(instruction_text_raw)
+            else:
+                instruction_code = 'BOX' if (instruction_code_raw is None or pd.isna(instruction_code_raw)) else str(instruction_code_raw)
+                instruction_text = 'oLPN' if (instruction_text_raw is None or pd.isna(instruction_text_raw)) else str(instruction_text_raw)
             carrier_code = data_row.get("carrier_code")
             hub_code = data_row.get("hub_code")
             sub_hub = data_row.get("sub_hub")

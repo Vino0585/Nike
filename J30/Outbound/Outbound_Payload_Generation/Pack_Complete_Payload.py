@@ -44,15 +44,15 @@ class Pack_Complete_Payload:
                         "businessKeyStructureText": "distributionCenterCd|transportgoodsholderId",
                         "businessKeyValueText": f"{plant}|{payload['OlpnId']}",
                         "packGoodsHolderRequest": {
-                            "distributionCenterCd": str(plant), "nodeDistributionOrderId": str(payload['AggregatedOrder']),
+                            "distributionCenterCd": str(plant), "nodeDistributionOrderId": str(payload['OrderId']),
                             "transportGoodsHolderId": str(payload['OlpnId']),
                             "laborActivityId": "", "transactionId": "", "containerTypeId": "", "criteriaID": "",
                             "toteId": None,
                             "items": [
                                     {
-                                    "productCode": str(payload['Item']),
+                                    "productCode": str(payload['ItemId']),
                                     "countryOfOrigin": None,
-                                    "packedQuantity": int(payload['Qty']),
+                                    "packedQuantity": int(payload['InitialQuantity']),
                                     "shortedQuantity": 0
                                     }
                                     ]
