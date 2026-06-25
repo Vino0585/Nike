@@ -364,9 +364,8 @@ class FR_Order_Creation_Payload:
                 {
                     "fulfillmentRequestContact": {"dayPhoneNumber": phone},
                     "fulfillmentRequestLocationAddress": {
-                        "addressLine1Text": address_1, "addressLine2Text": address_2, "cityName": city,
-                        "countryCode": country, "languageCode": "JA", "postalCode": postal_code, "stateProvinceCode": state,
-                        "streetAddress1": street_address_1, "streetAddress2": street_address_2
+                        "addressLine1Text": address_1, "cityName": city, "countryCode": country, "languageCode": "JA",
+                        "postalCode": postal_code, "stateProvinceCode": state, "streetAddress1": street_address_1,
                     },
                     "partyIdentifierType": party_identifier, "partyIdentifier": f"{sold_to_facility_id}",
                     "partyName1": first_name, "partyTypeCode": "SOLD_TO",
@@ -440,8 +439,8 @@ class FR_Order_Creation_Payload:
             }
 
             fulfillment_request_reference = [
-                {"referenceNumberTypeCode": "SALES_DOCUMENT_NUMBER", "referenceNumberValue": "0328139201"},
-                {"referenceNumberTypeCode": "CONSUMER_SALES_ORDER_NUMBER", "referenceNumberValue": 'KT8178021221'},
+                {"referenceNumberTypeCode": "SALES_DOCUMENT_NUMBER", "referenceNumberValue": f"S{current_order_id}"},
+                {"referenceNumberTypeCode": "CONSUMER_SALES_ORDER_NUMBER", "referenceNumberValue": f"KT{current_order_id}"},
                 {"referenceNumberTypeCode": "INITIATING_DOCUMENT_NUMBER", "referenceNumberValue": self.po_nbr}
             ]
 
