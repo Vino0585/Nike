@@ -24,9 +24,7 @@ def _configure_logging():
     console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
     root_logger.addHandler(console_handler)
 
-
 _configure_logging()
-
 
 class FR_Order_Creation:
     def __init__(self):

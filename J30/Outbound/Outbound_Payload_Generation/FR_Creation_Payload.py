@@ -90,7 +90,7 @@ class FR_Order_Creation_Payload:
                 "materialGroupCode": "03", "storageLocationCode": "1000", "batchNumber": "0043754328", "prepackCode": "0",
                 "promotionalIndicator": False, "customerBusinessTypeCode": "001", "customerAccountType": "009",
                 "channelClassCode": "26", "netPriceAmount": 0, "manufacturersSuggestedRetailPrice": 48,
-                "salesUnitQuantity": current_qty, "salesUnitQuantityUOM": "EA", "baseUnitQuantity": current_qty, "baseUnitQuantityUOM": "EA",
+                "salesUnitQuantity": int(current_qty), "salesUnitQuantityUOM": "EA", "baseUnitQuantity": int(current_qty), "baseUnitQuantityUOM": "EA",
                 "grossWeight": 1.104, "netWeight": 1.104, "weightUOM": "KG", "sizeCode": current_item.rsplit('-', 1)[1],
                 "stockCategoryCode": "01000", "materialAvailableDate": "2026-06-16", "assortmentNumber": "0043754328",
                 "fulfillmentRequestItemReferenceOrder": fulfillment_request_item_reference_order,
@@ -302,15 +302,16 @@ class FR_Order_Creation_Payload:
             instr_code = ''
             consumer_sales_order_number = ''
             if order_type == "Z033":
-                party_identifier = 'Digital'
+                party_identifier = 'DIGITAL'
                 customer_po_type = 'DTCJ'
                 instr_code = 'ZGFR'
-                consumer_sales_order_number = self.po_nbr
+                ship_to_address_override_indicator_flag = True
             else:
                 party_identifier = 'WHOLE_SALE_DC'
                 customer_po_type = ''
                 instr_code = 'ZGRS'
-                consumer_sales_order_number = ''
+                ship_to_address_override_indicator_flag = False
+
 
 
             formatted_pickup_dttm = pickup_dttm.strftime("%m%d%y 05:01")
@@ -362,13 +363,13 @@ class FR_Order_Creation_Payload:
 
             digital_fulfillment_request_party = [
                 {
-                    "fulfillmentRequestContact": {"dayPhoneNumber": phone},
+                    "fulfillmentRequestContact": {"dayPhoneNumber": "15-2773-9103"},
                     "fulfillmentRequestLocationAddress": {
-                        "addressLine1Text": address_1, "cityName": city, "countryCode": country, "languageCode": "JA",
-                        "postalCode": postal_code, "stateProvinceCode": state, "streetAddress1": street_address_1,
+                        "addressLine1Text": "15 NELSON", "cityName": "港区赤坂９－７－１", "countryCode": country, "languageCode": "JA",
+                        "postalCode": "107-6210", "stateProvinceCode": "13", "streetAddress1": "15 NELSON",
                     },
                     "partyIdentifierType": party_identifier, "partyIdentifier": f"{sold_to_facility_id}",
-                    "partyName1": first_name, "partyTypeCode": "SOLD_TO",
+                    "partyName1": "Fabron Boscawen", "partyTypeCode": "SOLD_TO",
                 },
                 {
                     "partyTypeCode": "CARRIER", "partyIdentifierType": party_identifier,
@@ -385,7 +386,7 @@ class FR_Order_Creation_Payload:
                         "streetAddress1": street_address_1, "streetAddress2": street_address_2
                     },
                     "partyIdentifier": f"{d_facility}", "partyIdentifierType": party_identifier,
-                    "partyName1": first_name, "partyName2": "Fabron Boscawen", "partyTypeCode": "SHIP_TO"
+                    "partyName1": "Fabron Boscawen", "partyName2": address_2, "partyTypeCode": "SHIP_TO"
                 },
                 {
                     "partyIdentifier": f"{plant}", "partyIdentifierType": party_identifier, "partyTypeCode": "SHIP_FROM"
@@ -398,7 +399,7 @@ class FR_Order_Creation_Payload:
                         "streetAddress1": street_address_1, "streetAddress2": street_address_2
                     },
                     "partyIdentifier": f"{d_facility}", "partyIdentifierType": party_identifier,
-                    "partyName1": first_name, "partyName2": "Fabron Boscawen", "partyTypeCode": "BILL_TO"
+                    "partyName1": "Douglas Barclay", "partyName2": address_2, "partyTypeCode": "BILL_TO"
                 }
             ]
             nondigital_fulfillment_Request_Instruction = [
@@ -447,14 +448,13 @@ class FR_Order_Creation_Payload:
             order_line_info: list = self._parse_order_line_item(item, qty, instruction_code, instruction_text, order_type,
                                                           row_num_in_sheet, plant, gtin, formatted_dlvd, fr_request_delivery_date)
 
-
             fulfillmentrequestheader = {
                 "event": {"timestamp": formatted_now},
                 "fulfillmentRequestHeader": {
                     "fulfillmentRequestNumber": current_order_id, "orderGroupType": "ZLF", "orderType": order_type,
                     "fulfillmentRequestType": "ZLF", "shippingPointCode": plant, "routeNumber": route_number,
                     "salesOrganizationCode": "7000", "incoTermsCode": "DDP", "exportIndicator": False,
-                    "shipToAddressOverrideIndicator": False, "customerDocumentRequiredIndicator": False,
+                    "shipToAddressOverrideIndicator": ship_to_address_override_indicator_flag, "customerDocumentRequiredIndicator": False,
                     "customerPOType": customer_po_type, "serviceLevelCode": service_level,
                     "appointmentSchedulingIndicator": True, "currencyCode": "JPY", "consumerRequestedMethod": "SHIP",
                     "fulfillmentMethod": "SHIP", "immediateReleaseIndicator": False, "salesDeliveryPriority": "02",
