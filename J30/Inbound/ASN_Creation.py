@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import logging
+import os
 
 from collections import defaultdict
 from pathlib import Path
@@ -12,6 +13,12 @@ from Inbound.Inbound_payload_generation.ASN_Creation_Payload import Asn_Payload_
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class ASN_Creation:
+
+    @staticmethod
+    def _get_ssl_verify_config():
+        disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
+        ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
     def create_asns(self):
         asn_gen = Asn_Payload_Generator()
@@ -32,6 +39,7 @@ class ASN_Creation:
         # This list will collect data for the final report from ALL successful payloads
         extracted_report_data = []
         output_data = [] # This will hold one dictionary per successful payload
+        verify = self._get_ssl_verify_config()
 
         for environment, payloads in payloads_by_env.items():
             logging.info(f"Processing {len(payloads)} Payloads for Environment: {environment.upper()}")
@@ -68,7 +76,13 @@ class ASN_Creation:
                             "authorization": 'Bearer ' + bearer_token
                         }
 
-                        response = requests.post(url=url_value, headers=headers, json=payload_to_send)
+                        response = requests.post(
+                            url=url_value,
+                            headers=headers,
+                            json=payload_to_send,
+                            verify=verify,
+                            timeout=30
+                        )
                         response.raise_for_status()
 
                         response_data = response.json()
