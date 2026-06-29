@@ -8,10 +8,26 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # 1. Get the path to the directory containing this script.
 SCRIPT_DIR = Path(__file__).resolve().parent
 # 2. Define the project root relative to this script.
-PROJECT_ROOT = SCRIPT_DIR.parent
+PROJECT_ROOT = SCRIPT_DIR.parent.parent  # .../Nike/J30
+
+
+def _resolve_default_excel_path() -> Path:
+    input_dir = PROJECT_ROOT / "Input_files"
+    candidates = [
+        input_dir / "Worksheet.xlsx",
+        input_dir / "WorkSheet.xlsx",
+        input_dir / "WorkSheet1.xlsx",
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    # Keep legacy default for clear error messaging if no candidate exists.
+    return candidates[0]
+
+
 # 3. Construct the full, robust path to the Excel file.
-DEFAULT_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Worksheet.xlsx'
-MASTER_EXCEL_PATH = PROJECT_ROOT / 'Input_files/Worksheet.xlsx'
+DEFAULT_EXCEL_PATH = _resolve_default_excel_path()
+MASTER_EXCEL_PATH = _resolve_default_excel_path()
 
 
 class Worksheet:
