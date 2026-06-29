@@ -63,9 +63,6 @@ class Pack_Complete:
                     response = requests.post(url=url_value, json=payload_to_send, headers=header)
                     response.raise_for_status()
 
-                    response_data = response.json()
-                    print(json.dumps(response_data, indent=4))
-
                 except KeyError as e:
                     logging.error(f"ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
                 except requests.exceptions.RequestException as e:
