@@ -3,12 +3,15 @@ import pandas as pd
 import time
 import sys
 from pathlib import Path
+import os
 
 # Ensure project root is on sys.path so `Inbound` package imports work when file runs directly
 CURRENT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CURRENT_DIR.parent  # .../Nike/J30
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+os.environ["NIKE_DISABLE_SSL_VERIFY"] = "true"
 
 from Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
 from ASN_Creation import ASN_Creation
