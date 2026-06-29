@@ -625,8 +625,8 @@ class Worksheet:
 if __name__ == '__main__':
     Work = Worksheet()
     import pprint
-    # payload = Work.create_asn_extract_parameters()
-    # print(payload)
+    payload = Work.create_asn_extract_parameters()
+    print(payload)
     # payload = Work.search_item_extract_parameters()
     # pprint.pprint(payload)
     # payload = Work.search_asn_extract_parameters()
