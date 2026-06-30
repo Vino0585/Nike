@@ -197,9 +197,9 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         )
         return self.generated_loading_group_ids
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # # To execute this class to check on in the later stage.
-    number_generation = NumberGeneration()
+    # number_generation = NumberGeneration()
     # asn = number_generation.asn_number_generation(1, 'PROD', 'PV01')
     # print(asn)
     # lpn = number_generation.lpn_number_generation(envn='qa')
