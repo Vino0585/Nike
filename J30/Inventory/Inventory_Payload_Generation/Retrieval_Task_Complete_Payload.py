@@ -69,3 +69,4 @@ class Recall_Retrieval_Task_Payload:
                         logging.info(f"SUCCESS: Payload {i + 1} processed successfully.")
 
                         for entry in resp:
+                            pass

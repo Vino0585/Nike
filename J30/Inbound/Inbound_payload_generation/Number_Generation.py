@@ -6,6 +6,7 @@ from pathlib import Path
 class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
     # Persist LPN sequence across separate script runs.
     _LPN_STATE_FILE = Path(__file__).resolve().with_name(".lpn_sequence_state.json")
+    _FR_ORDER_STATE_FILE = Path(__file__).resolve().with_name(".fr_order_sequence_state.json")
 
     def __init__(self):
         self.generated_asn_ids = []
@@ -58,6 +59,43 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         return next_sequence
 
+    @classmethod
+    def _next_fr_order_sequence(cls, date_key: str) -> int:
+        state = {}
+        if cls._FR_ORDER_STATE_FILE.exists():
+            try:
+                state = json.loads(cls._FR_ORDER_STATE_FILE.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                state = {}
+
+        stored_date = None
+        stored_counter = 0
+
+        if isinstance(state, dict):
+            if "date_key" in state and "counter" in state:
+                stored_date = str(state.get("date_key"))
+                stored_counter = int(state.get("counter", 0))
+            elif date_key in state:
+                stored_date = date_key
+                stored_counter = int(state.get(date_key, 0))
+
+        if stored_date != date_key:
+            next_sequence = 1
+        else:
+            next_sequence = stored_counter + 1
+
+        state = {
+            "date_key": date_key,
+            "counter": next_sequence
+        }
+
+        try:
+            cls._FR_ORDER_STATE_FILE.write_text(json.dumps(state), encoding="utf-8")
+        except OSError:
+            pass
+
+        return next_sequence
+
     def asn_number_generation(self, num_of_asn_to_generate: int, envn: str, initial: str) -> list:
         if not isinstance(num_of_asn_to_generate, int) or num_of_asn_to_generate <= 0:
             print("Warning: Number of ASN is zero or invalid. No ASN IDs will be generated for this data row.")
@@ -69,7 +107,8 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         for i in range(num_of_asn_to_generate):
             # Using a wider random range and the loop index for better uniqueness
             unique_part = f"{random.randint(100, 999)}{i}"
-            id_ = f"{initial}ASN{timestamp}{envn.upper()}{unique_part}"  # 'id' is a built-in, better to use 'id_'
+            # id_ = f"{initial}ASN{timestamp}{envn.upper()}{unique_part}" # 'id' is a built-in, better to use 'id_'
+            id_ = f"{initial}{timestamp}{unique_part}"
             self.generated_asn_ids.append(id_)
         return self.generated_asn_ids
 
@@ -131,10 +170,10 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
         # Clear previous results for new generation batch
         self.generated_fr_order_ids = []
         timestamp = datetime.now().strftime('%m%d')
-        for i in range(num_of_order_to_generate):
-            # Using a wider random range and the loop index for better uniqueness
-            unique_part = f"{random.randint(100, 999)}{i}"
-            id_ = f"{initial}{timestamp}{unique_part}"
+        date_key = datetime.today().strftime('%m%d%Y')
+        for _ in range(num_of_order_to_generate):
+            sequence = self._next_fr_order_sequence(date_key)
+            id_ = f"{initial}{timestamp}{sequence:05d}"
             self.generated_fr_order_ids.append(id_)
         return self.generated_fr_order_ids
 
@@ -161,10 +200,10 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 if __name__ == '__main__':
     # # To execute this class to check on in the later stage.
     number_generation = NumberGeneration()
-    # asn = number_generation.asn_number_generation(2, 'dev')
+    # asn = number_generation.asn_number_generation(1, 'PROD', 'PV01')
     # print(asn)
-    lpn = number_generation.lpn_number_generation(envn='qa')
-    print(lpn)
+    # lpn = number_generation.lpn_number_generation(envn='qa')
+    # print(lpn)
     # bol, pro, trailer, seal = number_generation.misc_nbr('dev')
     # print(bol, pro, trailer, seal)
     # order = number_generation.order_number_generation(2, 'QA', 'VG')

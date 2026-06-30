@@ -20,6 +20,7 @@ class Inventory_WorkSheet_Extract:
         self.inventory_excel_file_path = excel_path
         self.all_search_iLPN_parameters = []
         self.list_of_entry = []
+        self.all_item_cubiscan = []
 
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
@@ -182,6 +183,41 @@ class Inventory_WorkSheet_Extract:
             self.all_search_iLPN_parameters.append(lpn_params)
 
         return self.all_search_iLPN_parameters
+
+    def cubiscan_worksheet_information(self):
+        self.all_item_cubiscan = []
+
+        if not self._excel_open(input_sheet_name='CubiScan'):
+            logging.error(f"Error: The sheet name in '{self.inventory_excel_file_path}' was not found.")
+
+        if not self.list_of_entry:
+            logging.error(f"No iLPN entry found to extract parameters from {self.list_of_entry}.")
+            return None
+
+        for i, entry_dict in enumerate(self.list_of_entry):
+            plant = entry_dict.get("Plant")
+            envn = entry_dict.get("Environment")
+            item = entry_dict.get("Item")
+            length = entry_dict.get("Length")
+            width = entry_dict.get("Width")
+            height = entry_dict.get("Height")
+            volume = entry_dict.get("Volume")
+            conveyable = entry_dict.get("Conveyable")
+            picking_mhe_conveyable = entry_dict.get("PickingMHEConveyable")
+
+            cubiscan_params = {
+                "Plant": plant,
+                "Environment": envn,
+                "Length": length,
+                "Width": width,
+                "Height": height,
+                "Volume": volume,
+                "Conveyable": conveyable,
+                "PickingMHEConveyable": picking_mhe_conveyable
+            }
+            self.all_item_cubiscan.append(cubiscan_params)
+
+        return self.all_item_cubiscan
 
 if __name__ == "__main__":
     invn = Inventory_WorkSheet_Extract()
