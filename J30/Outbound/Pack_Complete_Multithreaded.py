@@ -231,5 +231,4 @@ if __name__ == "__main__":
 
 # Run with SSL verification disabled
 # echo 'export NIKE_DISABLE_SSL_VERIFY=true' >> ~/.zshrc
-# source ~/.zshrc
 # python "Outbound/Pack_Complete_Multithreaded.py" --max-workers 12 --timeout 10 --interval-seconds 60

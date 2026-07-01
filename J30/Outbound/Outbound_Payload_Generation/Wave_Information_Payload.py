@@ -236,7 +236,7 @@ class Wave_Information_Payload:
             if list_of_datadict is None:
                 logging.error("Error: Outbound Worksheet wave_information_extract method returned None. Halting generation")
                 return []
-            logging.info(f"Successfully extracted {len(list_of_datadict)} data row(s) for wave information processing.")
+            logging.debug(f"Successfully extracted {len(list_of_datadict)} data row(s) for wave information processing.")
             template_structure = {
                 "OlpnId": None
             }
@@ -244,7 +244,7 @@ class Wave_Information_Payload:
             self.all_wave_information_payload = []
             for i, data_row in enumerate(list_of_datadict):
                 row_num_in_sheet = i + 1
-                logging.info(f"Processing row {row_num_in_sheet}: {data_row}")
+                logging.debug(f"Processing row {row_num_in_sheet}: {data_row}")
 
                 plant = data_row.get("Plant")
                 environment = data_row.get("Environment")
