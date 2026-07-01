@@ -3,9 +3,11 @@ import sys
 import argparse
 import time
 import os
+import urllib3
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
+from urllib3.exceptions import InsecureRequestWarning
 
 import requests
 
@@ -28,6 +30,8 @@ class Pack_Complete_Multithreaded:
     def _get_ssl_verify_config():
         disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
         ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        if disable_ssl_verify:
+            urllib3.disable_warnings(InsecureRequestWarning)
         return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
     def _build_headers(self, plant_id_for_token, bearer_token):
@@ -224,3 +228,8 @@ if __name__ == "__main__":
 # --timeout 30 → each request gets up to 30 seconds
 # --timeout 90 → each request gets up to 90 seconds
 # Default is 60 seconds right now.
+
+# Run with SSL verification disabled
+# echo 'export NIKE_DISABLE_SSL_VERIFY=true' >> ~/.zshrc
+# source ~/.zshrc
+# python "Outbound/Pack_Complete_Multithreaded.py" --max-workers 12 --timeout 10 --interval-seconds 60

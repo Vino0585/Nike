@@ -31,7 +31,7 @@ class Outbound_Worksheet:
 
             xls = pd.ExcelFile(self.excel_file_path)
             sheet_names = xls.sheet_names
-            logging.info(f"Sheets found in '{self.excel_file_path}': {sheet_names}")
+            logging.debug(f"Sheets found in '{self.excel_file_path}': {sheet_names}")
             if input_sheet_name not in sheet_names:
                 logging.error(f"Sheet {input_sheet_name} not found in the Excel file.")
 

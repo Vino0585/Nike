@@ -1,5 +1,7 @@
 import requests
 import os
+import urllib3
+from urllib3.exceptions import InsecureRequestWarning
 
 
 class Get_Token():
@@ -39,6 +41,8 @@ class Get_Token():
         # - NIKE_DISABLE_SSL_VERIFY=true      (temporary workaround only)
         disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
         ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        if disable_ssl_verify:
+            urllib3.disable_warnings(InsecureRequestWarning)
         verify = False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
         response = requests.post(

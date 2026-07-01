@@ -4,7 +4,9 @@ import logging
 import sys
 import time
 import os
+import urllib3
 from pathlib import Path
+from urllib3.exceptions import InsecureRequestWarning
 
 # Ensure project root is importable when running this file directly.
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +30,8 @@ class Pack_Complete:
     def _get_ssl_verify_config():
         disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
         ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        if disable_ssl_verify:
+            urllib3.disable_warnings(InsecureRequestWarning)
         return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
     def send_pack_complete_payload(self):
