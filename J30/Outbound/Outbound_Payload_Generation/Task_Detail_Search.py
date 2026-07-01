@@ -1,6 +1,7 @@
 import logging
 import requests
 import sys
+import os
 from pathlib import Path
 
 # Ensure project root is on sys.path so `Environment` and `Outbound` packages can be imported
@@ -31,6 +32,13 @@ class Task_Search_Payload:
         self.worksheet = Outbound_Worksheet()
         self.order_search = Outbound_Order_Search()
         self.template_structure1 = {"OlpnId": None}
+        self.ssl_verify = self._get_ssl_verify_config()
+
+    @staticmethod
+    def _get_ssl_verify_config():
+        disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
+        ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
     # Task Detail status codes: 1000 is created; 8000 is Completed; 9000 is canceled.
 
@@ -54,7 +62,7 @@ class Task_Search_Payload:
             "authorization": 'Bearer ' + bearer_token
         }
 
-        response = requests.post(url=url_value, headers=headers, json=payload)
+        response = requests.post(url=url_value, headers=headers, json=payload, verify=self.ssl_verify)
         response.raise_for_status()
 
         response_data = response.json()

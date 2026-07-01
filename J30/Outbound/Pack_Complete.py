@@ -3,6 +3,7 @@ import requests
 import logging
 import sys
 import time
+import os
 from pathlib import Path
 
 # Ensure project root is importable when running this file directly.
@@ -23,6 +24,12 @@ class Pack_Complete:
     def __init__(self):
         self.pack_complete_payload = Pack_Complete_Payload().pack_complete_payload()
 
+    @staticmethod
+    def _get_ssl_verify_config():
+        disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
+        ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
+
     def send_pack_complete_payload(self):
         if not self.pack_complete_payload:
             logging.error("No payload were generated in Pack Complete Payload program")
@@ -36,6 +43,7 @@ class Pack_Complete:
             logging.error(f"INFO: Skipping row as 'Plant' or 'Environment' or 'Payload' is missing")
 
         logging.info(f"Processing {len(payloads)} Payloads for Environment: {envn.upper()}")
+        verify = self._get_ssl_verify_config()
 
         try:
             plant_id_for_token = plant
@@ -60,7 +68,7 @@ class Pack_Complete:
                         "authorization": 'Bearer ' + bearer_token
                     }
 
-                    response = requests.post(url=url_value, json=payload_to_send, headers=header)
+                    response = requests.post(url=url_value, json=payload_to_send, headers=header, verify=verify)
                     response.raise_for_status()
 
                 except KeyError as e:

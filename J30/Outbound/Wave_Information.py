@@ -1,6 +1,7 @@
 import requests
 import logging
 import sys
+import os
 from pathlib import Path
 
 # Ensure project root is on sys.path so `Environment` and `Outbound` packages can be imported
@@ -21,6 +22,13 @@ class Wave_Information_Search:
 
     def __init__(self):
         self.wave_information = Wave_Information_Payload()
+        self.ssl_verify = self._get_ssl_verify_config()
+
+    @staticmethod
+    def _get_ssl_verify_config():
+        disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
+        ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
     def search_olpn_payload(self):
         olpn_search_payload = self.wave_information.extract_wave_olpn_information()
@@ -60,7 +68,7 @@ class Wave_Information_Search:
                 }
 
                 # --- 4. Make API Request Call ---
-                response = requests.post(api_url, headers=headers, json=olpn_payload)
+                response = requests.post(api_url, headers=headers, json=olpn_payload, verify=self.ssl_verify)
                 response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
                 logging.info(f"Successfully received response for Plant {plant_id} ({envn.upper()})")
                 raw_data = response.json()
@@ -147,7 +155,7 @@ class Wave_Information_Search:
                 }
 
                 # --- 4. Make API Request Call ---
-                response = requests.post(api_url, headers=headers, json=task_payload)
+                response = requests.post(api_url, headers=headers, json=task_payload, verify=self.ssl_verify)
                 response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
                 logging.info(f"Successfully received response for Plant {plant_id} ({envn.upper()})")
                 raw_data = response.json()
@@ -234,7 +242,7 @@ class Wave_Information_Search:
                 }
 
                 # --- 4. Make API Request Call ---
-                response = requests.post(api_url, headers=headers, json=olpn_payload)
+                response = requests.post(api_url, headers=headers, json=olpn_payload, verify=self.ssl_verify)
                 response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
                 logging.info(f"Successfully received response for Plant {plant_id} ({envn.upper()})")
                 raw_data = response.json()
@@ -292,7 +300,7 @@ class Wave_Information_Search:
                 }
 
                 # --- 4. Make API Request Call ---
-                response = requests.post(api_url, headers=headers, json=olpn_payload)
+                response = requests.post(api_url, headers=headers, json=olpn_payload, verify=self.ssl_verify)
                 response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
                 logging.info(f"Successfully received response for Plant {plant_id} ({envn.upper()})")
                 raw_data = response.json()
@@ -357,7 +365,7 @@ class Wave_Information_Search:
                 }
 
                 # --- 4. Make API Request Call ---
-                response = requests.post(api_url, headers=headers, json=olpn_payload)
+                response = requests.post(api_url, headers=headers, json=olpn_payload, verify=self.ssl_verify)
                 response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
                 logging.info(f"Successfully received response for Plant {plant_id} ({envn.upper()})")
                 raw_data = response.json()

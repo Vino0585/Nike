@@ -2,6 +2,7 @@ import logging
 import sys
 import argparse
 import time
+import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,13 @@ class Pack_Complete_Multithreaded:
     def __init__(self, max_workers=8, request_timeout=60):
         self.max_workers = max_workers
         self.request_timeout = request_timeout
+        self.ssl_verify = self._get_ssl_verify_config()
+
+    @staticmethod
+    def _get_ssl_verify_config():
+        disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
+        ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
     def _build_headers(self, plant_id_for_token, bearer_token):
         return {
@@ -39,6 +47,7 @@ class Pack_Complete_Multithreaded:
                 url=url_value,
                 json=payload_to_send,
                 headers=headers,
+                verify=self.ssl_verify,
                 timeout=self.request_timeout,
             )
             response.raise_for_status()
