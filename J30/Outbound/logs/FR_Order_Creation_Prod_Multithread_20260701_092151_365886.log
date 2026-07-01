@@ -1,0 +1,15 @@
+2026-07-01 09:21:51,368 - INFO - MainThread - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/FR_Order_Creation_Prod_Multithread_20260701_092151_365886.log
+2026-07-01 09:21:51,864 - INFO - MainThread - Sheets found in '/Users/vgana3/Documents/GitHub/Nike/J30/Input_files/Outbound_Worksheet.xlsx': ['CreateOrder', 'Parent_Order', 'BackUp', 'TranLog', 'MHE_Journal', 'OriginalOrderInput', 'CreateShipment', 'MasterData', 'MasterInput', 'Shipment_ID', 'Item_info', 'B2B_SUB_HUB']
+2026-07-01 09:21:51,991 - INFO - MainThread - Successfully extracted 2 data row(s) for processing.
+2026-07-01 09:21:51,991 - INFO - MainThread - Processing Excel Row 1
+2026-07-01 09:21:51,995 - INFO - MainThread - Order: S3070100001
+2026-07-01 09:21:51,995 - INFO - MainThread - Processing Excel Row 2
+2026-07-01 09:21:51,999 - INFO - MainThread - Order: S3070100002
+2026-07-01 09:21:52,120 - INFO - MainThread - Sheets found in '/Users/vgana3/Documents/GitHub/Nike/J30/Input_files/Outbound_Worksheet.xlsx': ['CreateOrder', 'Parent_Order', 'BackUp', 'TranLog', 'MHE_Journal', 'OriginalOrderInput', 'CreateShipment', 'MasterData', 'MasterInput', 'Shipment_ID', 'Item_info', 'B2B_SUB_HUB']
+2026-07-01 09:21:52,241 - INFO - MainThread - Total payloads to send: 2
+2026-07-01 09:21:52,241 - INFO - MainThread - Using 2 worker thread(s).
+2026-07-01 09:21:52,996 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 1/2 | Order Number: S3070100001
+2026-07-01 09:21:52,997 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 2/2 | Order Number: S3070100002
+2026-07-01 09:21:56,202 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 2/2 sent successfully. Status Code: 200
+2026-07-01 09:21:57,170 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 1/2 sent successfully. Status Code: 200
+2026-07-01 09:21:57,172 - INFO - MainThread - Completed order creation. Success: 2, Failed: 0, Total: 2
