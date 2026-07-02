@@ -174,12 +174,14 @@ class Wave_Information_Payload:
             logging.info(f"Successfully extracted {len(list_of_datadict)} data row(s) for wave information processing.")
 
             template_structure = {
-                "OlpnDetail": {
-                    "OlpnId": None,
-                    "ItemId": None,
-                    "InitialQuantity": None,
-                    "OrderId": None
-                }
+                "OlpnDetail": [
+                    {
+                        "OlpnId": None,
+                        "ItemId": None,
+                        "InitialQuantity": None,
+                        "OrderId": None,
+                    }
+                ]
             }
 
             self.all_wave_information_payload = []
@@ -209,7 +211,7 @@ class Wave_Information_Payload:
                 wave_id_split = wave_id.split(';')
                 wave_id_query_value = "','".join(wave_id_split)
 
-                query_list = [f"OrderPlanningRunId in ('{wave_id_query_value}') AND Status = '7000'"]
+                query_list = [f"OrderPlanningRunId in ('{wave_id_query_value}') AND Status in ('7000')"]
                 if fc_eligible_olpn_values:
                     fc_eligible_olpn_query_value = "','".join(fc_eligible_olpn_values)
                     query_list.append(f"OlpnId in ('{fc_eligible_olpn_query_value}')")

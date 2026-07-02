@@ -166,8 +166,8 @@ class Outbound_Worksheet:
             route_number = entry_dict.get("Route_nbr")
             mark_for_customer_id = entry_dict.get("Mark_for")
             sold_to_facility_id_raw = entry_dict.get("Sold_Facility")
-            pickup_dttm = entry_dict.get("PickupDTTM")
-            delivery_dttm = entry_dict.get("DeliveryDTTM")
+            pickup_dttm = str(entry_dict.get("PickupDTTM"))
+            delivery_dttm = str(entry_dict.get("DeliveryDTTM"))
             DLVD = entry_dict.get("DLVD")
             # Convert to string and pad with leading zeros to ensure 10 digits (e.g., 0005005401)
             sold_to_facility_id = str(sold_to_facility_id_raw).zfill(10) if sold_to_facility_id_raw is not None else ''

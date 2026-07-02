@@ -23,6 +23,33 @@ class FR_Order_Creation_Payload:
         self.all_order_payloads = []
         self.po_nbr = self.number_gen.purchase_order_number()
 
+    @staticmethod
+    def _parse_sheet_date(value, field_name: str, row_num_in_sheet: int) -> datetime:
+        if value is None or pd.isna(value):
+            raise ValueError(f"{field_name} is empty in row {row_num_in_sheet}")
+
+        if isinstance(value, datetime):
+            return value
+
+        value_as_text = str(value).strip()
+        accepted_formats = (
+            "%m/%d/%Y",
+            "%Y-%m-%d",
+            "%Y-%m-%d %H:%M:%S",
+            "%m/%d/%Y %H:%M:%S",
+        )
+        for date_format in accepted_formats:
+            try:
+                return datetime.strptime(value_as_text, date_format)
+            except ValueError:
+                continue
+
+        raise ValueError(
+            f"{field_name} value '{value_as_text}' in row {row_num_in_sheet} "
+            "does not match accepted formats: MM/DD/YYYY, YYYY-MM-DD, "
+            "YYYY-MM-DD HH:MM:SS, MM/DD/YYYY HH:MM:SS"
+        )
+
     def _parse_order_line_item(self, item, qty, instruction_code, instruction_text,
                                order_type, row_num_in_sheet, plant, gtin, formatted_dlvd, fr_request_delivery_date, ) -> list:
         def normalize_text(value):
@@ -284,8 +311,8 @@ class FR_Order_Creation_Payload:
                         mark_for_customer_id_raw is None or pd.isna(mark_for_customer_id_raw)) else str(
                 mark_for_customer_id_raw)
             sold_to_facility_id = data_row.get("sold_to_facility_id")
-            pickup_dttm = datetime.strptime(str(data_row.get("pickup_dttm")), "%m/%d/%Y")
-            delivery_dttm = datetime.strptime(data_row.get("delivery_dttm"), "%m/%d/%Y")
+            pickup_dttm = self._parse_sheet_date(data_row.get("pickup_dttm"), "pickup_dttm", row_num_in_sheet)
+            delivery_dttm = self._parse_sheet_date(data_row.get("delivery_dttm"), "delivery_dttm", row_num_in_sheet)
             dlvd = data_row.get("dlvd")
 
             order_ids = self.number_gen.fr_order_number_generation(num_of_order, envn, user_initial)
@@ -312,8 +339,6 @@ class FR_Order_Creation_Payload:
                 instr_code = 'ZGRS'
                 ship_to_address_override_indicator_flag = False
 
-
-
             formatted_pickup_dttm = pickup_dttm.strftime("%m%d%y 05:01")
             formatted_delivery_dttm = delivery_dttm.strftime("%m%d%y 12:59")
             formatted_dlvd = to_full_width(str(dlvd)) if dlvd and not pd.isna(dlvd) else ""
@@ -323,7 +348,6 @@ class FR_Order_Creation_Payload:
             change_format_delivery_dttm = delivery_dttm.strftime("%Y-%m-%d")
             fr_request_pickup_date = pickup_dttm.strftime("%Y-%m-%dT00:00:00")
             fr_request_delivery_date = delivery_dttm.strftime("%Y-%m-%dT00:00:00")
-
 
             nondigital_fulfillment_request_party = [
                     {
@@ -359,7 +383,6 @@ class FR_Order_Creation_Payload:
                         "partyTypeCode": "SHIP_FROM", "partyIdentifierType": party_identifier, "partyIdentifier": f"{plant}"
                     }
                 ]
-
 
             digital_fulfillment_request_party = [
                 {
@@ -438,6 +461,12 @@ class FR_Order_Creation_Payload:
                 "deliveryPlanScheduledDeliveryDate": change_format_delivery_dttm, "deliveryPlanScheduledProcessingDate": change_format_pickup_dttm,
                 "customerOrderCreateTimestamp": formatted_now, "scheduledDeliveryStartTimestamp": fr_request_delivery_date
             }
+
+            # fulfillment_request_reference = [
+            #     {"referenceNumberTypeCode": "SALES_DOCUMENT_NUMBER", "referenceNumberValue": f"S0702202601"},
+            #     {"referenceNumberTypeCode": "CONSUMER_SALES_ORDER_NUMBER", "referenceNumberValue": f"S0702202601"},
+            #     {"referenceNumberTypeCode": "INITIATING_DOCUMENT_NUMBER", "referenceNumberValue": f"S0702202601"}
+            # ]
 
             fulfillment_request_reference = [
                 {"referenceNumberTypeCode": "SALES_DOCUMENT_NUMBER", "referenceNumberValue": f"S{current_order_id}"},

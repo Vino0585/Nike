@@ -312,8 +312,12 @@ class Wave_Information_Search:
                 if response_data:
                     for data_entry in response_data:
                         olpn_detail_rows = data_entry.get('OlpnDetail', [])
-                        if olpn_detail_rows:
-                            oLPN_detail.extend(olpn_detail_rows)
+                        if isinstance(olpn_detail_rows, dict):
+                            oLPN_detail.append(olpn_detail_rows)
+                        elif isinstance(olpn_detail_rows, list):
+                            oLPN_detail.extend(
+                                detail for detail in olpn_detail_rows if isinstance(detail, dict)
+                            )
 
                 logging.info(f"Success: Found {len(response_data)} oLPN row(s) for this task.")
 
