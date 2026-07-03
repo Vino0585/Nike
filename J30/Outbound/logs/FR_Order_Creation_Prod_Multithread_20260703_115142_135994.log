@@ -1,0 +1,13 @@
+2026-07-03 11:51:42,139 - INFO - MainThread - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/FR_Order_Creation_Prod_Multithread_20260703_115142_135994.log
+2026-07-03 11:51:42,864 - INFO - MainThread - Successfully extracted 2 data row(s) for processing.
+2026-07-03 11:51:42,864 - INFO - MainThread - Processing Excel Row 1
+2026-07-03 11:51:42,867 - INFO - MainThread - Order: V6D070300001
+2026-07-03 11:51:42,867 - INFO - MainThread - Processing Excel Row 2
+2026-07-03 11:51:42,869 - INFO - MainThread - Order: V6D070300002
+2026-07-03 11:51:43,384 - INFO - MainThread - Total payloads to send: 2
+2026-07-03 11:51:43,384 - INFO - MainThread - Using 2 worker thread(s).
+2026-07-03 11:51:44,126 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 1/2 | Order Number: V6D070300001
+2026-07-03 11:51:44,126 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 2/2 | Order Number: V6D070300002
+2026-07-03 11:51:49,043 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 1/2 sent successfully. Status Code: 200
+2026-07-03 11:51:49,138 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 2/2 sent successfully. Status Code: 200
+2026-07-03 11:51:49,139 - INFO - MainThread - Completed order creation. Success: 2, Failed: 0, Total: 2

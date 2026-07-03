@@ -1,0 +1,352 @@
+2026-07-02 16:27:43,136 - INFO - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/pack_complete_20260702_162743.log
+2026-07-02 16:27:43,136 - INFO - Starting continuous mode. The job will rerun every 60 seconds. Press Ctrl+C to stop.
+2026-07-02 16:27:43,136 - INFO - Starting Pack Complete run...
+2026-07-02 16:27:43,501 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:27:43,501 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:27:43,727 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:27:44,174 - INFO - Successfully retrieved token.
+2026-07-02 16:27:44,174 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:27:44,403 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:27:44,813 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:27:45,041 - INFO - -> Success: True, Message: None
+2026-07-02 16:27:45,044 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:27:45,415 - INFO - Successfully retrieved token.
+2026-07-02 16:27:45,415 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:27:45,613 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:27:45,613 - INFO - Success: Found 2 oLPN row(s) for this task.
+2026-07-02 16:27:45,614 - INFO - Processing 2 payloads for Environment: PROD
+2026-07-02 16:27:45,934 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:27:45,934 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:27:45,934 - INFO - Using 2 worker threads for 2 payloads.
+2026-07-02 16:27:45,935 - INFO - [PROD] Processing Payload 1/2 for Plant 1081
+2026-07-02 16:27:45,935 - INFO - [PROD] Processing Payload 2/2 for Plant 1081
+2026-07-02 16:27:48,196 - INFO - Pack Complete run finished. Success: 2, Failed: 0, Total: 2
+2026-07-02 16:27:48,196 - INFO - Pack Complete run finished.
+2026-07-02 16:27:48,196 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:28:48,202 - INFO - Starting Pack Complete run...
+2026-07-02 16:28:48,485 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:28:48,485 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:28:48,692 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:28:49,227 - INFO - Successfully retrieved token.
+2026-07-02 16:28:49,228 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:28:49,492 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:28:49,970 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:28:50,195 - INFO - -> Success: True, Message: None
+2026-07-02 16:28:50,201 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:28:50,587 - INFO - Successfully retrieved token.
+2026-07-02 16:28:50,588 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:28:50,826 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:28:50,827 - INFO - Success: Found 5 oLPN row(s) for this task.
+2026-07-02 16:28:50,834 - INFO - Processing 5 payloads for Environment: PROD
+2026-07-02 16:28:51,226 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:28:51,227 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:28:51,227 - INFO - Using 5 worker threads for 5 payloads.
+2026-07-02 16:28:51,228 - INFO - [PROD] Processing Payload 1/5 for Plant 1081
+2026-07-02 16:28:51,231 - INFO - [PROD] Processing Payload 2/5 for Plant 1081
+2026-07-02 16:28:51,232 - INFO - [PROD] Processing Payload 3/5 for Plant 1081
+2026-07-02 16:28:51,234 - INFO - [PROD] Processing Payload 4/5 for Plant 1081
+2026-07-02 16:28:51,236 - INFO - [PROD] Processing Payload 5/5 for Plant 1081
+2026-07-02 16:28:53,047 - INFO - Pack Complete run finished. Success: 5, Failed: 0, Total: 5
+2026-07-02 16:28:53,048 - INFO - Pack Complete run finished.
+2026-07-02 16:28:53,048 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:29:53,053 - INFO - Starting Pack Complete run...
+2026-07-02 16:29:53,314 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:29:53,314 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:29:53,555 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:29:54,144 - INFO - Successfully retrieved token.
+2026-07-02 16:29:54,145 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:29:54,400 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:29:54,862 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:29:55,103 - INFO - -> Success: True, Message: None
+2026-07-02 16:29:55,109 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:29:55,574 - INFO - Successfully retrieved token.
+2026-07-02 16:29:55,575 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:29:55,791 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:29:55,792 - INFO - Success: Found 12 oLPN row(s) for this task.
+2026-07-02 16:29:55,795 - INFO - Processing 12 payloads for Environment: PROD
+2026-07-02 16:29:56,147 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:29:56,147 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:29:56,148 - INFO - Using 10 worker threads for 12 payloads.
+2026-07-02 16:29:56,148 - INFO - [PROD] Processing Payload 1/12 for Plant 1081
+2026-07-02 16:29:56,149 - INFO - [PROD] Processing Payload 2/12 for Plant 1081
+2026-07-02 16:29:56,150 - INFO - [PROD] Processing Payload 3/12 for Plant 1081
+2026-07-02 16:29:56,155 - INFO - [PROD] Processing Payload 4/12 for Plant 1081
+2026-07-02 16:29:56,157 - INFO - [PROD] Processing Payload 5/12 for Plant 1081
+2026-07-02 16:29:56,159 - INFO - [PROD] Processing Payload 6/12 for Plant 1081
+2026-07-02 16:29:56,164 - INFO - [PROD] Processing Payload 7/12 for Plant 1081
+2026-07-02 16:29:56,166 - INFO - [PROD] Processing Payload 8/12 for Plant 1081
+2026-07-02 16:29:56,166 - INFO - [PROD] Processing Payload 9/12 for Plant 1081
+2026-07-02 16:29:56,166 - INFO - [PROD] Processing Payload 10/12 for Plant 1081
+2026-07-02 16:29:57,241 - INFO - [PROD] Processing Payload 11/12 for Plant 1081
+2026-07-02 16:29:57,421 - INFO - [PROD] Processing Payload 12/12 for Plant 1081
+2026-07-02 16:29:58,019 - INFO - Pack Complete run finished. Success: 12, Failed: 0, Total: 12
+2026-07-02 16:29:58,020 - INFO - Pack Complete run finished.
+2026-07-02 16:29:58,020 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:30:58,026 - INFO - Starting Pack Complete run...
+2026-07-02 16:30:58,273 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:30:58,273 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:30:58,480 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:30:58,882 - INFO - Successfully retrieved token.
+2026-07-02 16:30:58,884 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:30:59,144 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:30:59,681 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:30:59,912 - INFO - -> Success: True, Message: None
+2026-07-02 16:30:59,914 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:31:00,354 - INFO - Successfully retrieved token.
+2026-07-02 16:31:00,354 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:31:00,620 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:31:00,622 - INFO - Success: Found 10 oLPN row(s) for this task.
+2026-07-02 16:31:00,630 - INFO - Processing 10 payloads for Environment: PROD
+2026-07-02 16:31:00,969 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:31:00,969 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:31:00,969 - INFO - Using 10 worker threads for 10 payloads.
+2026-07-02 16:31:00,971 - INFO - [PROD] Processing Payload 1/10 for Plant 1081
+2026-07-02 16:31:00,972 - INFO - [PROD] Processing Payload 2/10 for Plant 1081
+2026-07-02 16:31:00,974 - INFO - [PROD] Processing Payload 3/10 for Plant 1081
+2026-07-02 16:31:00,976 - INFO - [PROD] Processing Payload 4/10 for Plant 1081
+2026-07-02 16:31:00,980 - INFO - [PROD] Processing Payload 5/10 for Plant 1081
+2026-07-02 16:31:00,986 - INFO - [PROD] Processing Payload 6/10 for Plant 1081
+2026-07-02 16:31:01,003 - INFO - [PROD] Processing Payload 7/10 for Plant 1081
+2026-07-02 16:31:01,005 - INFO - [PROD] Processing Payload 8/10 for Plant 1081
+2026-07-02 16:31:01,006 - INFO - [PROD] Processing Payload 9/10 for Plant 1081
+2026-07-02 16:31:01,007 - INFO - [PROD] Processing Payload 10/10 for Plant 1081
+2026-07-02 16:31:03,266 - INFO - Pack Complete run finished. Success: 10, Failed: 0, Total: 10
+2026-07-02 16:31:03,267 - INFO - Pack Complete run finished.
+2026-07-02 16:31:03,267 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:32:03,274 - INFO - Starting Pack Complete run...
+2026-07-02 16:32:03,578 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:32:03,578 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:32:03,821 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:32:04,299 - INFO - Successfully retrieved token.
+2026-07-02 16:32:04,299 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:32:04,543 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:32:05,022 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:32:05,262 - INFO - -> Success: True, Message: None
+2026-07-02 16:32:05,274 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:32:05,739 - INFO - Successfully retrieved token.
+2026-07-02 16:32:05,739 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:32:06,004 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:32:06,008 - INFO - Success: Found 10 oLPN row(s) for this task.
+2026-07-02 16:32:06,017 - INFO - Processing 10 payloads for Environment: PROD
+2026-07-02 16:32:06,455 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:32:06,456 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:32:06,456 - INFO - Using 10 worker threads for 10 payloads.
+2026-07-02 16:32:06,457 - INFO - [PROD] Processing Payload 1/10 for Plant 1081
+2026-07-02 16:32:06,463 - INFO - [PROD] Processing Payload 2/10 for Plant 1081
+2026-07-02 16:32:06,464 - INFO - [PROD] Processing Payload 3/10 for Plant 1081
+2026-07-02 16:32:06,466 - INFO - [PROD] Processing Payload 4/10 for Plant 1081
+2026-07-02 16:32:06,474 - INFO - [PROD] Processing Payload 5/10 for Plant 1081
+2026-07-02 16:32:06,478 - INFO - [PROD] Processing Payload 6/10 for Plant 1081
+2026-07-02 16:32:06,479 - INFO - [PROD] Processing Payload 7/10 for Plant 1081
+2026-07-02 16:32:06,480 - INFO - [PROD] Processing Payload 8/10 for Plant 1081
+2026-07-02 16:32:06,481 - INFO - [PROD] Processing Payload 9/10 for Plant 1081
+2026-07-02 16:32:06,483 - INFO - [PROD] Processing Payload 10/10 for Plant 1081
+2026-07-02 16:32:10,554 - INFO - Pack Complete run finished. Success: 10, Failed: 0, Total: 10
+2026-07-02 16:32:10,555 - INFO - Pack Complete run finished.
+2026-07-02 16:32:10,555 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:33:10,560 - INFO - Starting Pack Complete run...
+2026-07-02 16:33:10,827 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:33:10,827 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:33:11,032 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:33:11,394 - INFO - Successfully retrieved token.
+2026-07-02 16:33:11,394 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:33:11,663 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:33:12,048 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:33:12,277 - INFO - -> Success: True, Message: None
+2026-07-02 16:33:12,284 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:33:12,741 - INFO - Successfully retrieved token.
+2026-07-02 16:33:12,741 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:33:13,030 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:33:13,033 - INFO - Success: Found 20 oLPN row(s) for this task.
+2026-07-02 16:33:13,038 - INFO - Processing 20 payloads for Environment: PROD
+2026-07-02 16:33:13,461 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:33:13,461 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:33:13,462 - INFO - Using 10 worker threads for 20 payloads.
+2026-07-02 16:33:13,466 - INFO - [PROD] Processing Payload 1/20 for Plant 1081
+2026-07-02 16:33:13,467 - INFO - [PROD] Processing Payload 2/20 for Plant 1081
+2026-07-02 16:33:13,470 - INFO - [PROD] Processing Payload 3/20 for Plant 1081
+2026-07-02 16:33:13,473 - INFO - [PROD] Processing Payload 4/20 for Plant 1081
+2026-07-02 16:33:13,475 - INFO - [PROD] Processing Payload 5/20 for Plant 1081
+2026-07-02 16:33:13,476 - INFO - [PROD] Processing Payload 6/20 for Plant 1081
+2026-07-02 16:33:13,477 - INFO - [PROD] Processing Payload 7/20 for Plant 1081
+2026-07-02 16:33:13,477 - INFO - [PROD] Processing Payload 8/20 for Plant 1081
+2026-07-02 16:33:13,478 - INFO - [PROD] Processing Payload 9/20 for Plant 1081
+2026-07-02 16:33:13,479 - INFO - [PROD] Processing Payload 10/20 for Plant 1081
+2026-07-02 16:33:15,057 - INFO - [PROD] Processing Payload 11/20 for Plant 1081
+2026-07-02 16:33:15,067 - INFO - [PROD] Processing Payload 12/20 for Plant 1081
+2026-07-02 16:33:15,080 - INFO - [PROD] Processing Payload 13/20 for Plant 1081
+2026-07-02 16:33:15,082 - INFO - [PROD] Processing Payload 14/20 for Plant 1081
+2026-07-02 16:33:15,089 - INFO - [PROD] Processing Payload 15/20 for Plant 1081
+2026-07-02 16:33:15,101 - INFO - [PROD] Processing Payload 16/20 for Plant 1081
+2026-07-02 16:33:15,154 - INFO - [PROD] Processing Payload 17/20 for Plant 1081
+2026-07-02 16:33:15,500 - INFO - [PROD] Processing Payload 18/20 for Plant 1081
+2026-07-02 16:33:15,501 - INFO - [PROD] Processing Payload 19/20 for Plant 1081
+2026-07-02 16:33:15,596 - INFO - [PROD] Processing Payload 20/20 for Plant 1081
+2026-07-02 16:33:16,370 - INFO - Pack Complete run finished. Success: 20, Failed: 0, Total: 20
+2026-07-02 16:33:16,371 - INFO - Pack Complete run finished.
+2026-07-02 16:33:16,372 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:34:16,377 - INFO - Starting Pack Complete run...
+2026-07-02 16:34:16,675 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:34:16,675 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:34:16,904 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:34:17,340 - INFO - Successfully retrieved token.
+2026-07-02 16:34:17,340 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:34:17,590 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:34:18,074 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:34:18,309 - INFO - -> Success: True, Message: None
+2026-07-02 16:34:18,315 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:34:18,756 - INFO - Successfully retrieved token.
+2026-07-02 16:34:18,756 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:34:19,061 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:34:19,061 - INFO - Success: Found 20 oLPN row(s) for this task.
+2026-07-02 16:34:19,062 - INFO - Processing 20 payloads for Environment: PROD
+2026-07-02 16:34:19,396 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:34:19,397 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:34:19,397 - INFO - Using 10 worker threads for 20 payloads.
+2026-07-02 16:34:19,398 - INFO - [PROD] Processing Payload 1/20 for Plant 1081
+2026-07-02 16:34:19,399 - INFO - [PROD] Processing Payload 2/20 for Plant 1081
+2026-07-02 16:34:19,401 - INFO - [PROD] Processing Payload 3/20 for Plant 1081
+2026-07-02 16:34:19,409 - INFO - [PROD] Processing Payload 4/20 for Plant 1081
+2026-07-02 16:34:19,411 - INFO - [PROD] Processing Payload 5/20 for Plant 1081
+2026-07-02 16:34:19,412 - INFO - [PROD] Processing Payload 6/20 for Plant 1081
+2026-07-02 16:34:19,415 - INFO - [PROD] Processing Payload 7/20 for Plant 1081
+2026-07-02 16:34:19,416 - INFO - [PROD] Processing Payload 8/20 for Plant 1081
+2026-07-02 16:34:19,417 - INFO - [PROD] Processing Payload 9/20 for Plant 1081
+2026-07-02 16:34:19,419 - INFO - [PROD] Processing Payload 10/20 for Plant 1081
+2026-07-02 16:34:20,832 - INFO - [PROD] Processing Payload 11/20 for Plant 1081
+2026-07-02 16:34:20,872 - INFO - [PROD] Processing Payload 12/20 for Plant 1081
+2026-07-02 16:34:20,892 - INFO - [PROD] Processing Payload 13/20 for Plant 1081
+2026-07-02 16:34:21,014 - INFO - [PROD] Processing Payload 14/20 for Plant 1081
+2026-07-02 16:34:21,079 - INFO - [PROD] Processing Payload 15/20 for Plant 1081
+2026-07-02 16:34:21,097 - INFO - [PROD] Processing Payload 16/20 for Plant 1081
+2026-07-02 16:34:21,150 - INFO - [PROD] Processing Payload 17/20 for Plant 1081
+2026-07-02 16:34:21,209 - INFO - [PROD] Processing Payload 18/20 for Plant 1081
+2026-07-02 16:34:21,234 - INFO - [PROD] Processing Payload 19/20 for Plant 1081
+2026-07-02 16:34:21,598 - INFO - [PROD] Processing Payload 20/20 for Plant 1081
+2026-07-02 16:34:22,267 - INFO - Pack Complete run finished. Success: 20, Failed: 0, Total: 20
+2026-07-02 16:34:22,268 - INFO - Pack Complete run finished.
+2026-07-02 16:34:22,268 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:35:22,274 - INFO - Starting Pack Complete run...
+2026-07-02 16:35:22,569 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:35:22,569 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:35:22,791 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:35:23,296 - INFO - Successfully retrieved token.
+2026-07-02 16:35:23,296 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:35:23,565 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:35:23,966 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:35:24,226 - INFO - -> Success: True, Message: None
+2026-07-02 16:35:24,233 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:35:24,631 - INFO - Successfully retrieved token.
+2026-07-02 16:35:24,632 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:35:24,902 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:35:24,902 - INFO - Success: Found 20 oLPN row(s) for this task.
+2026-07-02 16:35:24,903 - INFO - Processing 20 payloads for Environment: PROD
+2026-07-02 16:35:25,291 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:35:25,292 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:35:25,292 - INFO - Using 10 worker threads for 20 payloads.
+2026-07-02 16:35:25,293 - INFO - [PROD] Processing Payload 1/20 for Plant 1081
+2026-07-02 16:35:25,293 - INFO - [PROD] Processing Payload 2/20 for Plant 1081
+2026-07-02 16:35:25,293 - INFO - [PROD] Processing Payload 3/20 for Plant 1081
+2026-07-02 16:35:25,294 - INFO - [PROD] Processing Payload 4/20 for Plant 1081
+2026-07-02 16:35:25,300 - INFO - [PROD] Processing Payload 6/20 for Plant 1081
+2026-07-02 16:35:25,302 - INFO - [PROD] Processing Payload 7/20 for Plant 1081
+2026-07-02 16:35:25,294 - INFO - [PROD] Processing Payload 5/20 for Plant 1081
+2026-07-02 16:35:25,309 - INFO - [PROD] Processing Payload 8/20 for Plant 1081
+2026-07-02 16:35:25,310 - INFO - [PROD] Processing Payload 9/20 for Plant 1081
+2026-07-02 16:35:25,311 - INFO - [PROD] Processing Payload 10/20 for Plant 1081
+2026-07-02 16:35:26,582 - INFO - [PROD] Processing Payload 11/20 for Plant 1081
+2026-07-02 16:35:26,584 - INFO - [PROD] Processing Payload 12/20 for Plant 1081
+2026-07-02 16:35:26,594 - INFO - [PROD] Processing Payload 13/20 for Plant 1081
+2026-07-02 16:35:26,597 - INFO - [PROD] Processing Payload 14/20 for Plant 1081
+2026-07-02 16:35:26,601 - INFO - [PROD] Processing Payload 15/20 for Plant 1081
+2026-07-02 16:35:26,606 - INFO - [PROD] Processing Payload 16/20 for Plant 1081
+2026-07-02 16:35:26,608 - INFO - [PROD] Processing Payload 17/20 for Plant 1081
+2026-07-02 16:35:26,619 - INFO - [PROD] Processing Payload 18/20 for Plant 1081
+2026-07-02 16:35:26,669 - INFO - [PROD] Processing Payload 19/20 for Plant 1081
+2026-07-02 16:35:26,925 - INFO - [PROD] Processing Payload 20/20 for Plant 1081
+2026-07-02 16:35:28,207 - INFO - Pack Complete run finished. Success: 20, Failed: 0, Total: 20
+2026-07-02 16:35:28,208 - INFO - Pack Complete run finished.
+2026-07-02 16:35:28,208 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:36:28,221 - INFO - Starting Pack Complete run...
+2026-07-02 16:36:28,494 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:36:28,494 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:36:28,738 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:36:29,163 - INFO - Successfully retrieved token.
+2026-07-02 16:36:29,164 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:36:29,402 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:36:29,802 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:36:30,041 - INFO - -> Success: True, Message: None
+2026-07-02 16:36:30,052 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:36:30,388 - INFO - Successfully retrieved token.
+2026-07-02 16:36:30,389 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:36:30,647 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:36:30,648 - INFO - Success: Found 20 oLPN row(s) for this task.
+2026-07-02 16:36:30,650 - INFO - Processing 20 payloads for Environment: PROD
+2026-07-02 16:36:30,979 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:36:30,979 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:36:30,979 - INFO - Using 10 worker threads for 20 payloads.
+2026-07-02 16:36:30,980 - INFO - [PROD] Processing Payload 1/20 for Plant 1081
+2026-07-02 16:36:30,980 - INFO - [PROD] Processing Payload 2/20 for Plant 1081
+2026-07-02 16:36:30,981 - INFO - [PROD] Processing Payload 3/20 for Plant 1081
+2026-07-02 16:36:30,982 - INFO - [PROD] Processing Payload 4/20 for Plant 1081
+2026-07-02 16:36:30,982 - INFO - [PROD] Processing Payload 5/20 for Plant 1081
+2026-07-02 16:36:30,989 - INFO - [PROD] Processing Payload 6/20 for Plant 1081
+2026-07-02 16:36:30,991 - INFO - [PROD] Processing Payload 7/20 for Plant 1081
+2026-07-02 16:36:30,992 - INFO - [PROD] Processing Payload 8/20 for Plant 1081
+2026-07-02 16:36:30,993 - INFO - [PROD] Processing Payload 9/20 for Plant 1081
+2026-07-02 16:36:30,994 - INFO - [PROD] Processing Payload 10/20 for Plant 1081
+2026-07-02 16:36:32,083 - INFO - [PROD] Processing Payload 11/20 for Plant 1081
+2026-07-02 16:36:32,155 - INFO - [PROD] Processing Payload 12/20 for Plant 1081
+2026-07-02 16:36:32,159 - INFO - [PROD] Processing Payload 13/20 for Plant 1081
+2026-07-02 16:36:32,232 - INFO - [PROD] Processing Payload 14/20 for Plant 1081
+2026-07-02 16:36:32,234 - INFO - [PROD] Processing Payload 15/20 for Plant 1081
+2026-07-02 16:36:32,245 - INFO - [PROD] Processing Payload 16/20 for Plant 1081
+2026-07-02 16:36:32,313 - INFO - [PROD] Processing Payload 17/20 for Plant 1081
+2026-07-02 16:36:32,318 - INFO - [PROD] Processing Payload 18/20 for Plant 1081
+2026-07-02 16:36:32,321 - INFO - [PROD] Processing Payload 19/20 for Plant 1081
+2026-07-02 16:36:32,336 - INFO - [PROD] Processing Payload 20/20 for Plant 1081
+2026-07-02 16:36:33,182 - INFO - Pack Complete run finished. Success: 20, Failed: 0, Total: 20
+2026-07-02 16:36:33,183 - INFO - Pack Complete run finished.
+2026-07-02 16:36:33,183 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:37:33,189 - INFO - Starting Pack Complete run...
+2026-07-02 16:37:33,455 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-02 16:37:33,456 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-02 16:37:33,660 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:37:34,098 - INFO - Successfully retrieved token.
+2026-07-02 16:37:34,099 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:37:34,343 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:37:34,731 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-02 16:37:34,969 - INFO - -> Success: True, Message: None
+2026-07-02 16:37:34,976 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-02 16:37:35,479 - INFO - Successfully retrieved token.
+2026-07-02 16:37:35,479 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-02 16:37:35,726 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-02 16:37:35,726 - INFO - Success: Found 20 oLPN row(s) for this task.
+2026-07-02 16:37:35,727 - INFO - Processing 20 payloads for Environment: PROD
+2026-07-02 16:37:36,113 - INFO - Successfully retrieved token for PROD environment.
+2026-07-02 16:37:36,113 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-02 16:37:36,113 - INFO - Using 10 worker threads for 20 payloads.
+2026-07-02 16:37:36,113 - INFO - [PROD] Processing Payload 1/20 for Plant 1081
+2026-07-02 16:37:36,113 - INFO - [PROD] Processing Payload 2/20 for Plant 1081
+2026-07-02 16:37:36,114 - INFO - [PROD] Processing Payload 3/20 for Plant 1081
+2026-07-02 16:37:36,114 - INFO - [PROD] Processing Payload 4/20 for Plant 1081
+2026-07-02 16:37:36,114 - INFO - [PROD] Processing Payload 5/20 for Plant 1081
+2026-07-02 16:37:36,115 - INFO - [PROD] Processing Payload 6/20 for Plant 1081
+2026-07-02 16:37:36,116 - INFO - [PROD] Processing Payload 7/20 for Plant 1081
+2026-07-02 16:37:36,116 - INFO - [PROD] Processing Payload 8/20 for Plant 1081
+2026-07-02 16:37:36,116 - INFO - [PROD] Processing Payload 9/20 for Plant 1081
+2026-07-02 16:37:36,117 - INFO - [PROD] Processing Payload 10/20 for Plant 1081
+2026-07-02 16:37:37,238 - INFO - [PROD] Processing Payload 11/20 for Plant 1081
+2026-07-02 16:37:37,294 - INFO - [PROD] Processing Payload 12/20 for Plant 1081
+2026-07-02 16:37:37,346 - INFO - [PROD] Processing Payload 13/20 for Plant 1081
+2026-07-02 16:37:37,358 - INFO - [PROD] Processing Payload 14/20 for Plant 1081
+2026-07-02 16:37:37,375 - INFO - [PROD] Processing Payload 15/20 for Plant 1081
+2026-07-02 16:37:37,412 - INFO - [PROD] Processing Payload 16/20 for Plant 1081
+2026-07-02 16:37:37,426 - INFO - [PROD] Processing Payload 17/20 for Plant 1081
+2026-07-02 16:37:37,437 - INFO - [PROD] Processing Payload 18/20 for Plant 1081
+2026-07-02 16:37:37,469 - INFO - [PROD] Processing Payload 19/20 for Plant 1081
+2026-07-02 16:37:37,476 - INFO - [PROD] Processing Payload 20/20 for Plant 1081
+2026-07-02 16:37:38,137 - INFO - Pack Complete run finished. Success: 20, Failed: 0, Total: 20
+2026-07-02 16:37:38,138 - INFO - Pack Complete run finished.
+2026-07-02 16:37:38,138 - INFO - Waiting 60 seconds before next run...
+2026-07-02 16:38:04,772 - INFO - Stop requested (Ctrl+C). Continuous Pack Complete execution stopped.

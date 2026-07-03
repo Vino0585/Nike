@@ -1,0 +1,35 @@
+2026-07-01 16:00:39,077 - INFO - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/pack_complete_20260701_160039.log
+2026-07-01 16:00:39,077 - INFO - Starting continuous mode. The job will rerun every 60 seconds. Press Ctrl+C to stop.
+2026-07-01 16:00:39,077 - INFO - Starting Pack Complete run...
+2026-07-01 16:00:39,489 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-01 16:00:39,489 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W06302026000000000001'}
+2026-07-01 16:00:39,710 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-01 16:00:40,214 - INFO - Successfully retrieved token.
+2026-07-01 16:00:40,215 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-01 16:00:40,441 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-01 16:00:40,445 - INFO - No valid search by iLPN found, cannot create any payloads, check self.search_by_iLPN in task_search_payload
+2026-07-01 16:00:40,445 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-01 16:00:40,883 - INFO - Successfully retrieved token.
+2026-07-01 16:00:40,883 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-01 16:00:41,092 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-01 16:00:41,093 - INFO - Success: Found 0 oLPN row(s) for this task.
+2026-07-01 16:00:41,096 - ERROR - Skipping run because 'Plant', 'Env', or 'Payloads' is missing/empty
+2026-07-01 16:00:41,097 - INFO - Pack Complete run finished.
+2026-07-01 16:00:41,097 - INFO - Waiting 60 seconds before next run...
+2026-07-01 16:01:41,102 - INFO - Starting Pack Complete run...
+2026-07-01 16:01:41,336 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-01 16:01:41,336 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W06302026000000000001'}
+2026-07-01 16:01:41,548 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-01 16:01:42,034 - INFO - Successfully retrieved token.
+2026-07-01 16:01:42,035 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-01 16:01:42,443 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-01 16:01:42,447 - INFO - No valid search by iLPN found, cannot create any payloads, check self.search_by_iLPN in task_search_payload
+2026-07-01 16:01:42,448 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-01 16:01:42,887 - INFO - Successfully retrieved token.
+2026-07-01 16:01:42,887 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-01 16:01:43,094 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-01 16:01:43,095 - INFO - Success: Found 0 oLPN row(s) for this task.
+2026-07-01 16:01:43,097 - ERROR - Skipping run because 'Plant', 'Env', or 'Payloads' is missing/empty
+2026-07-01 16:01:43,097 - INFO - Pack Complete run finished.
+2026-07-01 16:01:43,097 - INFO - Waiting 60 seconds before next run...
+2026-07-01 16:02:21,432 - INFO - Stop requested (Ctrl+C). Continuous Pack Complete execution stopped.

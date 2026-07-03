@@ -1,0 +1,21 @@
+2026-07-03 09:31:40,054 - INFO - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/pack_complete_20260703_093140.log
+2026-07-03 09:31:40,054 - INFO - Starting continuous mode. The job will rerun every 20 seconds. Press Ctrl+C to stop.
+2026-07-03 09:31:40,054 - INFO - Starting Pack Complete run...
+2026-07-03 09:31:40,418 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-03 09:31:40,418 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-03 09:31:40,638 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-03 09:31:41,040 - INFO - Successfully retrieved token.
+2026-07-03 09:31:41,041 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 09:31:41,252 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 09:31:41,618 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 09:31:41,817 - INFO - -> Success: True, Message: None
+2026-07-03 09:31:41,821 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-03 09:31:42,283 - INFO - Successfully retrieved token.
+2026-07-03 09:31:42,283 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 09:31:42,456 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 09:31:42,456 - INFO - Success: Found 0 oLPN row(s) for this task.
+2026-07-03 09:31:42,459 - ERROR - No valid pack complete payload rows were built.
+2026-07-03 09:31:42,459 - ERROR - No payload were generated in Pack Complete Payload program
+2026-07-03 09:31:42,459 - INFO - Pack Complete run finished.
+2026-07-03 09:31:42,459 - INFO - Waiting 20 seconds before next run...
+2026-07-03 09:31:50,685 - INFO - Stop requested (Ctrl+C). Continuous Pack Complete execution stopped.

@@ -1,0 +1,339 @@
+2026-07-03 10:21:46,372 - INFO - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/pack_complete_20260703_102146.log
+2026-07-03 10:21:46,372 - INFO - Starting continuous mode. The job will rerun every 20 seconds. Press Ctrl+C to stop.
+2026-07-03 10:21:46,372 - INFO - Starting Pack Complete run...
+2026-07-03 10:21:46,801 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-03 10:21:46,801 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-03 10:21:47,021 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-03 10:21:47,493 - INFO - Successfully retrieved token.
+2026-07-03 10:21:47,493 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:21:47,815 - INFO - Successfully received page 0 for Plant 1081 (PROD)
+2026-07-03 10:21:47,815 - INFO - Plant 1081 (PROD): totalCount=356, pageSize=20, totalPages=18
+2026-07-03 10:21:48,027 - INFO - Fetched page 1 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:48,221 - INFO - Fetched page 2 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:48,410 - INFO - Fetched page 3 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:48,605 - INFO - Fetched page 4 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:48,798 - INFO - Fetched page 5 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:48,998 - INFO - Fetched page 6 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:49,189 - INFO - Fetched page 7 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:49,368 - INFO - Fetched page 8 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:49,559 - INFO - Fetched page 9 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:49,751 - INFO - Fetched page 10 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:49,961 - INFO - Fetched page 11 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:50,160 - INFO - Fetched page 12 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:50,366 - INFO - Fetched page 13 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:50,573 - INFO - Fetched page 14 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:50,770 - INFO - Fetched page 15 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:50,983 - INFO - Fetched page 16 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:21:51,197 - INFO - Fetched page 17 for Plant 1081 (PROD) with 16 row(s)
+2026-07-03 10:21:51,588 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:51,778 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:51,780 - INFO - Processed FC task-detail batch 1 with 20 input oLPN(s); received 0 row(s)
+2026-07-03 10:21:51,781 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:51,970 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:51,972 - INFO - Processed FC task-detail batch 2 with 20 input oLPN(s); received 17 row(s)
+2026-07-03 10:21:51,972 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:52,160 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:52,164 - INFO - Processed FC task-detail batch 3 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:21:52,165 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:52,368 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:52,372 - INFO - Processed FC task-detail batch 4 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:21:52,373 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:52,556 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:52,558 - INFO - Processed FC task-detail batch 5 with 20 input oLPN(s); received 14 row(s)
+2026-07-03 10:21:52,558 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:52,745 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:52,746 - INFO - Processed FC task-detail batch 6 with 20 input oLPN(s); received 16 row(s)
+2026-07-03 10:21:52,746 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:52,917 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:52,919 - INFO - Processed FC task-detail batch 7 with 20 input oLPN(s); received 0 row(s)
+2026-07-03 10:21:52,919 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:53,097 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:53,098 - INFO - Processed FC task-detail batch 8 with 20 input oLPN(s); received 9 row(s)
+2026-07-03 10:21:53,098 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:53,283 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:53,285 - INFO - Processed FC task-detail batch 9 with 20 input oLPN(s); received 13 row(s)
+2026-07-03 10:21:53,286 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:53,466 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:53,467 - INFO - Processed FC task-detail batch 10 with 20 input oLPN(s); received 19 row(s)
+2026-07-03 10:21:53,467 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:53,647 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:53,649 - INFO - Processed FC task-detail batch 11 with 20 input oLPN(s); received 18 row(s)
+2026-07-03 10:21:53,649 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:53,830 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:53,831 - INFO - Processed FC task-detail batch 12 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:21:53,831 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:54,004 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:54,006 - INFO - Processed FC task-detail batch 13 with 20 input oLPN(s); received 7 row(s)
+2026-07-03 10:21:54,006 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:54,195 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:54,198 - INFO - Processed FC task-detail batch 14 with 20 input oLPN(s); received 17 row(s)
+2026-07-03 10:21:54,199 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:54,379 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:54,382 - INFO - Processed FC task-detail batch 15 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:21:54,382 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:54,564 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:54,566 - INFO - Processed FC task-detail batch 16 with 20 input oLPN(s); received 19 row(s)
+2026-07-03 10:21:54,566 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:54,748 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:54,758 - INFO - Processed FC task-detail batch 17 with 20 input oLPN(s); received 11 row(s)
+2026-07-03 10:21:54,758 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:21:54,940 - INFO - -> Success: True, Message: None
+2026-07-03 10:21:54,944 - INFO - Processed FC task-detail batch 18 with 16 input oLPN(s); received 4 row(s)
+2026-07-03 10:21:54,944 - INFO - Processing Task 1/2: Plant 1081 (PROD)
+2026-07-03 10:21:55,314 - INFO - Successfully retrieved token.
+2026-07-03 10:21:55,314 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:21:55,494 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 10:21:55,494 - INFO - Success: Found 0 oLPN row(s) for this task.
+2026-07-03 10:21:55,495 - INFO - Processing Task 2/2: Plant 1081 (PROD)
+2026-07-03 10:21:55,888 - INFO - Successfully retrieved token.
+2026-07-03 10:21:55,888 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:21:56,114 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 10:21:56,115 - INFO - Success: Found 20 oLPN row(s) for this task.
+2026-07-03 10:21:56,117 - INFO - Processing 20 payloads for Environment: PROD
+2026-07-03 10:21:56,453 - INFO - Successfully retrieved token for PROD environment.
+2026-07-03 10:21:56,453 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-03 10:21:56,453 - INFO - Using 8 worker threads for 20 payloads.
+2026-07-03 10:21:56,454 - INFO - [PROD] Processing Payload 1/20 for Plant 1081
+2026-07-03 10:21:56,454 - INFO - [PROD] Processing Payload 2/20 for Plant 1081
+2026-07-03 10:21:56,454 - INFO - [PROD] Processing Payload 3/20 for Plant 1081
+2026-07-03 10:21:56,455 - INFO - [PROD] Processing Payload 4/20 for Plant 1081
+2026-07-03 10:21:56,456 - INFO - [PROD] Processing Payload 5/20 for Plant 1081
+2026-07-03 10:21:56,457 - INFO - [PROD] Processing Payload 6/20 for Plant 1081
+2026-07-03 10:21:56,459 - INFO - [PROD] Processing Payload 7/20 for Plant 1081
+2026-07-03 10:21:56,460 - INFO - [PROD] Processing Payload 8/20 for Plant 1081
+2026-07-03 10:21:57,816 - INFO - [PROD] Processing Payload 9/20 for Plant 1081
+2026-07-03 10:21:57,818 - INFO - [PROD] Processing Payload 10/20 for Plant 1081
+2026-07-03 10:21:57,894 - INFO - [PROD] Processing Payload 11/20 for Plant 1081
+2026-07-03 10:21:57,896 - INFO - [PROD] Processing Payload 12/20 for Plant 1081
+2026-07-03 10:21:57,898 - INFO - [PROD] Processing Payload 13/20 for Plant 1081
+2026-07-03 10:21:57,901 - INFO - [PROD] Processing Payload 14/20 for Plant 1081
+2026-07-03 10:21:58,131 - INFO - [PROD] Processing Payload 15/20 for Plant 1081
+2026-07-03 10:21:58,141 - INFO - [PROD] Processing Payload 16/20 for Plant 1081
+2026-07-03 10:21:58,658 - INFO - [PROD] Processing Payload 17/20 for Plant 1081
+2026-07-03 10:21:58,660 - INFO - [PROD] Processing Payload 18/20 for Plant 1081
+2026-07-03 10:21:58,701 - INFO - [PROD] Processing Payload 19/20 for Plant 1081
+2026-07-03 10:21:58,705 - INFO - [PROD] Processing Payload 20/20 for Plant 1081
+2026-07-03 10:21:59,436 - INFO - Pack Complete run finished. Success: 20, Failed: 0, Total: 20
+2026-07-03 10:21:59,436 - INFO - Pack Complete run finished.
+2026-07-03 10:21:59,436 - INFO - Waiting 20 seconds before next run...
+2026-07-03 10:22:19,442 - INFO - Starting Pack Complete run...
+2026-07-03 10:22:19,687 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-03 10:22:19,687 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-03 10:22:19,892 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-03 10:22:20,369 - INFO - Successfully retrieved token.
+2026-07-03 10:22:20,370 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:22:20,570 - INFO - Successfully received page 0 for Plant 1081 (PROD)
+2026-07-03 10:22:20,571 - INFO - Plant 1081 (PROD): totalCount=336, pageSize=20, totalPages=17
+2026-07-03 10:22:20,782 - INFO - Fetched page 1 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:21,005 - INFO - Fetched page 2 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:21,197 - INFO - Fetched page 3 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:21,400 - INFO - Fetched page 4 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:21,590 - INFO - Fetched page 5 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:21,780 - INFO - Fetched page 6 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:21,966 - INFO - Fetched page 7 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:22,148 - INFO - Fetched page 8 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:22,342 - INFO - Fetched page 9 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:22,545 - INFO - Fetched page 10 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:22,760 - INFO - Fetched page 11 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:22,967 - INFO - Fetched page 12 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:23,172 - INFO - Fetched page 13 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:23,363 - INFO - Fetched page 14 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:23,563 - INFO - Fetched page 15 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:23,782 - INFO - Fetched page 16 for Plant 1081 (PROD) with 16 row(s)
+2026-07-03 10:22:24,199 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:24,377 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:24,381 - INFO - Processed FC task-detail batch 1 with 20 input oLPN(s); received 0 row(s)
+2026-07-03 10:22:24,381 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:24,581 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:24,582 - INFO - Processed FC task-detail batch 2 with 20 input oLPN(s); received 17 row(s)
+2026-07-03 10:22:24,582 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:24,772 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:24,774 - INFO - Processed FC task-detail batch 3 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:22:24,774 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:24,958 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:24,959 - INFO - Processed FC task-detail batch 4 with 20 input oLPN(s); received 14 row(s)
+2026-07-03 10:22:24,960 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:25,144 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:25,147 - INFO - Processed FC task-detail batch 5 with 20 input oLPN(s); received 16 row(s)
+2026-07-03 10:22:25,147 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:25,325 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:25,326 - INFO - Processed FC task-detail batch 6 with 20 input oLPN(s); received 0 row(s)
+2026-07-03 10:22:25,326 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:25,495 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:25,496 - INFO - Processed FC task-detail batch 7 with 20 input oLPN(s); received 9 row(s)
+2026-07-03 10:22:25,496 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:25,669 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:25,670 - INFO - Processed FC task-detail batch 8 with 20 input oLPN(s); received 13 row(s)
+2026-07-03 10:22:25,670 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:25,850 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:25,852 - INFO - Processed FC task-detail batch 9 with 20 input oLPN(s); received 19 row(s)
+2026-07-03 10:22:25,852 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:26,028 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:26,029 - INFO - Processed FC task-detail batch 10 with 20 input oLPN(s); received 18 row(s)
+2026-07-03 10:22:26,029 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:26,202 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:26,203 - INFO - Processed FC task-detail batch 11 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:22:26,203 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:26,387 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:26,389 - INFO - Processed FC task-detail batch 12 with 20 input oLPN(s); received 7 row(s)
+2026-07-03 10:22:26,389 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:26,573 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:26,574 - INFO - Processed FC task-detail batch 13 with 20 input oLPN(s); received 17 row(s)
+2026-07-03 10:22:26,574 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:26,755 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:26,757 - INFO - Processed FC task-detail batch 14 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:22:26,757 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:27,165 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:27,167 - INFO - Processed FC task-detail batch 15 with 20 input oLPN(s); received 19 row(s)
+2026-07-03 10:22:27,168 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:27,339 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:27,341 - INFO - Processed FC task-detail batch 16 with 20 input oLPN(s); received 11 row(s)
+2026-07-03 10:22:27,342 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:27,530 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:27,532 - INFO - Processed FC task-detail batch 17 with 16 input oLPN(s); received 4 row(s)
+2026-07-03 10:22:27,532 - INFO - Processing Task 1/2: Plant 1081 (PROD)
+2026-07-03 10:22:27,901 - INFO - Successfully retrieved token.
+2026-07-03 10:22:27,901 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:22:28,085 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 10:22:28,085 - INFO - Success: Found 0 oLPN row(s) for this task.
+2026-07-03 10:22:28,085 - INFO - Processing Task 2/2: Plant 1081 (PROD)
+2026-07-03 10:22:28,441 - INFO - Successfully retrieved token.
+2026-07-03 10:22:28,441 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:22:28,666 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 10:22:28,666 - INFO - Success: Found 20 oLPN row(s) for this task.
+2026-07-03 10:22:28,667 - INFO - Processing 20 payloads for Environment: PROD
+2026-07-03 10:22:29,101 - INFO - Successfully retrieved token for PROD environment.
+2026-07-03 10:22:29,101 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-03 10:22:29,101 - INFO - Using 8 worker threads for 20 payloads.
+2026-07-03 10:22:29,102 - INFO - [PROD] Processing Payload 1/20 for Plant 1081
+2026-07-03 10:22:29,102 - INFO - [PROD] Processing Payload 2/20 for Plant 1081
+2026-07-03 10:22:29,104 - INFO - [PROD] Processing Payload 3/20 for Plant 1081
+2026-07-03 10:22:29,104 - INFO - [PROD] Processing Payload 4/20 for Plant 1081
+2026-07-03 10:22:29,105 - INFO - [PROD] Processing Payload 5/20 for Plant 1081
+2026-07-03 10:22:29,105 - INFO - [PROD] Processing Payload 6/20 for Plant 1081
+2026-07-03 10:22:29,105 - INFO - [PROD] Processing Payload 7/20 for Plant 1081
+2026-07-03 10:22:29,105 - INFO - [PROD] Processing Payload 8/20 for Plant 1081
+2026-07-03 10:22:30,374 - INFO - [PROD] Processing Payload 9/20 for Plant 1081
+2026-07-03 10:22:30,397 - INFO - [PROD] Processing Payload 10/20 for Plant 1081
+2026-07-03 10:22:30,403 - INFO - [PROD] Processing Payload 11/20 for Plant 1081
+2026-07-03 10:22:30,404 - INFO - [PROD] Processing Payload 12/20 for Plant 1081
+2026-07-03 10:22:30,430 - INFO - [PROD] Processing Payload 13/20 for Plant 1081
+2026-07-03 10:22:30,451 - INFO - [PROD] Processing Payload 14/20 for Plant 1081
+2026-07-03 10:22:30,499 - INFO - [PROD] Processing Payload 15/20 for Plant 1081
+2026-07-03 10:22:30,516 - INFO - [PROD] Processing Payload 16/20 for Plant 1081
+2026-07-03 10:22:31,227 - INFO - [PROD] Processing Payload 17/20 for Plant 1081
+2026-07-03 10:22:31,232 - INFO - [PROD] Processing Payload 18/20 for Plant 1081
+2026-07-03 10:22:31,233 - INFO - [PROD] Processing Payload 19/20 for Plant 1081
+2026-07-03 10:22:31,237 - INFO - [PROD] Processing Payload 20/20 for Plant 1081
+2026-07-03 10:22:32,047 - INFO - Pack Complete run finished. Success: 20, Failed: 0, Total: 20
+2026-07-03 10:22:32,047 - INFO - Pack Complete run finished.
+2026-07-03 10:22:32,047 - INFO - Waiting 20 seconds before next run...
+2026-07-03 10:22:52,054 - INFO - Starting Pack Complete run...
+2026-07-03 10:22:52,312 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-03 10:22:52,312 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-03 10:22:52,581 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-03 10:22:52,963 - INFO - Successfully retrieved token.
+2026-07-03 10:22:52,963 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:22:53,151 - INFO - Successfully received page 0 for Plant 1081 (PROD)
+2026-07-03 10:22:53,152 - INFO - Plant 1081 (PROD): totalCount=316, pageSize=20, totalPages=16
+2026-07-03 10:22:53,395 - INFO - Fetched page 1 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:53,605 - INFO - Fetched page 2 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:53,805 - INFO - Fetched page 3 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:54,009 - INFO - Fetched page 4 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:54,223 - INFO - Fetched page 5 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:54,407 - INFO - Fetched page 6 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:54,604 - INFO - Fetched page 7 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:54,802 - INFO - Fetched page 8 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:55,004 - INFO - Fetched page 9 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:55,194 - INFO - Fetched page 10 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:55,390 - INFO - Fetched page 11 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:55,595 - INFO - Fetched page 12 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:55,802 - INFO - Fetched page 13 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:55,994 - INFO - Fetched page 14 for Plant 1081 (PROD) with 20 row(s)
+2026-07-03 10:22:56,226 - INFO - Fetched page 15 for Plant 1081 (PROD) with 16 row(s)
+2026-07-03 10:22:56,745 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:56,940 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:56,943 - INFO - Processed FC task-detail batch 1 with 20 input oLPN(s); received 0 row(s)
+2026-07-03 10:22:56,943 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:57,148 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:57,149 - INFO - Processed FC task-detail batch 2 with 20 input oLPN(s); received 17 row(s)
+2026-07-03 10:22:57,150 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:57,336 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:57,341 - INFO - Processed FC task-detail batch 3 with 20 input oLPN(s); received 14 row(s)
+2026-07-03 10:22:57,341 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:57,526 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:57,531 - INFO - Processed FC task-detail batch 4 with 20 input oLPN(s); received 16 row(s)
+2026-07-03 10:22:57,531 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:57,721 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:57,722 - INFO - Processed FC task-detail batch 5 with 20 input oLPN(s); received 0 row(s)
+2026-07-03 10:22:57,723 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:57,917 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:57,919 - INFO - Processed FC task-detail batch 6 with 20 input oLPN(s); received 9 row(s)
+2026-07-03 10:22:57,919 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:58,118 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:58,120 - INFO - Processed FC task-detail batch 7 with 20 input oLPN(s); received 13 row(s)
+2026-07-03 10:22:58,120 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:58,304 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:58,306 - INFO - Processed FC task-detail batch 8 with 20 input oLPN(s); received 19 row(s)
+2026-07-03 10:22:58,306 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:58,545 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:58,546 - INFO - Processed FC task-detail batch 9 with 20 input oLPN(s); received 18 row(s)
+2026-07-03 10:22:58,546 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:58,719 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:58,721 - INFO - Processed FC task-detail batch 10 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:22:58,721 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:58,908 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:58,909 - INFO - Processed FC task-detail batch 11 with 20 input oLPN(s); received 7 row(s)
+2026-07-03 10:22:58,910 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:59,095 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:59,098 - INFO - Processed FC task-detail batch 12 with 20 input oLPN(s); received 17 row(s)
+2026-07-03 10:22:59,098 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:59,291 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:59,295 - INFO - Processed FC task-detail batch 13 with 20 input oLPN(s); received 20 row(s)
+2026-07-03 10:22:59,295 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:59,484 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:59,488 - INFO - Processed FC task-detail batch 14 with 20 input oLPN(s); received 19 row(s)
+2026-07-03 10:22:59,488 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:59,676 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:59,679 - INFO - Processed FC task-detail batch 15 with 20 input oLPN(s); received 11 row(s)
+2026-07-03 10:22:59,680 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 10:22:59,858 - INFO - -> Success: True, Message: None
+2026-07-03 10:22:59,860 - INFO - Processed FC task-detail batch 16 with 16 input oLPN(s); received 4 row(s)
+2026-07-03 10:22:59,860 - INFO - Processing Task 1/2: Plant 1081 (PROD)
+2026-07-03 10:23:00,246 - INFO - Successfully retrieved token.
+2026-07-03 10:23:00,247 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:23:00,429 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 10:23:00,429 - INFO - Success: Found 0 oLPN row(s) for this task.
+2026-07-03 10:23:00,430 - INFO - Processing Task 2/2: Plant 1081 (PROD)
+2026-07-03 10:23:00,798 - INFO - Successfully retrieved token.
+2026-07-03 10:23:00,799 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 10:23:01,046 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 10:23:01,047 - INFO - Success: Found 20 oLPN row(s) for this task.
+2026-07-03 10:23:01,048 - INFO - Processing 20 payloads for Environment: PROD
+2026-07-03 10:23:01,380 - INFO - Successfully retrieved token for PROD environment.
+2026-07-03 10:23:01,381 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-03 10:23:01,381 - INFO - Using 8 worker threads for 20 payloads.
+2026-07-03 10:23:01,381 - INFO - [PROD] Processing Payload 1/20 for Plant 1081
+2026-07-03 10:23:01,381 - INFO - [PROD] Processing Payload 2/20 for Plant 1081
+2026-07-03 10:23:01,383 - INFO - [PROD] Processing Payload 3/20 for Plant 1081
+2026-07-03 10:23:01,384 - INFO - [PROD] Processing Payload 4/20 for Plant 1081
+2026-07-03 10:23:01,384 - INFO - [PROD] Processing Payload 5/20 for Plant 1081
+2026-07-03 10:23:01,385 - INFO - [PROD] Processing Payload 6/20 for Plant 1081
+2026-07-03 10:23:01,385 - INFO - [PROD] Processing Payload 7/20 for Plant 1081
+2026-07-03 10:23:01,386 - INFO - [PROD] Processing Payload 8/20 for Plant 1081
+2026-07-03 10:23:02,654 - INFO - [PROD] Processing Payload 9/20 for Plant 1081
+2026-07-03 10:23:02,659 - INFO - [PROD] Processing Payload 10/20 for Plant 1081
+2026-07-03 10:23:02,716 - INFO - [PROD] Processing Payload 11/20 for Plant 1081
+2026-07-03 10:23:02,729 - INFO - [PROD] Processing Payload 12/20 for Plant 1081
+2026-07-03 10:23:02,746 - INFO - [PROD] Processing Payload 13/20 for Plant 1081
+2026-07-03 10:23:02,773 - INFO - [PROD] Processing Payload 14/20 for Plant 1081
+2026-07-03 10:23:02,774 - INFO - [PROD] Processing Payload 15/20 for Plant 1081
+2026-07-03 10:23:02,775 - INFO - [PROD] Processing Payload 16/20 for Plant 1081
+2026-07-03 10:23:03,492 - INFO - [PROD] Processing Payload 17/20 for Plant 1081
+2026-07-03 10:23:03,495 - INFO - [PROD] Processing Payload 18/20 for Plant 1081
+2026-07-03 10:23:03,502 - INFO - [PROD] Processing Payload 19/20 for Plant 1081
+2026-07-03 10:23:03,514 - INFO - [PROD] Processing Payload 20/20 for Plant 1081
+2026-07-03 10:23:04,341 - INFO - Pack Complete run finished. Success: 20, Failed: 0, Total: 20
+2026-07-03 10:23:04,341 - INFO - Pack Complete run finished.
+2026-07-03 10:23:04,341 - INFO - Waiting 20 seconds before next run...
+2026-07-03 10:23:10,442 - INFO - Stop requested (Ctrl+C). Continuous Pack Complete execution stopped.

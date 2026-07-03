@@ -1,0 +1,206 @@
+2026-07-01 13:53:35,062 - INFO - MainThread - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Inbound/logs/ASN_Creation_Multithread_20260701_135335_060225.log
+2026-07-01 13:53:35,281 - INFO - MainThread - Sheets found in '/Users/vgana3/Documents/GitHub/Nike/J30/Input_files/Worksheet.xlsx': ['CreateASN', 'InboundMaster', 'MasterInput', 'Exception_Input', 'ItemSearch', 'SearchASN', 'BackUP']
+2026-07-01 13:53:35,292 - INFO - MainThread - Successfully extracted 10 data row(s) for processing.
+2026-07-01 13:53:35,292 - INFO - MainThread - Processing Excel Row 2
+2026-07-01 13:53:35,292 - INFO - MainThread - ASN V807011840:
+2026-07-01 13:53:35,292 - INFO - MainThread - Single-Item Group 'FQ0516-072-XL': Generating 40 LPNs.
+2026-07-01 13:53:35,343 - INFO - MainThread - Single-Item Group 'FQ1151-490-2XL': Generating 40 LPNs.
+2026-07-01 13:53:35,375 - INFO - MainThread - Single-Item Group 'FQ1637-010-L': Generating 20 LPNs.
+2026-07-01 13:53:35,392 - INFO - MainThread - Single-Item Group 'DV4349-701-4Y': Generating 40 LPNs.
+2026-07-01 13:53:35,423 - INFO - MainThread - Single-Item Group 'DV4349-701-5Y': Generating 40 LPNs.
+2026-07-01 13:53:35,453 - INFO - MainThread - Single-Item Group 'DV4349-701-6Y': Generating 20 LPNs.
+2026-07-01 13:53:35,469 - INFO - MainThread - Single-Item Group 'DV4351-003-1.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,483 - INFO - MainThread - Single-Item Group 'DV4351-402-3Y': Generating 20 LPNs.
+2026-07-01 13:53:35,498 - INFO - MainThread - Single-Item Group 'DV4351-402-4Y': Generating 20 LPNs.
+2026-07-01 13:53:35,514 - INFO - MainThread - Single-Item Group 'DV4351-402-5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,528 - INFO - MainThread - Single-Item Group 'DV4351-402-6Y': Generating 20 LPNs.
+2026-07-01 13:53:35,542 - INFO - MainThread - Processing Excel Row 3
+2026-07-01 13:53:35,542 - INFO - MainThread - ASN V807016240:
+2026-07-01 13:53:35,542 - INFO - MainThread - Single-Item Group 'DV4351-701-1Y': Generating 20 LPNs.
+2026-07-01 13:53:35,558 - INFO - MainThread - Single-Item Group 'DV4351-701-2Y': Generating 20 LPNs.
+2026-07-01 13:53:35,574 - INFO - MainThread - Single-Item Group 'DV4351-701-2.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,588 - INFO - MainThread - Single-Item Group 'DV4351-701-3Y': Generating 20 LPNs.
+2026-07-01 13:53:35,608 - INFO - MainThread - Single-Item Group 'DV4351-701-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,623 - INFO - MainThread - Single-Item Group 'DV4351-701-4Y': Generating 20 LPNs.
+2026-07-01 13:53:35,637 - INFO - MainThread - Single-Item Group 'DV4351-701-5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,652 - INFO - MainThread - Single-Item Group 'DV4351-701-6Y': Generating 20 LPNs.
+2026-07-01 13:53:35,667 - INFO - MainThread - Single-Item Group 'DV5456-002-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,681 - INFO - MainThread - Single-Item Group 'DV5456-002-4Y': Generating 20 LPNs.
+2026-07-01 13:53:35,695 - INFO - MainThread - Single-Item Group 'DV5456-002-5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,711 - INFO - MainThread - Single-Item Group 'DV5456-002-6Y': Generating 20 LPNs.
+2026-07-01 13:53:35,726 - INFO - MainThread - Single-Item Group 'DV5456-002-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,740 - INFO - MainThread - Single-Item Group 'DV5456-002-7Y': Generating 20 LPNs.
+2026-07-01 13:53:35,754 - INFO - MainThread - Single-Item Group 'DV5456-008-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,770 - INFO - MainThread - Processing Excel Row 4
+2026-07-01 13:53:35,770 - INFO - MainThread - ASN V807014810:
+2026-07-01 13:53:35,770 - INFO - MainThread - Single-Item Group 'DV5456-008-4Y': Generating 20 LPNs.
+2026-07-01 13:53:35,785 - INFO - MainThread - Single-Item Group 'DV5456-008-5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,799 - INFO - MainThread - Single-Item Group 'DV5456-008-6Y': Generating 20 LPNs.
+2026-07-01 13:53:35,814 - INFO - MainThread - Single-Item Group 'DV5456-008-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,829 - INFO - MainThread - Single-Item Group 'DV5456-008-7Y': Generating 20 LPNs.
+2026-07-01 13:53:35,842 - INFO - MainThread - Single-Item Group 'DV5456-012-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,857 - INFO - MainThread - Single-Item Group 'DV5456-012-4Y': Generating 20 LPNs.
+2026-07-01 13:53:35,872 - INFO - MainThread - Single-Item Group 'DV5456-012-5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,885 - INFO - MainThread - Single-Item Group 'DV5456-012-6Y': Generating 20 LPNs.
+2026-07-01 13:53:35,900 - INFO - MainThread - Single-Item Group 'DV5456-012-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,915 - INFO - MainThread - Single-Item Group 'DV5456-012-7Y': Generating 20 LPNs.
+2026-07-01 13:53:35,929 - INFO - MainThread - Single-Item Group 'DV5456-104-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,947 - INFO - MainThread - Single-Item Group 'DV5456-104-4Y': Generating 20 LPNs.
+2026-07-01 13:53:35,964 - INFO - MainThread - Single-Item Group 'DV5456-104-5Y': Generating 20 LPNs.
+2026-07-01 13:53:35,985 - INFO - MainThread - Single-Item Group 'DV5456-104-6Y': Generating 20 LPNs.
+2026-07-01 13:53:36,003 - INFO - MainThread - Processing Excel Row 5
+2026-07-01 13:53:36,003 - INFO - MainThread - ASN V807015230:
+2026-07-01 13:53:36,003 - INFO - MainThread - Single-Item Group 'DV5456-104-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,023 - INFO - MainThread - Single-Item Group 'DV5456-104-7Y': Generating 20 LPNs.
+2026-07-01 13:53:36,039 - INFO - MainThread - Single-Item Group 'DV5456-105-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,053 - INFO - MainThread - Single-Item Group 'DV5456-105-4Y': Generating 20 LPNs.
+2026-07-01 13:53:36,068 - INFO - MainThread - Single-Item Group 'DV5456-105-5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,083 - INFO - MainThread - Single-Item Group 'DV5456-105-6Y': Generating 20 LPNs.
+2026-07-01 13:53:36,097 - INFO - MainThread - Single-Item Group 'DV5456-105-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,111 - INFO - MainThread - Single-Item Group 'DV5456-105-7Y': Generating 20 LPNs.
+2026-07-01 13:53:36,126 - INFO - MainThread - Single-Item Group 'DV5456-106-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,140 - INFO - MainThread - Single-Item Group 'DV5456-106-4Y': Generating 20 LPNs.
+2026-07-01 13:53:36,154 - INFO - MainThread - Single-Item Group 'DV5456-106-5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,169 - INFO - MainThread - Single-Item Group 'DV5456-106-6Y': Generating 20 LPNs.
+2026-07-01 13:53:36,183 - INFO - MainThread - Single-Item Group 'DV5456-106-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,205 - INFO - MainThread - Single-Item Group 'DV5456-106-7Y': Generating 20 LPNs.
+2026-07-01 13:53:36,220 - INFO - MainThread - Single-Item Group 'DV5456-131-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,236 - INFO - MainThread - Processing Excel Row 6
+2026-07-01 13:53:36,236 - INFO - MainThread - ASN V807012990:
+2026-07-01 13:53:36,236 - INFO - MainThread - Single-Item Group 'DV5456-131-4Y': Generating 20 LPNs.
+2026-07-01 13:53:36,251 - INFO - MainThread - Single-Item Group 'DV5456-131-5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,265 - INFO - MainThread - Single-Item Group 'DV5456-131-6Y': Generating 20 LPNs.
+2026-07-01 13:53:36,280 - INFO - MainThread - Single-Item Group 'DV5456-131-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,296 - INFO - MainThread - Single-Item Group 'DV5456-131-7Y': Generating 20 LPNs.
+2026-07-01 13:53:36,310 - INFO - MainThread - Single-Item Group 'DV5456-133-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,326 - INFO - MainThread - Single-Item Group 'DV5456-133-4Y': Generating 20 LPNs.
+2026-07-01 13:53:36,343 - INFO - MainThread - Single-Item Group 'DV5456-133-5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,359 - INFO - MainThread - Single-Item Group 'DV5456-133-6Y': Generating 20 LPNs.
+2026-07-01 13:53:36,374 - INFO - MainThread - Single-Item Group 'DV5456-133-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,389 - INFO - MainThread - Single-Item Group 'DV5456-133-7Y': Generating 20 LPNs.
+2026-07-01 13:53:36,406 - INFO - MainThread - Single-Item Group 'DV5456-135-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,422 - INFO - MainThread - Single-Item Group 'DV5456-600-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,436 - INFO - MainThread - Single-Item Group 'DV5456-600-4Y': Generating 20 LPNs.
+2026-07-01 13:53:36,451 - INFO - MainThread - Single-Item Group 'DV5456-600-5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,465 - INFO - MainThread - Processing Excel Row 7
+2026-07-01 13:53:36,465 - INFO - MainThread - ASN V807014240:
+2026-07-01 13:53:36,465 - INFO - MainThread - Single-Item Group 'DV5456-600-6Y': Generating 20 LPNs.
+2026-07-01 13:53:36,479 - INFO - MainThread - Single-Item Group 'DV5456-600-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,494 - INFO - MainThread - Single-Item Group 'DV5456-600-7Y': Generating 20 LPNs.
+2026-07-01 13:53:36,508 - INFO - MainThread - Single-Item Group 'DV5456-601-3.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,522 - INFO - MainThread - Single-Item Group 'DV5456-601-4Y': Generating 20 LPNs.
+2026-07-01 13:53:36,538 - INFO - MainThread - Single-Item Group 'DV5456-601-5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,554 - INFO - MainThread - Single-Item Group 'DV5456-601-6.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,569 - INFO - MainThread - Single-Item Group 'DV5457-002-10.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,586 - INFO - MainThread - Single-Item Group 'DV5457-002-11C': Generating 20 LPNs.
+2026-07-01 13:53:36,599 - INFO - MainThread - Single-Item Group 'DV5457-002-11.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,613 - INFO - MainThread - Single-Item Group 'DV5457-002-12C': Generating 20 LPNs.
+2026-07-01 13:53:36,628 - INFO - MainThread - Single-Item Group 'DV5457-002-12.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,642 - INFO - MainThread - Single-Item Group 'DV5457-002-13C': Generating 20 LPNs.
+2026-07-01 13:53:36,657 - INFO - MainThread - Single-Item Group 'DV5457-002-13.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,672 - INFO - MainThread - Single-Item Group 'DV5457-002-1Y': Generating 20 LPNs.
+2026-07-01 13:53:36,685 - INFO - MainThread - Processing Excel Row 8
+2026-07-01 13:53:36,685 - INFO - MainThread - ASN V807013360:
+2026-07-01 13:53:36,685 - INFO - MainThread - Single-Item Group 'DV5457-002-1.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,700 - INFO - MainThread - Single-Item Group 'DV5457-002-2Y': Generating 20 LPNs.
+2026-07-01 13:53:36,713 - INFO - MainThread - Single-Item Group 'DV5457-002-2.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,728 - INFO - MainThread - Single-Item Group 'DV5457-002-3Y': Generating 20 LPNs.
+2026-07-01 13:53:36,743 - INFO - MainThread - Single-Item Group 'DV5457-008-11C': Generating 20 LPNs.
+2026-07-01 13:53:36,758 - INFO - MainThread - Single-Item Group 'DV5457-008-11.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,771 - INFO - MainThread - Single-Item Group 'DV5457-008-12C': Generating 20 LPNs.
+2026-07-01 13:53:36,787 - INFO - MainThread - Single-Item Group 'DV5457-008-12.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,803 - INFO - MainThread - Single-Item Group 'DV5457-008-13C': Generating 20 LPNs.
+2026-07-01 13:53:36,816 - INFO - MainThread - Single-Item Group 'DV5457-008-13.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,833 - INFO - MainThread - Single-Item Group 'DV5457-008-1Y': Generating 20 LPNs.
+2026-07-01 13:53:36,847 - INFO - MainThread - Single-Item Group 'DV5457-008-1.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,861 - INFO - MainThread - Single-Item Group 'DV5457-008-2Y': Generating 20 LPNs.
+2026-07-01 13:53:36,876 - INFO - MainThread - Single-Item Group 'DV5457-008-2.5Y': Generating 20 LPNs.
+2026-07-01 13:53:36,890 - INFO - MainThread - Single-Item Group 'DV5457-008-3Y': Generating 20 LPNs.
+2026-07-01 13:53:36,905 - INFO - MainThread - Processing Excel Row 9
+2026-07-01 13:53:36,905 - INFO - MainThread - ASN V807013030:
+2026-07-01 13:53:36,905 - INFO - MainThread - Single-Item Group 'DV5457-012-10.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,920 - INFO - MainThread - Single-Item Group 'DV5457-012-11C': Generating 20 LPNs.
+2026-07-01 13:53:36,935 - INFO - MainThread - Single-Item Group 'DV5457-012-11.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,948 - INFO - MainThread - Single-Item Group 'DV5457-012-12C': Generating 20 LPNs.
+2026-07-01 13:53:36,964 - INFO - MainThread - Single-Item Group 'DV5457-012-12.5C': Generating 20 LPNs.
+2026-07-01 13:53:36,979 - INFO - MainThread - Single-Item Group 'DV5457-012-13C': Generating 20 LPNs.
+2026-07-01 13:53:36,992 - INFO - MainThread - Single-Item Group 'DV5457-012-13.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,008 - INFO - MainThread - Single-Item Group 'DV5457-012-1Y': Generating 20 LPNs.
+2026-07-01 13:53:37,023 - INFO - MainThread - Single-Item Group 'DV5457-012-1.5Y': Generating 20 LPNs.
+2026-07-01 13:53:37,038 - INFO - MainThread - Single-Item Group 'DV5457-012-2Y': Generating 20 LPNs.
+2026-07-01 13:53:37,052 - INFO - MainThread - Single-Item Group 'DV5457-012-2.5Y': Generating 20 LPNs.
+2026-07-01 13:53:37,066 - INFO - MainThread - Single-Item Group 'DV5457-012-3Y': Generating 20 LPNs.
+2026-07-01 13:53:37,080 - INFO - MainThread - Single-Item Group 'DV5457-104-10.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,095 - INFO - MainThread - Single-Item Group 'DV5457-104-11C': Generating 20 LPNs.
+2026-07-01 13:53:37,110 - INFO - MainThread - Single-Item Group 'DV5457-104-11.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,124 - INFO - MainThread - Processing Excel Row 10
+2026-07-01 13:53:37,124 - INFO - MainThread - ASN V807017640:
+2026-07-01 13:53:37,124 - INFO - MainThread - Single-Item Group 'DV5457-104-12C': Generating 20 LPNs.
+2026-07-01 13:53:37,139 - INFO - MainThread - Single-Item Group 'DV5457-104-12.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,155 - INFO - MainThread - Single-Item Group 'DV5457-104-13C': Generating 20 LPNs.
+2026-07-01 13:53:37,169 - INFO - MainThread - Single-Item Group 'DV5457-104-13.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,183 - INFO - MainThread - Single-Item Group 'DV5457-104-1Y': Generating 20 LPNs.
+2026-07-01 13:53:37,198 - INFO - MainThread - Single-Item Group 'DV5457-104-1.5Y': Generating 20 LPNs.
+2026-07-01 13:53:37,213 - INFO - MainThread - Single-Item Group 'DV5457-104-2Y': Generating 20 LPNs.
+2026-07-01 13:53:37,229 - INFO - MainThread - Single-Item Group 'DV5457-104-2.5Y': Generating 20 LPNs.
+2026-07-01 13:53:37,244 - INFO - MainThread - Single-Item Group 'DV5457-104-3Y': Generating 20 LPNs.
+2026-07-01 13:53:37,259 - INFO - MainThread - Single-Item Group 'DV5457-105-10.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,275 - INFO - MainThread - Single-Item Group 'DV5457-105-11C': Generating 20 LPNs.
+2026-07-01 13:53:37,290 - INFO - MainThread - Single-Item Group 'DV5457-105-11.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,305 - INFO - MainThread - Single-Item Group 'DV5457-105-12C': Generating 20 LPNs.
+2026-07-01 13:53:37,321 - INFO - MainThread - Single-Item Group 'DV5457-105-12.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,334 - INFO - MainThread - Single-Item Group 'DV5457-105-13C': Generating 20 LPNs.
+2026-07-01 13:53:37,349 - INFO - MainThread - Processing Excel Row 11
+2026-07-01 13:53:37,349 - INFO - MainThread - ASN V807013160:
+2026-07-01 13:53:37,349 - INFO - MainThread - Single-Item Group 'DV5457-105-13.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,364 - INFO - MainThread - Single-Item Group 'DV5457-105-1Y': Generating 20 LPNs.
+2026-07-01 13:53:37,379 - INFO - MainThread - Single-Item Group 'DV5457-105-1.5Y': Generating 20 LPNs.
+2026-07-01 13:53:37,404 - INFO - MainThread - Single-Item Group 'DV5457-105-2Y': Generating 20 LPNs.
+2026-07-01 13:53:37,418 - INFO - MainThread - Single-Item Group 'DV5457-105-2.5Y': Generating 20 LPNs.
+2026-07-01 13:53:37,432 - INFO - MainThread - Single-Item Group 'DV5457-105-3Y': Generating 20 LPNs.
+2026-07-01 13:53:37,447 - INFO - MainThread - Single-Item Group 'DV5457-106-10.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,463 - INFO - MainThread - Single-Item Group 'DV5457-106-11C': Generating 20 LPNs.
+2026-07-01 13:53:37,477 - INFO - MainThread - Single-Item Group 'DV5457-106-11.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,492 - INFO - MainThread - Single-Item Group 'DV5457-106-12C': Generating 20 LPNs.
+2026-07-01 13:53:37,506 - INFO - MainThread - Single-Item Group 'DV5457-106-12.5C': Generating 20 LPNs.
+2026-07-01 13:53:37,521 - INFO - MainThread - Single-Item Group 'DV5457-106-13C': Generating 20 LPNs.
+2026-07-01 13:53:37,536 - INFO - MainThread - Single-Item Group 'FJ4864-100-3': Generating 20 LPNs.
+2026-07-01 13:53:37,551 - INFO - MainThread - Single-Item Group 'FJ4864-100-4': Generating 20 LPNs.
+2026-07-01 13:53:37,565 - INFO - MainThread - Single-Item Group 'FN0536-017-L': Generating 20 LPNs.
+2026-07-01 13:53:37,580 - INFO - MainThread - Generation Complete. Total Payloads Created: 10
+2026-07-01 13:53:37,580 - INFO - MainThread - Processing 10 Payloads for Environment: PROD
+2026-07-01 13:53:38,084 - INFO - MainThread - Successfully retrieved token for PROD environment.
+2026-07-01 13:53:38,084 - INFO - MainThread - [PROD] Using 10 worker thread(s).
+2026-07-01 13:53:38,084 - INFO - ThreadPoolExecutor-0_0 - [PROD] Processing Payload 1/10 for Plant 1081
+2026-07-01 13:53:38,085 - INFO - ThreadPoolExecutor-0_1 - [PROD] Processing Payload 2/10 for Plant 1081
+2026-07-01 13:53:38,085 - INFO - ThreadPoolExecutor-0_2 - [PROD] Processing Payload 3/10 for Plant 1081
+2026-07-01 13:53:38,088 - INFO - ThreadPoolExecutor-0_3 - [PROD] Processing Payload 4/10 for Plant 1081
+2026-07-01 13:53:38,091 - INFO - ThreadPoolExecutor-0_4 - [PROD] Processing Payload 5/10 for Plant 1081
+2026-07-01 13:53:38,095 - INFO - ThreadPoolExecutor-0_5 - [PROD] Processing Payload 6/10 for Plant 1081
+2026-07-01 13:53:38,096 - INFO - ThreadPoolExecutor-0_6 - [PROD] Processing Payload 7/10 for Plant 1081
+2026-07-01 13:53:38,102 - INFO - ThreadPoolExecutor-0_7 - [PROD] Processing Payload 8/10 for Plant 1081
+2026-07-01 13:53:38,104 - INFO - ThreadPoolExecutor-0_8 - [PROD] Processing Payload 9/10 for Plant 1081
+2026-07-01 13:53:38,107 - INFO - ThreadPoolExecutor-0_9 - [PROD] Processing Payload 10/10 for Plant 1081
+2026-07-01 13:53:59,574 - ERROR - ThreadPoolExecutor-0_4 - ERROR: API request failed for payload 5: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,577 - ERROR - ThreadPoolExecutor-0_4 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 58938c0e-eaf5-4377-83e9-a125678870e5; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 58938c0e-eaf5-4377-83e9-a125678870e5; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 58938c0e-eaf5-4377-83e9-a125678870e5; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-qnkbt","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,581 - ERROR - ThreadPoolExecutor-0_1 - ERROR: API request failed for payload 2: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,581 - ERROR - ThreadPoolExecutor-0_1 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 79d31005-c416-4a12-9a75-38772e3c668a; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 79d31005-c416-4a12-9a75-38772e3c668a; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 79d31005-c416-4a12-9a75-38772e3c668a; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-qnkbt","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,584 - ERROR - ThreadPoolExecutor-0_9 - ERROR: API request failed for payload 10: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,584 - ERROR - ThreadPoolExecutor-0_9 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 6637145d-8b9c-4e82-99ac-1ee82d4fd83a; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 6637145d-8b9c-4e82-99ac-1ee82d4fd83a; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 6637145d-8b9c-4e82-99ac-1ee82d4fd83a; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-pncvx","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,592 - ERROR - ThreadPoolExecutor-0_7 - ERROR: API request failed for payload 8: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,592 - ERROR - ThreadPoolExecutor-0_7 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 5c1266e0-646d-4aef-bb21-7543bcbfb2f0; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 5c1266e0-646d-4aef-bb21-7543bcbfb2f0; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 5c1266e0-646d-4aef-bb21-7543bcbfb2f0; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-pncvx","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,593 - ERROR - ThreadPoolExecutor-0_8 - ERROR: API request failed for payload 9: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,593 - ERROR - ThreadPoolExecutor-0_8 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: d6eb4050-01db-4c28-8705-e52e286eae62; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: d6eb4050-01db-4c28-8705-e52e286eae62; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: d6eb4050-01db-4c28-8705-e52e286eae62; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-pncvx","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,607 - ERROR - ThreadPoolExecutor-0_3 - ERROR: API request failed for payload 4: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,607 - ERROR - ThreadPoolExecutor-0_3 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 8a165b08-e808-4eca-807e-50d4bfc496c3; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 8a165b08-e808-4eca-807e-50d4bfc496c3; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 8a165b08-e808-4eca-807e-50d4bfc496c3; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-qnkbt","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,613 - ERROR - ThreadPoolExecutor-0_6 - ERROR: API request failed for payload 7: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,613 - ERROR - ThreadPoolExecutor-0_6 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: fb684fb5-b4db-476f-93b6-7d69eba3c004; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: fb684fb5-b4db-476f-93b6-7d69eba3c004; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: fb684fb5-b4db-476f-93b6-7d69eba3c004; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-qnkbt","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,628 - ERROR - ThreadPoolExecutor-0_0 - ERROR: API request failed for payload 1: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,628 - ERROR - ThreadPoolExecutor-0_0 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: e290eb25-48f9-489e-a546-42b2016c5e1c; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: e290eb25-48f9-489e-a546-42b2016c5e1c; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: e290eb25-48f9-489e-a546-42b2016c5e1c; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-ght72","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,641 - ERROR - ThreadPoolExecutor-0_2 - ERROR: API request failed for payload 3: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,641 - ERROR - ThreadPoolExecutor-0_2 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 763c708d-8e25-45c7-b06b-afb46b87dc0c; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 763c708d-8e25-45c7-b06b-afb46b87dc0c; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 763c708d-8e25-45c7-b06b-afb46b87dc0c; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-qnkbt","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,651 - ERROR - ThreadPoolExecutor-0_5 - ERROR: API request failed for payload 6: 500 Server Error: Internal Server Error for url: https://nikeaplawmprod1.sce.manh.com/receiving/api/receiving/asn/save
+2026-07-01 13:53:59,651 - ERROR - ThreadPoolExecutor-0_5 - Status Code: 500, Response: {"success":false,"header":null,"data":null,"messageKey":"error.500","message":"error.500","errors":[],"exceptions":[{"messageData":{},"resource":"Throwable","messageKey":"Throwable","message":"Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 783782b3-7677-4dd5-87db-5d1f5743d156; com.netflix.zuul.exception.ZuulException: Forwarding error","stackTrace":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 783782b3-7677-4dd5-87db-5d1f5743d156; com.netflix.zuul.exception.ZuulException: Forwarding error\n"}],"messages":{"Message":[],"Size":0},"rootCause":"java.lang.Throwable: Internal exception was caught by CustomErrorController (see logs for the trace); message: [TIMEOUT_ERROR] UID: 783782b3-7677-4dd5-87db-5d1f5743d156; com.netflix.zuul.exception.ZuulException: Forwarding error","cloudComponent":"com-manh-cp-zuulserver:docker,sc,cloud,kubernetes,gcp,niki,p,nikip,nikip3,nikispr31o:8990","cloudComponentHostName":"zuulserver-6ffdf5857d-ght72","requestUri":"/error","statusCode":"INTERNAL_SERVER_ERROR"}
+2026-07-01 13:53:59,652 - INFO - MainThread - [PROD] Completed ASN creation. Success: 0, Failed: 10, Total: 10
+2026-07-01 13:53:59,653 - INFO - MainThread - No data was successfully processed to generate a report.
+2026-07-01 13:53:59,653 - INFO - MainThread - No data was successfully processed to generate an input sheet.

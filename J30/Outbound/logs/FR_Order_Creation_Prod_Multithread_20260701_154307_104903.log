@@ -1,0 +1,133 @@
+2026-07-01 15:43:07,107 - INFO - MainThread - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/FR_Order_Creation_Prod_Multithread_20260701_154307_104903.log
+2026-07-01 15:43:07,772 - INFO - MainThread - Successfully extracted 32 data row(s) for processing.
+2026-07-01 15:43:07,772 - INFO - MainThread - Processing Excel Row 1
+2026-07-01 15:43:07,785 - INFO - MainThread - Order: V3070100367
+2026-07-01 15:43:07,786 - INFO - MainThread - Processing Excel Row 2
+2026-07-01 15:43:07,786 - INFO - MainThread - Order: V3070100368
+2026-07-01 15:43:07,787 - INFO - MainThread - Processing Excel Row 3
+2026-07-01 15:43:07,787 - INFO - MainThread - Order: V3070100369
+2026-07-01 15:43:07,788 - INFO - MainThread - Processing Excel Row 4
+2026-07-01 15:43:07,788 - INFO - MainThread - Order: V3070100370
+2026-07-01 15:43:07,788 - INFO - MainThread - Processing Excel Row 5
+2026-07-01 15:43:07,789 - INFO - MainThread - Order: V3070100371
+2026-07-01 15:43:07,789 - INFO - MainThread - Processing Excel Row 6
+2026-07-01 15:43:07,790 - INFO - MainThread - Order: V3070100372
+2026-07-01 15:43:07,790 - INFO - MainThread - Processing Excel Row 7
+2026-07-01 15:43:07,791 - INFO - MainThread - Order: V3070100373
+2026-07-01 15:43:07,791 - INFO - MainThread - Processing Excel Row 8
+2026-07-01 15:43:07,792 - INFO - MainThread - Order: V3070100374
+2026-07-01 15:43:07,792 - INFO - MainThread - Processing Excel Row 9
+2026-07-01 15:43:07,792 - INFO - MainThread - Order: V3070100375
+2026-07-01 15:43:07,793 - INFO - MainThread - Processing Excel Row 10
+2026-07-01 15:43:07,795 - INFO - MainThread - Order: V3070100376
+2026-07-01 15:43:07,795 - INFO - MainThread - Processing Excel Row 11
+2026-07-01 15:43:07,797 - INFO - MainThread - Order: V3070100377
+2026-07-01 15:43:07,797 - INFO - MainThread - Processing Excel Row 12
+2026-07-01 15:43:07,799 - INFO - MainThread - Order: V3070100378
+2026-07-01 15:43:07,799 - INFO - MainThread - Processing Excel Row 13
+2026-07-01 15:43:07,801 - INFO - MainThread - Order: V3070100379
+2026-07-01 15:43:07,823 - INFO - MainThread - Processing Excel Row 14
+2026-07-01 15:43:07,827 - INFO - MainThread - Order: V3070100380
+2026-07-01 15:43:07,828 - INFO - MainThread - Processing Excel Row 15
+2026-07-01 15:43:07,832 - INFO - MainThread - Order: V3070100381
+2026-07-01 15:43:07,833 - INFO - MainThread - Processing Excel Row 16
+2026-07-01 15:43:07,836 - INFO - MainThread - Order: V3070100382
+2026-07-01 15:43:07,836 - INFO - MainThread - Processing Excel Row 17
+2026-07-01 15:43:07,840 - INFO - MainThread - Order: V3070100383
+2026-07-01 15:43:07,840 - INFO - MainThread - Processing Excel Row 18
+2026-07-01 15:43:07,843 - INFO - MainThread - Order: V3070100384
+2026-07-01 15:43:07,843 - INFO - MainThread - Processing Excel Row 19
+2026-07-01 15:43:07,846 - INFO - MainThread - Order: V3070100385
+2026-07-01 15:43:07,846 - INFO - MainThread - Processing Excel Row 20
+2026-07-01 15:43:07,849 - INFO - MainThread - Order: V3070100386
+2026-07-01 15:43:07,849 - INFO - MainThread - Processing Excel Row 21
+2026-07-01 15:43:07,852 - INFO - MainThread - Order: V3070100387
+2026-07-01 15:43:07,852 - INFO - MainThread - Processing Excel Row 22
+2026-07-01 15:43:07,854 - INFO - MainThread - Order: V3070100388
+2026-07-01 15:43:07,854 - INFO - MainThread - Processing Excel Row 23
+2026-07-01 15:43:07,856 - INFO - MainThread - Order: V3070100389
+2026-07-01 15:43:07,856 - INFO - MainThread - Processing Excel Row 24
+2026-07-01 15:43:07,858 - INFO - MainThread - Order: V3070100390
+2026-07-01 15:43:07,858 - INFO - MainThread - Processing Excel Row 25
+2026-07-01 15:43:07,860 - INFO - MainThread - Order: V3070100391
+2026-07-01 15:43:07,861 - INFO - MainThread - Processing Excel Row 26
+2026-07-01 15:43:07,863 - INFO - MainThread - Order: V3070100392
+2026-07-01 15:43:07,863 - INFO - MainThread - Processing Excel Row 27
+2026-07-01 15:43:07,865 - INFO - MainThread - Order: V3070100393
+2026-07-01 15:43:07,865 - INFO - MainThread - Processing Excel Row 28
+2026-07-01 15:43:07,867 - INFO - MainThread - Order: V3070100394
+2026-07-01 15:43:07,867 - INFO - MainThread - Processing Excel Row 29
+2026-07-01 15:43:07,869 - INFO - MainThread - Order: V3070100395
+2026-07-01 15:43:07,869 - INFO - MainThread - Processing Excel Row 30
+2026-07-01 15:43:07,872 - INFO - MainThread - Order: V3070100396
+2026-07-01 15:43:07,872 - INFO - MainThread - Processing Excel Row 31
+2026-07-01 15:43:07,874 - INFO - MainThread - Order: V3070100397
+2026-07-01 15:43:07,874 - INFO - MainThread - Processing Excel Row 32
+2026-07-01 15:43:07,878 - INFO - MainThread - Order: V4070100398
+2026-07-01 15:43:08,107 - INFO - MainThread - Total payloads to send: 32
+2026-07-01 15:43:08,107 - INFO - MainThread - Using 5 worker thread(s).
+2026-07-01 15:43:08,827 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 1/32 | Order Number: V3070100367
+2026-07-01 15:43:08,827 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 2/32 | Order Number: V3070100368
+2026-07-01 15:43:08,827 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 3/32 | Order Number: V3070100369
+2026-07-01 15:43:08,828 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 4/32 | Order Number: V3070100370
+2026-07-01 15:43:08,828 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 5/32 | Order Number: V3070100371
+2026-07-01 15:43:11,285 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 4/32 sent successfully. Status Code: 200
+2026-07-01 15:43:11,286 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 6/32 | Order Number: V3070100372
+2026-07-01 15:43:11,363 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 2/32 sent successfully. Status Code: 200
+2026-07-01 15:43:11,365 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 7/32 | Order Number: V3070100373
+2026-07-01 15:43:11,367 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 3/32 sent successfully. Status Code: 200
+2026-07-01 15:43:11,368 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 8/32 | Order Number: V3070100374
+2026-07-01 15:43:11,417 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 5/32 sent successfully. Status Code: 200
+2026-07-01 15:43:11,419 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 9/32 | Order Number: V3070100375
+2026-07-01 15:43:11,424 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 1/32 sent successfully. Status Code: 200
+2026-07-01 15:43:11,425 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 10/32 | Order Number: V3070100376
+2026-07-01 15:43:12,675 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 6/32 sent successfully. Status Code: 200
+2026-07-01 15:43:12,676 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 11/32 | Order Number: V3070100377
+2026-07-01 15:43:12,774 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 8/32 sent successfully. Status Code: 200
+2026-07-01 15:43:12,775 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 12/32 | Order Number: V3070100378
+2026-07-01 15:43:12,818 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 9/32 sent successfully. Status Code: 200
+2026-07-01 15:43:12,820 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 13/32 | Order Number: V3070100379
+2026-07-01 15:43:12,982 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 10/32 sent successfully. Status Code: 200
+2026-07-01 15:43:12,983 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 14/32 | Order Number: V3070100380
+2026-07-01 15:43:12,987 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 7/32 sent successfully. Status Code: 200
+2026-07-01 15:43:12,987 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 15/32 | Order Number: V3070100381
+2026-07-01 15:43:14,094 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 11/32 sent successfully. Status Code: 200
+2026-07-01 15:43:14,095 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 16/32 | Order Number: V3070100382
+2026-07-01 15:43:14,230 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 12/32 sent successfully. Status Code: 200
+2026-07-01 15:43:14,232 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 13/32 sent successfully. Status Code: 200
+2026-07-01 15:43:14,233 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 17/32 | Order Number: V3070100383
+2026-07-01 15:43:14,234 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 18/32 | Order Number: V3070100384
+2026-07-01 15:43:14,393 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 15/32 sent successfully. Status Code: 200
+2026-07-01 15:43:14,394 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 19/32 | Order Number: V3070100385
+2026-07-01 15:43:14,484 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 14/32 sent successfully. Status Code: 200
+2026-07-01 15:43:14,485 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 20/32 | Order Number: V3070100386
+2026-07-01 15:43:15,504 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 16/32 sent successfully. Status Code: 200
+2026-07-01 15:43:15,510 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 21/32 | Order Number: V3070100387
+2026-07-01 15:43:15,596 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 17/32 sent successfully. Status Code: 200
+2026-07-01 15:43:15,597 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 22/32 | Order Number: V3070100388
+2026-07-01 15:43:15,717 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 18/32 sent successfully. Status Code: 200
+2026-07-01 15:43:15,717 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 23/32 | Order Number: V3070100389
+2026-07-01 15:43:15,777 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 19/32 sent successfully. Status Code: 200
+2026-07-01 15:43:15,778 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 24/32 | Order Number: V3070100390
+2026-07-01 15:43:15,945 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 20/32 sent successfully. Status Code: 200
+2026-07-01 15:43:15,945 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 25/32 | Order Number: V3070100391
+2026-07-01 15:43:16,985 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 21/32 sent successfully. Status Code: 200
+2026-07-01 15:43:16,987 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 26/32 | Order Number: V3070100392
+2026-07-01 15:43:17,079 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 22/32 sent successfully. Status Code: 200
+2026-07-01 15:43:17,080 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 27/32 | Order Number: V3070100393
+2026-07-01 15:43:17,084 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 23/32 sent successfully. Status Code: 200
+2026-07-01 15:43:17,085 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 28/32 | Order Number: V3070100394
+2026-07-01 15:43:17,170 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 24/32 sent successfully. Status Code: 200
+2026-07-01 15:43:17,171 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 29/32 | Order Number: V3070100395
+2026-07-01 15:43:17,289 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 25/32 sent successfully. Status Code: 200
+2026-07-01 15:43:17,290 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 30/32 | Order Number: V3070100396
+2026-07-01 15:43:18,463 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 27/32 sent successfully. Status Code: 200
+2026-07-01 15:43:18,465 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 31/32 | Order Number: V3070100397
+2026-07-01 15:43:18,476 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 28/32 sent successfully. Status Code: 200
+2026-07-01 15:43:18,476 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 32/32 | Order Number: V4070100398
+2026-07-01 15:43:18,505 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 26/32 sent successfully. Status Code: 200
+2026-07-01 15:43:18,650 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 30/32 sent successfully. Status Code: 200
+2026-07-01 15:43:18,674 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 29/32 sent successfully. Status Code: 200
+2026-07-01 15:43:19,873 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 32/32 sent successfully. Status Code: 200
+2026-07-01 15:43:19,883 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 31/32 sent successfully. Status Code: 200
+2026-07-01 15:43:19,886 - INFO - MainThread - Completed order creation. Success: 32, Failed: 0, Total: 32

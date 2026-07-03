@@ -1,0 +1,41 @@
+2026-07-03 15:38:40,444 - INFO - MainThread - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/FR_Order_Creation_Prod_Multithread_20260703_153840_436405.log
+2026-07-03 15:38:41,205 - INFO - MainThread - Successfully extracted 9 data row(s) for processing.
+2026-07-03 15:38:41,205 - INFO - MainThread - Processing Excel Row 1
+2026-07-03 15:38:41,210 - INFO - MainThread - Order: 3070303003
+2026-07-03 15:38:41,210 - INFO - MainThread - Processing Excel Row 2
+2026-07-03 15:38:41,214 - INFO - MainThread - Order: 3070303004
+2026-07-03 15:38:41,214 - INFO - MainThread - Processing Excel Row 3
+2026-07-03 15:38:41,218 - INFO - MainThread - Order: 3070303005
+2026-07-03 15:38:41,218 - INFO - MainThread - Processing Excel Row 4
+2026-07-03 15:38:41,228 - INFO - MainThread - Order: 3070303006
+2026-07-03 15:38:41,228 - INFO - MainThread - Processing Excel Row 5
+2026-07-03 15:38:41,229 - INFO - MainThread - Order: 3070303007
+2026-07-03 15:38:41,229 - INFO - MainThread - Processing Excel Row 6
+2026-07-03 15:38:41,230 - INFO - MainThread - Order: 3070303008
+2026-07-03 15:38:41,230 - INFO - MainThread - Processing Excel Row 7
+2026-07-03 15:38:41,231 - INFO - MainThread - Order: 3070303009
+2026-07-03 15:38:41,231 - INFO - MainThread - Processing Excel Row 8
+2026-07-03 15:38:41,233 - INFO - MainThread - Order: 3070303010
+2026-07-03 15:38:41,233 - INFO - MainThread - Processing Excel Row 9
+2026-07-03 15:38:41,240 - INFO - MainThread - Order: 3070303011
+2026-07-03 15:38:41,752 - INFO - MainThread - Total payloads to send: 9
+2026-07-03 15:38:41,758 - INFO - MainThread - Using 5 worker thread(s).
+2026-07-03 15:38:42,447 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 1/9 | Order Number: 3070303003
+2026-07-03 15:38:42,447 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 2/9 | Order Number: 3070303004
+2026-07-03 15:38:42,447 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 3/9 | Order Number: 3070303005
+2026-07-03 15:38:42,449 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 4/9 | Order Number: 3070303006
+2026-07-03 15:38:42,449 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 5/9 | Order Number: 3070303007
+2026-07-03 15:38:44,708 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 4/9 sent successfully. Status Code: 200
+2026-07-03 15:38:44,709 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 6/9 | Order Number: 3070303008
+2026-07-03 15:38:44,842 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 2/9 sent successfully. Status Code: 200
+2026-07-03 15:38:44,844 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 7/9 | Order Number: 3070303009
+2026-07-03 15:38:45,676 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 5/9 sent successfully. Status Code: 200
+2026-07-03 15:38:45,679 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 8/9 | Order Number: 3070303010
+2026-07-03 15:38:47,138 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 6/9 sent successfully. Status Code: 200
+2026-07-03 15:38:47,141 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 9/9 | Order Number: 3070303011
+2026-07-03 15:38:47,323 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 1/9 sent successfully. Status Code: 200
+2026-07-03 15:38:47,474 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 7/9 sent successfully. Status Code: 200
+2026-07-03 15:38:47,544 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 8/9 sent successfully. Status Code: 200
+2026-07-03 15:38:47,561 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 3/9 sent successfully. Status Code: 200
+2026-07-03 15:38:48,972 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 9/9 sent successfully. Status Code: 200
+2026-07-03 15:38:48,975 - INFO - MainThread - Completed order creation. Success: 9, Failed: 0, Total: 9

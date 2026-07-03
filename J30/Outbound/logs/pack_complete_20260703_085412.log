@@ -1,0 +1,30 @@
+2026-07-03 08:54:12,087 - INFO - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/pack_complete_20260703_085412.log
+2026-07-03 08:54:12,087 - INFO - Starting continuous mode. The job will rerun every 10 seconds. Press Ctrl+C to stop.
+2026-07-03 08:54:12,087 - INFO - Starting Pack Complete run...
+2026-07-03 08:54:12,459 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-03 08:54:12,459 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'PROD', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-03 08:54:12,678 - INFO - Processing Task 1/1: Plant 1081 (PROD)
+2026-07-03 08:54:13,056 - INFO - Successfully retrieved token.
+2026-07-03 08:54:13,056 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 08:54:13,264 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 08:54:13,659 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/task/api/task/taskDetail/search
+2026-07-03 08:54:13,868 - INFO - -> Success: True, Message: None
+2026-07-03 08:54:13,873 - INFO - Processing Task 1/2: Plant 1081 (PROD)
+2026-07-03 08:54:14,275 - INFO - Successfully retrieved token.
+2026-07-03 08:54:14,275 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 08:54:14,464 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 08:54:14,465 - INFO - Success: Found 0 oLPN row(s) for this task.
+2026-07-03 08:54:14,465 - INFO - Processing Task 2/2: Plant 1081 (PROD)
+2026-07-03 08:54:14,798 - INFO - Successfully retrieved token.
+2026-07-03 08:54:14,798 - INFO - Sending payload to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/pickpack/olpn/search
+2026-07-03 08:54:14,984 - INFO - Successfully received response for Plant 1081 (PROD)
+2026-07-03 08:54:14,984 - INFO - Success: Found 1 oLPN row(s) for this task.
+2026-07-03 08:54:14,985 - INFO - Processing 1 payloads for Environment: PROD
+2026-07-03 08:54:15,328 - INFO - Successfully retrieved token for PROD environment.
+2026-07-03 08:54:15,328 - INFO - Sending payloads to URL: https://nikeaplawmprod1.sce.manh.com/pickpack/api/ServiceDefinition/invoke/NIKEEX10PackResultCS_1081
+2026-07-03 08:54:15,328 - INFO - Using 1 worker threads for 1 payloads.
+2026-07-03 08:54:15,329 - INFO - [PROD] Processing Payload 1/1 for Plant 1081
+2026-07-03 08:54:15,978 - INFO - Pack Complete run finished. Success: 1, Failed: 0, Total: 1
+2026-07-03 08:54:15,978 - INFO - Pack Complete run finished.
+2026-07-03 08:54:15,978 - INFO - Waiting 10 seconds before next run...
+2026-07-03 08:54:24,043 - INFO - Stop requested (Ctrl+C). Continuous Pack Complete execution stopped.
