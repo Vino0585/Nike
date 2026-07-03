@@ -229,25 +229,32 @@ class Task_Search_Payload:
             return []
 
         bearer_token = self.get_bearer_token(environment, plant_id)
-        fc_olpn_query_value = "','".join(fc_olpn_values)
-
-        # Search the oLPN that are in created status and then pass that into the payload.
-
-        payload = {
-            "Query": f"OlpnId in ('{fc_olpn_query_value}')"
-                     f" AND GenerationCodeId in ('Wave', 'Stream')"
-                     f" AND Status in ('8000')",
-            "Template": self.template_structure1
-        }
-
-        get_response = self.get_task_detail_api_response(bearer_token, environment, plant_id, payload)
         oLPN_list = []
+        seen_olpn = set()
+        batch_size = 20
 
-        for i, item in enumerate(get_response):
-            olpn = get_response[i]['OlpnId']  # This is the oLPN
+        for batch_index in range(0, len(fc_olpn_values), batch_size):
+            olpn_batch = fc_olpn_values[batch_index: batch_index + batch_size]
+            fc_olpn_query_value = "','".join(olpn_batch)
 
-            if olpn and len(olpn) == 20 and olpn not in oLPN_list:
-                oLPN_list.append(olpn)
+            # WMS returns a limited result window for large IN lists; query by 20 oLPNs per call.
+            payload = {
+                "Query": f"OlpnId in ('{fc_olpn_query_value}')"
+                         f" AND GenerationCodeId in ('Wave', 'Stream')"
+                         f" AND Status in ('8000')",
+                "Template": self.template_structure1
+            }
+
+            get_response = self.get_task_detail_api_response(bearer_token, environment, plant_id, payload)
+            logging.info(
+                f"Processed FC task-detail batch {batch_index // batch_size + 1} "
+                f"with {len(olpn_batch)} input oLPN(s); received {len(get_response)} row(s)"
+            )
+            for item in get_response:
+                olpn = item.get('OlpnId') if isinstance(item, dict) else None
+                if olpn and len(olpn) == 20 and olpn not in seen_olpn:
+                    seen_olpn.add(olpn)
+                    oLPN_list.append(olpn)
 
         return oLPN_list
 
@@ -343,5 +350,5 @@ if __name__ == "__main__":
     # generated_payloads = task_search.search_task_detail_by_wave_nbr_FC_packcomplete('W06172026000000000021', 'QA', '1081')
     # print(generated_payloads)
     #
-    generated_payloads = task_search.search_task_detail_by_wave_nbr_FC_packcomplete('QA', '1081')
+    generated_payloads = task_search.search_task_detail_by_wave_nbr_FC_packcomplete('PROD', '1081')
     print(generated_payloads)

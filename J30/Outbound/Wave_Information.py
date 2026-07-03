@@ -42,6 +42,8 @@ class Wave_Information_Search:
             return
 
         all_olpn_results = []
+        seen_olpn_ids = set()
+        seen_olpn_ids = set()
 
         for i, payload in enumerate(olpn_search_payload):
             envn = payload['Environment']
@@ -343,6 +345,7 @@ class Wave_Information_Search:
             return
 
         all_olpn_results = []
+        seen_olpn_ids = set()
 
         for i, payload in enumerate(olpn_search_payload):
             envn = payload['Environment']
@@ -372,26 +375,107 @@ class Wave_Information_Search:
                     "location": plant_id,
                 }
 
-                # --- 4. Make API Request Call ---
-                response = requests.post(api_url, headers=headers, json=olpn_payload, verify=self.ssl_verify)
+                # --- 4. Make API Request Calls (All Pages) ---
+                base_payload = dict(olpn_payload)
+                page_size = int(base_payload.get("Size", 20) or 20)
+                if page_size <= 0:
+                    page_size = 20
+                starting_page = int(base_payload.get("Page", 0) or 0)
+
+                first_page_payload = dict(base_payload)
+                first_page_payload["Size"] = page_size
+                first_page_payload["Page"] = starting_page
+
+                response = requests.post(api_url, headers=headers, json=first_page_payload, verify=self.ssl_verify)
                 response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-                logging.info(f"Successfully received response for Plant {plant_id} ({envn.upper()})")
+                logging.info(f"Successfully received page {starting_page} for Plant {plant_id} ({envn.upper()})")
                 raw_data = response.json()
-                # print(raw_data)
-                data = raw_data['data']
-                for entry in data:
-                    all_olpn_results.append(entry['OlpnId'])
+
+                first_page_data = raw_data.get('data', [])
+                for entry in first_page_data:
+                    olpn_id = entry.get('OlpnId') if isinstance(entry, dict) else None
+                    if olpn_id and olpn_id not in seen_olpn_ids:
+                        seen_olpn_ids.add(olpn_id)
+                        all_olpn_results.append(olpn_id)
+
+                def to_int_or_none(value):
+                    try:
+                        return int(value)
+                    except (TypeError, ValueError):
+                        return None
+
+                response_header = raw_data.get("header", {}) if isinstance(raw_data, dict) else {}
+                total_count_candidates = [
+                    response.headers.get('totalCount'),
+                    response.headers.get('TotalCount'),
+                    response.headers.get('totalcount'),
+                    raw_data.get('totalCount') if isinstance(raw_data, dict) else None,
+                    raw_data.get('TotalCount') if isinstance(raw_data, dict) else None,
+                    response_header.get('totalCount') if isinstance(response_header, dict) else None,
+                    response_header.get('TotalCount') if isinstance(response_header, dict) else None,
+                ]
+                total_count = None
+                for candidate in total_count_candidates:
+                    parsed_count = to_int_or_none(candidate)
+                    if parsed_count is not None and parsed_count >= 0:
+                        total_count = parsed_count
+                        break
+
+                total_pages = None
+                if total_count is not None:
+                    total_pages = max(1, (total_count + page_size - 1) // page_size)
+                    logging.info(
+                        f"Plant {plant_id} ({envn.upper()}): totalCount={total_count}, "
+                        f"pageSize={page_size}, totalPages={total_pages}"
+                    )
+                else:
+                    logging.info(
+                        f"Plant {plant_id} ({envn.upper()}): totalCount not found in response; "
+                        f"continuing page fetch until last page is reached."
+                    )
+
+                page_number = starting_page + 1
+                while True:
+                    if total_pages is not None and page_number >= total_pages:
+                        break
+
+                    paged_payload = dict(base_payload)
+                    paged_payload["Size"] = page_size
+                    paged_payload["Page"] = page_number
+                    page_response = requests.post(
+                        api_url,
+                        headers=headers,
+                        json=paged_payload,
+                        verify=self.ssl_verify
+                    )
+                    page_response.raise_for_status()
+                    page_raw_data = page_response.json()
+                    page_data = page_raw_data.get('data', [])
+                    logging.info(
+                        f"Fetched page {page_number} for Plant {plant_id} ({envn.upper()}) "
+                        f"with {len(page_data)} row(s)"
+                    )
+                    for entry in page_data:
+                        olpn_id = entry.get('OlpnId') if isinstance(entry, dict) else None
+                        if olpn_id and olpn_id not in seen_olpn_ids:
+                            seen_olpn_ids.add(olpn_id)
+                            all_olpn_results.append(olpn_id)
+
+                    if total_pages is None and len(page_data) < page_size:
+                        break
+
+                    page_number += 1
 
             except requests.exceptions.RequestException as e:
                 logging.error(f"Request failed for Plant {plant_id} ({envn.upper()}): {e}")
             except Exception as e:
                 logging.error(f"An unexpected error occurred for Plant {plant_id} ({envn.upper()}): {e}")
 
-            return all_olpn_results
+        return all_olpn_results
 
 if __name__ == '__main__':
     search_olpn = Wave_Information_Search()
-    lpn_list = search_olpn.search_olpn_payload_for_pack_complete()
+    lpn_list = search_olpn.search_FC_olpn()
     print(lpn_list)
 
     # search_fc_olpn = Wave_Information_Search()
