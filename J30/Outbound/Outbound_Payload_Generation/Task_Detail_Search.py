@@ -21,6 +21,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 
 class Task_Search_Payload:
 
+    # Initialize search templates, dependencies, and runtime settings.
     def __init__(self):
         self.search_by_ilpn = ''
         self.search_by_orderid = ''
@@ -37,6 +38,7 @@ class Task_Search_Payload:
         self.ssl_verify = self._get_ssl_verify_config()
 
     @staticmethod
+    # Resolve SSL verification mode from environment flags/bundle settings.
     def _get_ssl_verify_config():
         disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
         ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
@@ -47,11 +49,13 @@ class Task_Search_Payload:
     # Task Detail status codes: 1000 is created; 8000 is Completed; 9000 is canceled.
 
 
+    # Retrieve bearer token for the requested environment and facility.
     def get_bearer_token(self, environment, plant_id):
         token_handler = Get_Token(env=environment.lower(), plant=plant_id)
         bearer_token = token_handler.get_bearer()
         return bearer_token
 
+    # Call the task-detail API and return the data array from response.
     def get_task_detail_api_response(self, bearer_token, environment, plant_id, payload):
         env_handler = AWM_OB_Env()
         env_handler.get_wm_host(host=environment.lower(), facility=str(plant_id))
@@ -81,6 +85,7 @@ class Task_Search_Payload:
 
         return response_result
 
+    # Search task details for provided iLPNs and return iLPN/oLPN mapping.
     def search_task_detail_fullcase_payloads_by_ilpns(self, search_by_ilpns, environment, plant_id):
         self.search_by_ilpn = ",".join(search_by_ilpns.split(';'))
 
@@ -114,6 +119,7 @@ class Task_Search_Payload:
 
         return data
 
+    # Search task details by LPN list and return normalized response fields.
     def search_task_detail_by_lpns(self, search_by_ilpns, environment, plant_id):
         self.search_by_ilpn = ",".join(search_by_ilpns.split(';'))
 
@@ -148,6 +154,7 @@ class Task_Search_Payload:
 
         return data
 
+    # Search task details by wave number and return unique iLPN/oLPN values.
     def search_task_detail_by_wave_nbr(self, search_by_wave_nbr, environment, plant_id):
         self.search_by_wavenbr = ",".join(search_by_wave_nbr.split(';'))
 
@@ -212,6 +219,7 @@ class Task_Search_Payload:
     #
     #     return oLPN_list
 
+    # Resolve FC oLPNs and query task detail in batches of 20 oLPNs.
     def search_task_detail_by_wave_nbr_FC_packcomplete(self, environment, plant_id):
         from Outbound.Wave_Information import Wave_Information_Search
 
@@ -259,6 +267,7 @@ class Task_Search_Payload:
         return oLPN_list
 
 
+    # Search task details by order ID and return matching oLPN list.
     def search_task_detail_by_order(self, order_id, environment, plant_id):
         self.search_by_orderid = ",".join(order_id[0].split(';'))
 
@@ -288,6 +297,7 @@ class Task_Search_Payload:
 
         return data
 
+    # Drive worksheet-based routing to the appropriate task-detail search path.
     def search_task_detail_worksheet_info(self):
         try:
             worksheet_info = self.worksheet.mhe_journal_worksheet_extract_parameter()

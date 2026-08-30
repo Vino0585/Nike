@@ -1,0 +1,81 @@
+2026-07-08 16:47:32,873 - INFO - MainThread - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/FR_Order_Creation_Prod_Multithread_20260708_164732_872896.log
+2026-07-08 16:47:34,017 - INFO - MainThread - Successfully extracted 19 data row(s) for processing.
+2026-07-08 16:47:34,017 - INFO - MainThread - Processing Excel Row 1
+2026-07-08 16:47:34,022 - INFO - MainThread - Order: V14070800001
+2026-07-08 16:47:34,022 - INFO - MainThread - Processing Excel Row 2
+2026-07-08 16:47:34,025 - INFO - MainThread - Order: V14070800002
+2026-07-08 16:47:34,025 - INFO - MainThread - Processing Excel Row 3
+2026-07-08 16:47:34,027 - INFO - MainThread - Order: V14070800003
+2026-07-08 16:47:34,027 - INFO - MainThread - Processing Excel Row 4
+2026-07-08 16:47:34,029 - INFO - MainThread - Order: V14070800004
+2026-07-08 16:47:34,029 - INFO - MainThread - Processing Excel Row 5
+2026-07-08 16:47:34,032 - INFO - MainThread - Order: V14070800005
+2026-07-08 16:47:34,033 - INFO - MainThread - Processing Excel Row 6
+2026-07-08 16:47:34,035 - INFO - MainThread - Order: V14070800006
+2026-07-08 16:47:34,035 - INFO - MainThread - Processing Excel Row 7
+2026-07-08 16:47:34,037 - INFO - MainThread - Order: V14070800007
+2026-07-08 16:47:34,037 - INFO - MainThread - Processing Excel Row 8
+2026-07-08 16:47:34,040 - INFO - MainThread - Order: V14070800008
+2026-07-08 16:47:34,041 - INFO - MainThread - Processing Excel Row 9
+2026-07-08 16:47:34,043 - INFO - MainThread - Order: V14070800009
+2026-07-08 16:47:34,043 - INFO - MainThread - Processing Excel Row 10
+2026-07-08 16:47:34,047 - INFO - MainThread - Order: V14070800010
+2026-07-08 16:47:34,047 - INFO - MainThread - Processing Excel Row 11
+2026-07-08 16:47:34,052 - INFO - MainThread - Order: V14070800011
+2026-07-08 16:47:34,052 - INFO - MainThread - Processing Excel Row 12
+2026-07-08 16:47:34,055 - INFO - MainThread - Order: V14070800012
+2026-07-08 16:47:34,055 - INFO - MainThread - Processing Excel Row 13
+2026-07-08 16:47:34,059 - INFO - MainThread - Order: V14070800013
+2026-07-08 16:47:34,059 - INFO - MainThread - Processing Excel Row 14
+2026-07-08 16:47:34,061 - INFO - MainThread - Order: V14070800014
+2026-07-08 16:47:34,061 - INFO - MainThread - Processing Excel Row 15
+2026-07-08 16:47:34,063 - INFO - MainThread - Order: V14070800015
+2026-07-08 16:47:34,063 - INFO - MainThread - Processing Excel Row 16
+2026-07-08 16:47:34,065 - INFO - MainThread - Order: V14070800016
+2026-07-08 16:47:34,065 - INFO - MainThread - Processing Excel Row 17
+2026-07-08 16:47:34,067 - INFO - MainThread - Order: V14070800017
+2026-07-08 16:47:34,067 - INFO - MainThread - Processing Excel Row 18
+2026-07-08 16:47:34,069 - INFO - MainThread - Order: V14070800018
+2026-07-08 16:47:34,069 - INFO - MainThread - Processing Excel Row 19
+2026-07-08 16:47:34,071 - INFO - MainThread - Order: V14070800019
+2026-07-08 16:47:34,752 - INFO - MainThread - Total payloads to send: 19
+2026-07-08 16:47:34,752 - INFO - MainThread - Using 5 worker thread(s).
+2026-07-08 16:47:35,989 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 1/19 | Order Number: V14070800001
+2026-07-08 16:47:35,989 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 2/19 | Order Number: V14070800002
+2026-07-08 16:47:35,990 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 3/19 | Order Number: V14070800003
+2026-07-08 16:47:35,993 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 4/19 | Order Number: V14070800004
+2026-07-08 16:47:35,993 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 5/19 | Order Number: V14070800005
+2026-07-08 16:47:38,446 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 3/19 sent successfully. Status Code: 200
+2026-07-08 16:47:38,447 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 6/19 | Order Number: V14070800006
+2026-07-08 16:47:38,898 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 2/19 sent successfully. Status Code: 200
+2026-07-08 16:47:38,899 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 7/19 | Order Number: V14070800007
+2026-07-08 16:47:38,920 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 4/19 sent successfully. Status Code: 200
+2026-07-08 16:47:38,921 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 8/19 | Order Number: V14070800008
+2026-07-08 16:47:39,820 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 6/19 sent successfully. Status Code: 200
+2026-07-08 16:47:39,822 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 9/19 | Order Number: V14070800009
+2026-07-08 16:47:40,413 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 7/19 sent successfully. Status Code: 200
+2026-07-08 16:47:40,415 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 1/19 sent successfully. Status Code: 200
+2026-07-08 16:47:40,416 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 10/19 | Order Number: V14070800010
+2026-07-08 16:47:40,417 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 11/19 | Order Number: V14070800011
+2026-07-08 16:47:40,671 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 5/19 sent successfully. Status Code: 200
+2026-07-08 16:47:40,672 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 12/19 | Order Number: V14070800012
+2026-07-08 16:47:40,718 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 8/19 sent successfully. Status Code: 200
+2026-07-08 16:47:40,718 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 13/19 | Order Number: V14070800013
+2026-07-08 16:47:41,790 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 10/19 sent successfully. Status Code: 200
+2026-07-08 16:47:41,792 - INFO - ThreadPoolExecutor-0_1 - [PROD] Sending payload 14/19 | Order Number: V14070800014
+2026-07-08 16:47:41,847 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 11/19 sent successfully. Status Code: 200
+2026-07-08 16:47:41,847 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 15/19 | Order Number: V14070800015
+2026-07-08 16:47:42,121 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 12/19 sent successfully. Status Code: 200
+2026-07-08 16:47:42,122 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 16/19 | Order Number: V14070800016
+2026-07-08 16:47:42,851 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 9/19 sent successfully. Status Code: 200
+2026-07-08 16:47:42,853 - INFO - ThreadPoolExecutor-0_2 - [PROD] Sending payload 17/19 | Order Number: V14070800017
+2026-07-08 16:47:43,418 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 16/19 sent successfully. Status Code: 200
+2026-07-08 16:47:43,418 - INFO - ThreadPoolExecutor-0_4 - [PROD] Sending payload 18/19 | Order Number: V14070800018
+2026-07-08 16:47:43,989 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 13/19 sent successfully. Status Code: 200
+2026-07-08 16:47:43,992 - INFO - ThreadPoolExecutor-0_3 - [PROD] Sending payload 19/19 | Order Number: V14070800019
+2026-07-08 16:47:44,364 - INFO - ThreadPoolExecutor-0_2 - [PROD] Payload 17/19 sent successfully. Status Code: 200
+2026-07-08 16:47:44,699 - INFO - ThreadPoolExecutor-0_4 - [PROD] Payload 18/19 sent successfully. Status Code: 200
+2026-07-08 16:47:44,923 - INFO - ThreadPoolExecutor-0_1 - [PROD] Payload 14/19 sent successfully. Status Code: 200
+2026-07-08 16:47:45,147 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 15/19 sent successfully. Status Code: 200
+2026-07-08 16:47:45,310 - INFO - ThreadPoolExecutor-0_3 - [PROD] Payload 19/19 sent successfully. Status Code: 200
+2026-07-08 16:47:45,311 - INFO - MainThread - Completed order creation. Success: 19, Failed: 0, Total: 19

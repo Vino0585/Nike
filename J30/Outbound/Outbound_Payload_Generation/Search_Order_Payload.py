@@ -19,11 +19,13 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 
 class Search_Order_Payload:
 
+    # Initialize worksheet helper and payload accumulator storage.
     def __init__(self):
         self.worksheet = Outbound_Worksheet()
         self.all_search_order_payload = []
 
 
+    # Build parent-order search payloads from worksheet order inputs.
     def parse_parent_order_search(self) -> list[Any]:
         try:
             list_of_datadict = self.worksheet.search_parent_order()
@@ -81,6 +83,7 @@ class Search_Order_Payload:
             logging.error(f"An unexpected error occurred: {e}")
 
 
+    # Parse major order search response into plant/environment/order IDs.
     def parse_major_order_response(self, response_data: dict) -> list:
         if not response_data.get("data"):
             logging.error(f"INFO: No data returned from search order payload generation.")
@@ -103,6 +106,7 @@ class Search_Order_Payload:
         return row
 
 
+    # Build MHE parent-order search payload for given env/plant/order IDs.
     def parse_mhe_parent_order_search(self, environemnt, plant_id, order_ids) -> list[Any]:
         self.all_search_order_payload = []
 
@@ -127,6 +131,7 @@ class Search_Order_Payload:
         self.all_search_order_payload.append(final_payload)
         return self.all_search_order_payload
 
+    # Build order search payloads using OriginalOrderId filter.
     def order_search(self):
         try:
             list_of_datadict = self.worksheet.search_parent_order()
@@ -168,6 +173,7 @@ class Search_Order_Payload:
             logging.error(f"An unexpected error occurred: {e}")
 
 
+    # Build parent-order payloads using OrderLine.OriginalOrderId filter.
     def parent_order_search(self):
         try:
             list_of_datadict = self.worksheet.search_parent_order()
@@ -208,6 +214,7 @@ class Search_Order_Payload:
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
 
+    # Convert ISO datetime text to JST display format.
     def _format_date(self, date_str: str) -> str:
         if not date_str:
             return None
@@ -224,6 +231,7 @@ class Search_Order_Payload:
         except ValueError:
             return date_str
 
+    # Parse original order response into detailed service-level rows.
     def parse_original_order_response(self, response_data: dict) -> list:
         if not response_data.get("data"):
             logging.error(f"INFO: No data returned from search order payload generation.")
@@ -298,6 +306,7 @@ class Search_Order_Payload:
                     original_order_data.append(row)
         return original_order_data
 
+    # Parse parent order-line response into compact status rows.
     def parse_parent_order_line_response(self, parent_order_line_response_data: dict) -> list:
         if not parent_order_line_response_data.get("data"):
             logging.error(f"INFO: No parent order data returned from search order payload generation, "
@@ -330,6 +339,7 @@ class Search_Order_Payload:
                 parent_order_line_data.append(row)
         return parent_order_line_data
 
+    # Build parent-order payloads for tran-log flow using wave numbers.
     def parent_order_search_for_tran_log(self):
         try:
             list_of_datadict = self.worksheet.wave_information_extract()
@@ -370,6 +380,7 @@ class Search_Order_Payload:
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
 
+    # Parse tran-log parent order-line response into order ID mappings.
     def parse_parent_order_line_response_for_tran_log_wave(self, parent_order_line_response_data: dict) -> list:
         if not parent_order_line_response_data.get("data"):
             logging.error(f"INFO: No parent order data returned from search order payload generation, "

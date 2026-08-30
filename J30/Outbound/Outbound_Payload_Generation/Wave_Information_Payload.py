@@ -15,11 +15,13 @@ from Outbound.Outbound_Payload_Generation.Task_Detail_Search import Task_Search_
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 class Wave_Information_Payload:
+    # Initialize worksheet/task helpers and payload accumulator storage.
     def __init__(self):
         self.all_wave_information_payload = []
         self.worksheet = Outbound_Worksheet()
         self.task_search = Task_Search_Payload()
 
+    # Build oLPN search payloads from wave inputs in worksheet rows.
     def extract_wave_olpn_information(self) -> list[Any]:
         try:
             list_of_datadict = self.worksheet.wave_information_extract()
@@ -60,6 +62,7 @@ class Wave_Information_Payload:
             return []
 
 
+    # Parse oLPN search API response into flattened reporting rows.
     def parse_wave_olpn_information(self, response_data: dict) -> list:
         if not response_data.get("data"):
             logging.error(f"INFO: No data returned from search order payload generation.")
@@ -100,6 +103,7 @@ class Wave_Information_Payload:
         return lpn_data
 
 
+    # Build task-detail search payloads for provided wave numbers.
     def extract_wave_task_detail_information(self) -> list[Any]:
         try:
             list_of_datadict = self.worksheet.wave_information_extract()
@@ -151,6 +155,7 @@ class Wave_Information_Payload:
             logging.error(f"An unexpected error occurred: {e}")
             return []
 
+    # Parse oLPN search response into a simple list of oLPN IDs.
     def parse_wave_olpn_information_for_tran_log(self, response_data: dict) -> list:
         if not response_data.get("data"):
             logging.error(f"INFO: No data returned from search order payload generation.")
@@ -165,6 +170,7 @@ class Wave_Information_Payload:
                 lpn_data.append(detail['OlpnId'])
         return lpn_data
 
+    # Build pack-message oLPN payloads, optionally constrained by FC eligibility.
     def extract_wave_olpn_information_for_pack_message(self) -> list[Any]:
         try:
             list_of_datadict = self.worksheet.wave_information_extract()
@@ -232,6 +238,7 @@ class Wave_Information_Payload:
             logging.error(f"An unexpected error occurred: {e}")
             return []
 
+    # Build FC pack-complete oLPN payloads for status-created wave lines.
     def extract_wave_olpn_information_for_FC_packcomplete(self) -> list[Any]:
         try:
             list_of_datadict = self.worksheet.wave_information_extract()

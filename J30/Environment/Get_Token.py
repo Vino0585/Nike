@@ -27,7 +27,7 @@ class Get_Token():
         self.payload = {
             "grant_type": "password",
             "username": "vgana3",
-            "password": "Vino-35160626"
+            "password": "Vino-35160526"
         }
 
         self.headers = {
@@ -62,6 +62,6 @@ class Get_Token():
     # Bearer token request completed -------------------------------
 
 if __name__ == '__main__':
-    bearer = Get_Token(env='prod', plant='1081')
+    bearer = Get_Token(env='qa', plant='1093')
     get_token = bearer.get_bearer()
     print(get_token)

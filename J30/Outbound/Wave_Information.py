@@ -22,11 +22,13 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 class Wave_Information_Search:
 
+    # Initialize wave payload helper and SSL verification behavior.
     def __init__(self):
         self.wave_information = Wave_Information_Payload()
         self.ssl_verify = self._get_ssl_verify_config()
 
     @staticmethod
+    # Resolve SSL verification mode from environment flags/bundle settings.
     def _get_ssl_verify_config():
         disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
         ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
@@ -34,6 +36,7 @@ class Wave_Information_Search:
             urllib3.disable_warnings(InsecureRequestWarning)
         return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
+    # Search oLPN data by wave and export flattened results to Excel.
     def search_olpn_payload(self):
         olpn_search_payload = self.wave_information.extract_wave_olpn_information()
 
@@ -42,7 +45,6 @@ class Wave_Information_Search:
             return
 
         all_olpn_results = []
-        seen_olpn_ids = set()
         seen_olpn_ids = set()
 
         for i, payload in enumerate(olpn_search_payload):
@@ -123,6 +125,7 @@ class Wave_Information_Search:
             return None
 
 
+    # Search task details by wave and export parsed results to Excel.
     def search_task_payload(self):
         task_detail_search_payload = self.wave_information.extract_wave_task_detail_information()
 
@@ -210,6 +213,7 @@ class Wave_Information_Search:
             return None
 
 
+    # Return oLPN IDs for tran-log flows using wave-based oLPN search.
     def search_olpn_info_for_tran_log(self):
         olpn_search_payload = self.wave_information.extract_wave_olpn_information()
 
@@ -268,6 +272,7 @@ class Wave_Information_Search:
 
         return all_olpn_results
 
+    # Fetch oLPN detail rows for pack-complete message generation.
     def search_olpn_payload_for_pack_complete(self):
         olpn_search_payload = self.wave_information.extract_wave_olpn_information_for_pack_message()
 
@@ -337,6 +342,7 @@ class Wave_Information_Search:
 
         return final_payload
 
+    # Fetch FC-eligible oLPN IDs across all result pages.
     def search_FC_olpn(self):
         olpn_search_payload = self.wave_information.extract_wave_olpn_information_for_FC_packcomplete()
 
@@ -398,6 +404,7 @@ class Wave_Information_Search:
                         seen_olpn_ids.add(olpn_id)
                         all_olpn_results.append(olpn_id)
 
+                # Safely convert candidate values to int for page-count math.
                 def to_int_or_none(value):
                     try:
                         return int(value)

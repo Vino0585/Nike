@@ -454,7 +454,7 @@ class FR_Order_Creation_Payload:
                 "customerOrderCreateTimestamp": formatted_now,
             }
 
-            nondigital_fulfillment_request_date  = {
+            nondigital_fulfillment_request_date = {
                 "cancelByDt": change_format_pickup_dttm, "plannedPickingTimestamp": fr_request_pickup_date,
                 "plannedGoodsIssueTimestamp": fr_request_pickup_date, "estimatedDeliveryTimestamp": fr_request_delivery_date,
                 "fulfillmentRequestCreateTimestamp": formatted_now, "customerRequestTimestamp": fr_request_delivery_date,

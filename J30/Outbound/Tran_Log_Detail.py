@@ -11,10 +11,12 @@ from Inventory.Inventory_Payload_Generation.Tran_Log_Detail_Payload import Tran_
 import requests
 
 class Tran_Log_Detail:
+    # Initialize Tran Log payload generator and prebuilt payload list.
     def __init__(self):
         self.tran_log_detail_payload = Tran_Log_Detail_Payload()
         self.all_tran_log_detail_payload = self.tran_log_detail_payload.create_tran_log_detail_payload()
 
+    # Send Tran Log detail requests, parse payload content, and export results.
     def send_tran_log_detail(self):
         if not self.all_tran_log_detail_payload:
             logging.error("No payload was received from Tran_log_detail_payload. Please check that file.")

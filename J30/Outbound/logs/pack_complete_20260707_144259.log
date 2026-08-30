@@ -1,0 +1,27 @@
+2026-07-07 14:42:59,687 - INFO - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/pack_complete_20260707_144259.log
+2026-07-07 14:42:59,687 - INFO - Starting continuous mode. The job will rerun every 10 seconds. Press Ctrl+C to stop.
+2026-07-07 14:42:59,687 - INFO - Starting Pack Complete run...
+2026-07-07 14:43:00,147 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-07 14:43:00,148 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'QA', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-07 14:43:00,374 - INFO - Processing Task 1/1: Plant 1081 (QA)
+2026-07-07 14:43:01,528 - ERROR - Request failed for Plant 1081 (QA): 401 Client Error:  for url: https://nikeaplawmqa1-auth.sce.manh.com/oauth/token
+2026-07-07 14:43:01,531 - INFO - No valid search by iLPN found, cannot create any payloads, check self.search_by_iLPN in task_search_payload
+2026-07-07 14:43:01,531 - INFO - Processing Task 1/1: Plant 1081 (QA)
+2026-07-07 14:43:02,159 - ERROR - Request failed for Plant 1081 (QA): 401 Client Error:  for url: https://nikeaplawmqa1-auth.sce.manh.com/oauth/token
+2026-07-07 14:43:02,162 - ERROR - No valid pack complete payload rows were built.
+2026-07-07 14:43:02,163 - ERROR - No payload were generated in Pack Complete Payload program
+2026-07-07 14:43:02,163 - INFO - Pack Complete run finished.
+2026-07-07 14:43:02,163 - INFO - Waiting 10 seconds before next run...
+2026-07-07 14:43:12,168 - INFO - Starting Pack Complete run...
+2026-07-07 14:43:12,419 - INFO - Successfully extracted 1 data row(s) for wave information processing.
+2026-07-07 14:43:12,419 - INFO - Processing row 1: {'Plant': 1081, 'Environment': 'QA', 'Wave_number': 'W07022026000000000004;W07022026000000000003;W07022026000000000002;W07022026000000000001;W07012026000000000004;W07012026000000000003'}
+2026-07-07 14:43:12,641 - INFO - Processing Task 1/1: Plant 1081 (QA)
+2026-07-07 14:43:14,423 - ERROR - Request failed for Plant 1081 (QA): 401 Client Error:  for url: https://nikeaplawmqa1-auth.sce.manh.com/oauth/token
+2026-07-07 14:43:14,425 - INFO - No valid search by iLPN found, cannot create any payloads, check self.search_by_iLPN in task_search_payload
+2026-07-07 14:43:14,425 - INFO - Processing Task 1/1: Plant 1081 (QA)
+2026-07-07 14:43:15,149 - ERROR - Request failed for Plant 1081 (QA): 401 Client Error:  for url: https://nikeaplawmqa1-auth.sce.manh.com/oauth/token
+2026-07-07 14:43:15,155 - ERROR - No valid pack complete payload rows were built.
+2026-07-07 14:43:15,155 - ERROR - No payload were generated in Pack Complete Payload program
+2026-07-07 14:43:15,155 - INFO - Pack Complete run finished.
+2026-07-07 14:43:15,155 - INFO - Waiting 10 seconds before next run...
+2026-07-07 14:43:22,569 - INFO - Stop requested (Ctrl+C). Continuous Pack Complete execution stopped.

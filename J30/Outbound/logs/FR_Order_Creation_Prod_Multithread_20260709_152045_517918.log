@@ -1,0 +1,9 @@
+2026-07-09 15:20:45,520 - INFO - MainThread - Execution log file: /Users/vgana3/Documents/GitHub/Nike/J30/Outbound/logs/FR_Order_Creation_Prod_Multithread_20260709_152045_517918.log
+2026-07-09 15:20:47,296 - INFO - MainThread - Successfully extracted 1 data row(s) for processing.
+2026-07-09 15:20:47,296 - INFO - MainThread - Processing Excel Row 1
+2026-07-09 15:20:47,299 - INFO - MainThread - Order: V10ND070900001
+2026-07-09 15:20:48,014 - INFO - MainThread - Total payloads to send: 1
+2026-07-09 15:20:48,014 - INFO - MainThread - Using 1 worker thread(s).
+2026-07-09 15:20:49,201 - INFO - ThreadPoolExecutor-0_0 - [PROD] Sending payload 1/1 | Order Number: V10ND070900001
+2026-07-09 15:20:50,821 - INFO - ThreadPoolExecutor-0_0 - [PROD] Payload 1/1 sent successfully. Status Code: 200
+2026-07-09 15:20:50,822 - INFO - MainThread - Completed order creation. Success: 1, Failed: 0, Total: 1
