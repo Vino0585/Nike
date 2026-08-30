@@ -5,8 +5,8 @@ import os
 
 from collections import defaultdict
 from pathlib import Path
-from Environment.Get_Token import Get_Token
-from Environment.WM_Environment import AWM_Env
+from Australia_Impact.Environment.Get_Token import Get_Token
+from Australia_Impact.Environment.WM_Environment import AWM_Env
 from Australia_Impact.Inbound.Inbound_payload_generation.ASN_Creation_Payload import Asn_Payload_Generator
 
 # Setup basic logging to provide better feedback than print()
@@ -118,7 +118,7 @@ class ASN_Creation:
                                 }
                                 extracted_report_data.append(report_entry)
 
-                        # 2. Data for the input sheet (WorkSheet.xlsx)
+                        # 2. Data for the input sheet (Inbound_worksheet.xlsx)
                         # This creates one row per successful payload.
                         current_lpns = [lpn.get('LpnId') for lpn in lpn_list if lpn.get('LpnId')]
                         formatted_lpn = ';'.join(current_lpns)
@@ -169,13 +169,17 @@ class ASN_Creation:
                 report_df = pd.DataFrame(output_data)
                 output_dir = AUSTRALIA_IMPACT_ROOT / "Input_files"
                 output_dir.mkdir(parents=True, exist_ok=True)
-                output_filepath = output_dir / "WorkSheet.xlsx"
-
-                with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a' if output_filepath.exists() else 'w', if_sheet_exists='replace') as writer:
-                    asn_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ASN_ID": "ASNID",
+                output_filepath = output_dir / "Inbound_worksheet.xlsx"
+                asn_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ASN_ID": "ASNID",
                                                    "LPN_ID": "LPNID", "Pre_Allocate": 'Pre_Allocate',
                                                    "Failed": "Failed"})
-                    asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
+
+                if output_filepath.exists():
+                    with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                        asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
+                else:
+                    with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='w') as writer:
+                        asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
 
                 logging.info(f"Successfully created multi-sheet report: {output_filepath}")
 

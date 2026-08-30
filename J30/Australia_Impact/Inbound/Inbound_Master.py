@@ -2,6 +2,7 @@ import logging
 import pandas as pd
 import time
 import sys
+import subprocess
 from pathlib import Path
 import os
 
@@ -13,49 +14,38 @@ if str(PROJECT_ROOT) not in sys.path:
 
 os.environ["NIKE_DISABLE_SSL_VERIFY"] = "true"
 
-from Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
-from ASN_Creation import ASN_Creation
-from Inbound_Delivery import Inbound_Delivery
-# from iLPN_Information import iLPN_Information
-# from Routing_Task_Completed import Routing_Task_Completed
-from Good_Holder_Announced import Goods_Holder_Announced
-from Goods_Holder_Measured import Goods_Holder_Measured
-from Putaway_Complete import Putaway_Complete
-from ASN_Verify import ASN_Verify
-from MHE_Jounal_IB import MHE_Journal_Inbound
+from Australia_Impact.Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
 
 
 class inbound_master_step:
 
     def __init__(self):
-        """Initialize all service classes once to be reused."""
+        """Initialize inbound master for Australia-specific flow orchestration."""
         self.worksheet_extractor = Worksheet()
-        self.asn_creation = ASN_Creation()
-        self.inbound_delivery = Inbound_Delivery()
-        # self.iLPN_information = iLPN_Information()
-        # self.routing_task_completed = Routing_Task_Completed()
-        self.goods_holder_announced = Goods_Holder_Announced()
-        self.goods_holder_measured = Goods_Holder_Measured()
-        self.putaway_complete = Putaway_Complete()
-        self.asn_verify = ASN_Verify()
-        self.mhe_journal_inbound = MHE_Journal_Inbound()
+        self.inbound_dir = CURRENT_DIR
+
+    def _run_script(self, script_name: str, step_label: str):
+        script_path = self.inbound_dir / script_name
+        if not script_path.exists():
+            logging.error(f"{step_label} script not found: {script_path}")
+            return
+        logging.info(f"{step_label} Started Successfully")
+        try:
+            subprocess.run([sys.executable, str(script_path)], check=True)
+            logging.info(f"{step_label} Completed Successfully")
+        except subprocess.CalledProcessError as ex:
+            logging.error(f"{step_label} failed with exit code {ex.returncode}")
 
     def is_no_or_empty(self, value):
         return value == 'N' or pd.isna(value) or value is None
 
     def call_asn_creation_program(self):
-        # Calling the Create ASN function
-        logging.info("ASN Creation Program Started Successfully")
-        self.asn_creation.create_asns()
-        logging.info("ASN Created Program Completed Successfully")
+        self._run_script("1_ASN_Creation.py", "ASN Creation Program")
         print("\n")
         time.sleep(5)
 
     def call_inbound_delivery_program(self):
-        # Calling the inbound delivery function
-        logging.info("Inbound Delivery Program Started Successfully")
-        self.inbound_delivery.send_inbound_delivery()
-        logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
+        self._run_script("2_Pre_Allocate_IBD.py", "Pre Allocate Inbound Delivery Program")
         print("\n")
         time.sleep(5)
 
@@ -69,44 +59,6 @@ class inbound_master_step:
     #     logging.info("Routing Task Complete Flow Completed")
     #     logging.info("Exception Flow Completed")
 
-    def call_goods_holder_announced_program(self):
-        # Calling the goods holder announced function
-        logging.info("Goods Holder Announced Program Started Successfully")
-        self.goods_holder_announced.send_goods_holder_announced()
-        logging.info("Goods Holder Announced Completed Successfully")
-        print("\n")
-        time.sleep(5)
-
-    def call_goods_holder_measured_program(self):
-        # Calling the goods holder measured function.
-        logging.info("Goods Holder Measured Program Started Successfully")
-        self.goods_holder_measured.send_goods_holder_measured()
-        logging.info("Goods Holder Measured Program Completed Successfully")
-        print("\n")
-        time.sleep(5)
-
-    def call_putaway_complete_program(self):
-        # Calling the Putaway Complete Function.
-        logging.info("Putaway Completed Program Started Successfully")
-        self.putaway_complete.create_putaway_task_complete()
-        logging.info("Putaway Completed Successfully")
-        print("\n")
-        time.sleep(5)
-
-    def call_asn_verify_program(self):
-        # Calling the ASN Verification Function
-        logging.info("ASN Verification Started Successfully")
-        self.asn_verify.send_asn_verify()
-        logging.info("ASN Verified Successfully")
-        print("\n")
-        time.sleep(5)
-
-    def call_mhe_journal_inbound_program(self):
-        # Calling the Message Journal Program
-        logging.info("Message Journal Program Started Successfully")
-        self.mhe_journal_inbound.create_mhe_journal_inbound()
-        logging.info("Message Journal Program Completed Successfully")
-
     def get_inbound_master_worksheet_extract(self):
         """Orchestrates the inbound process based on flags from a worksheet."""
         worksheet_entries = self.worksheet_extractor.extract_master_sheet_from_worksheet()
@@ -119,11 +71,12 @@ class inbound_master_step:
         operations = [
             {'flag': 'CreateASN', 'method': self.call_asn_creation_program},
             {'flag': 'InboundDelivery', 'method': self.call_inbound_delivery_program},
-            # {'flag': 'ExceptionFlow', 'method': self.call_exception_flow, 'mhe_delay': 35},
-            {'flag': 'GH_Announced', 'method': self.call_goods_holder_announced_program, 'mhe_delay': 60},
-            {'flag': 'GH_Weighed', 'method': self.call_goods_holder_measured_program, 'mhe_delay': 60},
-            {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program, 'mhe_delay': 60},
-            {'flag': 'ASNVerify', 'method': self.call_asn_verify_program, 'mhe_delay': 30},
+            # Future AU steps can be added here in sequence:
+            # {'flag': 'Appointment', 'method': self.call_appointment_program},
+            # {'flag': 'Receiving', 'method': self.call_receiving_program},
+            # {'flag': 'DropLocation', 'method': self.call_drop_location_program},
+            # {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program},
+            # {'flag': 'ASNVerify', 'method': self.call_asn_verify_program},
         ]
 
         for entry in worksheet_entries:
@@ -131,10 +84,7 @@ class inbound_master_step:
 
             if entry.get("RunAll") == 'Y':
                 for op in operations:
-                    if op['flag'] != 'ExceptionFlow':
-                        op['method']()
-                time.sleep(30)  # Final delay for RunAll
-                self.call_mhe_journal_inbound_program()
+                    op['method']()
                 logging.info("Run All Program Completed Successfully")
                 continue
 
@@ -151,26 +101,18 @@ class inbound_master_step:
 
             # Execute all operations from the starting point that are flagged with 'Y'
             methods_to_run = []
-            last_op_with_mhe = None
 
             for i in range(start_index, len(operations)):
                 op = operations[i]
                 # This logic runs a contiguous block of 'Y's from the starting point
                 if entry.get(op['flag']) == 'Y':
                     methods_to_run.append(op['method'])
-                    if 'mhe_delay' in op:
-                        last_op_with_mhe = op
                 else:
                     break  # Stop at the first non-'Y' flag
 
             if methods_to_run:
                 for method in methods_to_run:
                     method()
-
-                # After the sequence, trigger MHE journal if required by the last step
-                if last_op_with_mhe:
-                    time.sleep(last_op_with_mhe['mhe_delay'])
-                    self.call_mhe_journal_inbound_program()
 
                 logging.info("Program Completed Successfully")
             else:

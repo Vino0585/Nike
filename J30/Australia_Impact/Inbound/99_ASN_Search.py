@@ -1,8 +1,8 @@
 import requests
 import json
 import logging
-from Environment.Get_Token import Get_Token
-from Environment.WM_Environment import AWM_Env
+from Australia_Impact.Environment.Get_Token import Get_Token
+from Australia_Impact.Environment.WM_Environment import AWM_Env
 from pathlib import Path
 import pandas as pd
 from Australia_Impact.Inbound.Inbound_payload_generation.ASN_Search_Payload import ASN_Search_Payload

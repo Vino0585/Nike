@@ -1,7 +1,7 @@
 import logging
 import requests
-from Environment.Get_Token import Get_Token
-from Environment.WM_Environment import AWM_Env
+from Australia_Impact.Environment.Get_Token import Get_Token
+from Australia_Impact.Environment.WM_Environment import AWM_Env
 import json
 
 # Setup basic logging to provide better feedback than print()

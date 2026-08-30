@@ -12,16 +12,10 @@ AU_INPUT_DIR = AUSTRALIA_IMPACT_ROOT / "Input_files"
 
 
 def _resolve_default_excel_path() -> Path:
-    candidates = [
-        AU_INPUT_DIR / "Inbound_worksheet.xlsx",
-        AU_INPUT_DIR / "Worksheet.xlsx",
-        AU_INPUT_DIR / "WorkSheet.xlsx",
-        AU_INPUT_DIR / "WorkSheet1.xlsx",
-    ]
-    for candidate in candidates:
-        if candidate.is_file():
-            return candidate
-    return AU_INPUT_DIR / "Inbound_worksheet.xlsx"
+    canonical_file = AU_INPUT_DIR / "Inbound_worksheet.xlsx"
+    if canonical_file.is_file():
+        return canonical_file
+    return canonical_file
 
 
 class Worksheet(BaseWorksheet):

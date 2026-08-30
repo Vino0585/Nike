@@ -5,9 +5,9 @@ import json
 from typing import List, Dict, Any, Optional
 
 # Assuming these are the correct import paths
-from Environment.Get_Token import Get_Token
+from Australia_Impact.Environment.Get_Token import Get_Token
 from Australia_Impact.Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
-from Environment.WM_Environment import AWM_Env
+from Australia_Impact.Environment.WM_Environment import AWM_Env
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
