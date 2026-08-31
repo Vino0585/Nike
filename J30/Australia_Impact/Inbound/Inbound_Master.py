@@ -3,18 +3,22 @@ import pandas as pd
 import time
 import sys
 import subprocess
+from datetime import datetime
 from pathlib import Path
 import os
 
-# Ensure project root is on sys.path so `Inbound` package imports work when file runs directly
+# Ensure repository root is on sys.path so `Australia_Impact` imports work when file runs directly
 CURRENT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = CURRENT_DIR.parent  # .../Nike/J30
+PROJECT_ROOT = CURRENT_DIR.parent.parent  # .../Nike/J30
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 os.environ["NIKE_DISABLE_SSL_VERIFY"] = "true"
 
 from Australia_Impact.Inbound.Inbound_payload_generation.Worksheet_extract import Worksheet
+from Australia_Impact.Inbound.Inbound_payload_generation.Execution_Report_Writer import (
+    ExecutionReportWriter,
+)
 
 
 class inbound_master_step:
@@ -28,24 +32,46 @@ class inbound_master_step:
         script_path = self.inbound_dir / script_name
         if not script_path.exists():
             logging.error(f"{step_label} script not found: {script_path}")
-            return
+            return False
         logging.info(f"{step_label} Started Successfully")
+        env = os.environ.copy()
+        existing_pythonpath = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = f"{PROJECT_ROOT}:{existing_pythonpath}" if existing_pythonpath else str(PROJECT_ROOT)
         try:
-            subprocess.run([sys.executable, str(script_path)], check=True)
+            subprocess.run(
+                [sys.executable, str(script_path)],
+                check=True,
+                cwd=str(PROJECT_ROOT),
+                env=env,
+            )
             logging.info(f"{step_label} Completed Successfully")
+            return True
         except subprocess.CalledProcessError as ex:
             logging.error(f"{step_label} failed with exit code {ex.returncode}")
+            return False
 
     def is_no_or_empty(self, value):
         return value == 'N' or pd.isna(value) or value is None
 
     def call_asn_creation_program(self):
-        self._run_script("1_ASN_Creation.py", "ASN Creation Program")
+        if not self._run_script("1_ASN_Creation.py", "ASN Creation Program"):
+            raise RuntimeError("ASN Creation Program failed")
         print("\n")
         time.sleep(5)
 
     def call_inbound_delivery_program(self):
-        self._run_script("2_Pre_Allocate_IBD.py", "Pre Allocate Inbound Delivery Program")
+        if not self._run_script("2_Pre_Allocate_IBD.py", "Pre Allocate Inbound Delivery Program"):
+            raise RuntimeError("Pre Allocate Inbound Delivery Program failed")
+        print("\n")
+        time.sleep(5)
+
+    def call_appointment_program(self):
+        if not self._run_script("98_Dock_Door_Check.py", "Dock Door Check Program"):
+            raise RuntimeError("Dock Door Check Program failed")
+        if not self._run_script("3_Schedule_Appointment.py", "Schedule Appointment Program"):
+            raise RuntimeError("Schedule Appointment Program failed")
+        if not self._run_script("4_Check_In.py", "Check-In Program"):
+            raise RuntimeError("Check-In Program failed")
         print("\n")
         time.sleep(5)
 
@@ -71,8 +97,8 @@ class inbound_master_step:
         operations = [
             {'flag': 'CreateASN', 'method': self.call_asn_creation_program},
             {'flag': 'InboundDelivery', 'method': self.call_inbound_delivery_program},
+            {'flag': 'Appointment', 'method': self.call_appointment_program},
             # Future AU steps can be added here in sequence:
-            # {'flag': 'Appointment', 'method': self.call_appointment_program},
             # {'flag': 'Receiving', 'method': self.call_receiving_program},
             # {'flag': 'DropLocation', 'method': self.call_drop_location_program},
             # {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program},
@@ -80,12 +106,40 @@ class inbound_master_step:
         ]
 
         for entry in worksheet_entries:
+            run_started_at = datetime.now()
+            run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+            os.environ["AU_EXECUTION_RUN_ID"] = run_id
             logging.info(f"Processing entry: {entry}")
+            logging.info(f"Execution summary run id: {run_id}")
+            execution_status = "SUCCESS"
+            failure_reason = ""
+            completed_steps = []
 
             if entry.get("RunAll") == 'Y':
                 for op in operations:
-                    op['method']()
-                logging.info("Run All Program Completed Successfully")
+                    try:
+                        op['method']()
+                        completed_steps.append(op['flag'])
+                    except RuntimeError as ex:
+                        logging.error(str(ex))
+                        execution_status = "FAILED"
+                        failure_reason = str(ex)
+                        break
+                if execution_status == "SUCCESS":
+                    logging.info("Run All Program Completed Successfully")
+                run_ended_at = datetime.now()
+                summary_path = ExecutionReportWriter().write_end_to_end_summary(
+                    run_user=os.getenv("USER", ""),
+                    started_at=run_started_at,
+                    ended_at=run_ended_at,
+                    status=execution_status,
+                    selected_flags=entry,
+                    completed_steps=completed_steps,
+                    error_message=failure_reason,
+                )
+                logging.info(f"End-to-end execution summary updated: {summary_path}")
+                if execution_status == "FAILED":
+                    return
                 continue
 
             # Find the first operation flagged with 'Y'
@@ -97,6 +151,17 @@ class inbound_master_step:
 
             if start_index == -1:
                 logging.info("No operation flags set to 'Y'. No output produced for this entry.")
+                run_ended_at = datetime.now()
+                summary_path = ExecutionReportWriter().write_end_to_end_summary(
+                    run_user=os.getenv("USER", ""),
+                    started_at=run_started_at,
+                    ended_at=run_ended_at,
+                    status="SKIPPED",
+                    selected_flags=entry,
+                    completed_steps=[],
+                    error_message="No operation flags were set to Y.",
+                )
+                logging.info(f"End-to-end execution summary updated: {summary_path}")
                 continue
 
             # Execute all operations from the starting point that are flagged with 'Y'
@@ -111,393 +176,38 @@ class inbound_master_step:
                     break  # Stop at the first non-'Y' flag
 
             if methods_to_run:
-                for method in methods_to_run:
-                    method()
+                for index, method in enumerate(methods_to_run):
+                    try:
+                        method()
+                        completed_steps.append(operations[start_index + index]["flag"])
+                    except RuntimeError as ex:
+                        logging.error(str(ex))
+                        execution_status = "FAILED"
+                        failure_reason = str(ex)
+                        break
 
-                logging.info("Program Completed Successfully")
+                if execution_status == "SUCCESS":
+                    logging.info("Program Completed Successfully")
             else:
                 # This case should not be reached due to the start_index check, but is here for safety
                 logging.info("The combination provided doesn't match the requirement.")
+                execution_status = "SKIPPED"
+                failure_reason = "The combination provided does not match execution requirements."
+
+            run_ended_at = datetime.now()
+            summary_path = ExecutionReportWriter().write_end_to_end_summary(
+                run_user=os.getenv("USER", ""),
+                started_at=run_started_at,
+                ended_at=run_ended_at,
+                status=execution_status,
+                selected_flags=entry,
+                completed_steps=completed_steps,
+                error_message=failure_reason,
+            )
+            logging.info(f"End-to-end execution summary updated: {summary_path}")
+            if execution_status == "FAILED":
+                return
 
 if __name__ == "__main__":
     inbound_master = inbound_master_step()
     inbound_master.get_inbound_master_worksheet_extract()
-
-
-# Do not delete this as this is the version 1 of my learning.
-# # Version 1
-#
-# import logging
-# import pandas as pd
-# import time
-#
-# from Inbound_payload_generation.Worksheet_extract import Worksheet
-# from ASN_Creation import ASN_Creation
-# from Inbound_Delivery import Inbound_Delivery
-# from Good_Holder_Announced import Goods_Holder_Announced
-# from Goods_Holder_Measured import Goods_Holder_Measured
-# from Putaway_Complete import Putaway_Complete
-# from ASN_Verify import ASN_Verify
-# from MHE_Jounal_IB import MHE_Journal_Inbound
-#
-#
-# class inbound_master_step:
-#
-#     def __init__(self):
-#         """Initialize all service classes once to be reused."""
-#         self.worksheet_extractor = Worksheet()
-#         self.asn_creation = ASN_Creation()
-#         self.inbound_delivery = Inbound_Delivery()
-#         self.goods_holder_announced = Goods_Holder_Announced()
-#         self.goods_holder_measured = Goods_Holder_Measured()
-#         self.putaway_complete = Putaway_Complete()
-#         self.asn_verify = ASN_Verify()
-#         self.mhe_journal_inbound = MHE_Journal_Inbound()
-#
-#     def is_no_or_empty(self, value):
-#         return value == 'N' or pd.isna(value) or value is None
-#
-#     def call_asn_creation_program(self):
-#         # Calling the Create ASN function
-#         logging.info("ASN Creation Program Started Successfully")
-#         self.asn_creation.create_asns()
-#         logging.info("ASN Created Program Completed Successfully")
-#         time.sleep(5)
-#         print("\n")
-#
-#     def call_inbound_delivery_program(self):
-#         # Calling the inbound delivery function
-#         logging.info("Inbound Delivery Program Started Successfully")
-#         self.inbound_delivery.send_inbound_delivery()
-#         logging.info("Inbound Delivery Created Successfully and triggered the pre receipt allocation")
-#         time.sleep(5)
-#         print("\n")
-#
-#     def call_goods_holder_announced_program(self):
-#         # Calling the goods holder announced function
-#         logging.info("Goods Holder Announced Program Started Successfully")
-#         self.goods_holder_announced.send_goods_holder_announced()
-#         logging.info("Goods Holder Announced Completed Successfully")
-#         time.sleep(5)
-#         print("\n")
-#
-#     def call_goods_holder_measured_program(self):
-#         # Calling the goods holder measured function.
-#         logging.info("Goods Holder Measured Program Started Successfully")
-#         self.goods_holder_measured.send_goods_holder_measured()
-#         logging.info("Goods Holder Measured Program Completed Successfully")
-#         time.sleep(5)
-#         print("\n")
-#
-#     def call_putaway_complete_program(self):
-#         # Calling the Putaway Complete Function.
-#         logging.info("Putaway Completed Program Started Successfully")
-#         self.putaway_complete.create_putaway_task_complete()
-#         logging.info("Putaway Completed Successfully")
-#         time.sleep(5)
-#         print("\n")
-#
-#     def call_asn_verify_program(self):
-#         # Calling the ASN Verification Function
-#         logging.info("ASN Verification Started Successfully")
-#         self.asn_verify.send_asn_verify()
-#         logging.info("ASN Verified Successfully")
-#         time.sleep(5)
-#         print("\n")
-#
-#     def call_mhe_journal_inbound_program(self):
-#         # Calling the Message Journal Program
-#         logging.info("Message Journal Program Started Successfully")
-#         self.mhe_journal_inbound.create_mhe_journal_inbound()
-#         logging.info("Message Journal Program Completed Successfully")
-#
-#     def get_inbound_master_worksheet_extract(self):
-#         get_entry = self.worksheet_extractor.extract_master_sheet_from_worksheet()
-#
-#         if not get_entry:
-#             logging.error("The worksheet returned nothing check worksheet program extract_master_sheet_from_worksheet function.")
-#             return None
-#
-#         for entry in get_entry:
-#             create_asn = entry.get("CreateASN", 'Y')
-#             inbound_delivery = entry.get("InboundDelivery")
-#             goods_holder_announced = entry.get("GH_Announced")
-#             goods_holder_weighed = entry.get("GH_Weighed")
-#             putaway_complete = entry.get("PutawayComplete")
-#             asn_verify = entry.get("ASNVerify")
-#             run_all = entry.get("RunAll", 'N')
-#
-#             if (create_asn == 'Y' and self.is_no_or_empty(inbound_delivery)
-#                 and self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed)
-#                 and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(asn_verify) and self.is_no_or_empty(run_all)):
-#
-#                 self.call_asn_creation_program()
-#                 logging.info("Program Completed Successfully")
-#                 print("\n")
-#
-#             elif (create_asn == 'Y' and inbound_delivery == 'Y' and self.is_no_or_empty(goods_holder_announced) and
-#                   self.is_no_or_empty(goods_holder_weighed) and self.is_no_or_empty(putaway_complete) and
-#                   self.is_no_or_empty(asn_verify) and self.is_no_or_empty(run_all)):
-#
-#                 # Calling the Create ASN function
-#                 self.call_asn_creation_program()
-#
-#                 # Calling the inbound delivery function
-#                 self.call_inbound_delivery_program()
-#
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (create_asn == 'Y' and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and self.is_no_or_empty(goods_holder_weighed)
-#                 and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(asn_verify) and self.is_no_or_empty(run_all)):
-#
-#                 # Calling the Create ASN function
-#                 self.call_asn_creation_program()
-#
-#                 # Calling the inbound delivery function
-#                 self.call_inbound_delivery_program()
-#
-#                 # Calling the goods holder announced function
-#                 self.call_goods_holder_announced_program()
-#
-#                 time.sleep(35)
-#                 # Calling the MHE journal program
-#                 self.call_mhe_journal_inbound_program()
-#
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (create_asn == 'Y' and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and goods_holder_weighed == 'Y'
-#                   and self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(asn_verify) and self.is_no_or_empty(run_all)):
-#
-#                 # Calling the Create ASN function
-#                 self.call_asn_creation_program()
-#
-#                 # Calling the inbound delivery function
-#                 self.call_inbound_delivery_program()
-#
-#                 # Calling the goods holder announced function
-#                 self.call_goods_holder_announced_program()
-#
-#                 # Calling the goods holder measured function.
-#                 self.call_goods_holder_measured_program()
-#
-#                 time.sleep(35)
-#
-#                 print("\n")
-#                 self.call_mhe_journal_inbound_program()
-#
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (create_asn == 'Y' and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and goods_holder_weighed == 'Y' and
-#                     putaway_complete == 'Y' and self.is_no_or_empty(asn_verify) and self.is_no_or_empty(run_all)):
-#
-#                 # Calling the Create ASN function
-#                 self.call_asn_creation_program()
-#
-#                 # Calling the inbound delivery function
-#                 self.call_inbound_delivery_program()
-#
-#                 # Calling the goods holder announced function
-#                 self.call_goods_holder_announced_program()
-#
-#                 # Calling the goods holder measured function.
-#                 self.call_goods_holder_measured_program()
-#
-#                 # Calling the Putaway Complete Function.
-#                 self.call_putaway_complete_program()
-#
-#                 time.sleep(30)
-#
-#                 # Calling the MHE journal program
-#                 self.call_mhe_journal_inbound_program()
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and inbound_delivery == 'Y' and goods_holder_announced == 'Y' and
-#                   goods_holder_weighed == 'Y' and putaway_complete == 'Y' and asn_verify == 'Y' and
-#                   self.is_no_or_empty(run_all)):
-#
-#                 # Calling the inbound delivery function
-#                 self.call_inbound_delivery_program()
-#
-#                 # Calling the goods holder announced function
-#                 self.call_goods_holder_announced_program()
-#
-#                 # Calling the goods holder measured function.
-#                 self.call_goods_holder_measured_program()
-#
-#                 # Calling the Putaway Complete Function.
-#                 self.call_putaway_complete_program()
-#
-#                 # Calling the ASN Verification Function
-#                 self.call_asn_verify_program()
-#
-#                 time.sleep(30)
-#
-#                 # Calling the MHE journal program
-#                 self.call_mhe_journal_inbound_program()
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
-#                   goods_holder_announced == 'Y' and goods_holder_weighed == 'Y' and putaway_complete == 'Y' and
-#                   asn_verify == 'Y' and self.is_no_or_empty(run_all)):
-#
-#                 # Calling the goods holder announced function
-#                 self.call_goods_holder_announced_program()
-#
-#                 # Calling the goods holder measured function.
-#                 self.call_goods_holder_measured_program()
-#
-#                 # Calling the Putaway Complete Function.
-#                 self.call_putaway_complete_program()
-#
-#                 # Calling the ASN Verification Function
-#                 self.call_asn_verify_program()
-#
-#                 time.sleep(30)
-#
-#                 # Calling the MHE journal program
-#                 self.call_mhe_journal_inbound_program()
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
-#                   self.is_no_or_empty(goods_holder_announced) and goods_holder_weighed == 'Y' and
-#                   putaway_complete == 'Y' and asn_verify == 'Y' and self.is_no_or_empty(run_all)):
-#
-#                 # Calling the goods holder measured function.
-#                 self.call_goods_holder_measured_program()
-#
-#                 # Calling the Putaway Complete Function.
-#                 self.call_putaway_complete_program()
-#
-#                 # Calling the ASN Verification Function
-#                 self.call_asn_verify_program()
-#
-#                 # Deliberately creating delay of 5 seconds for each function execution
-#                 time.sleep(30)
-#
-#                 # Calling the MHE journal program
-#                 self.call_mhe_journal_inbound_program()
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
-#                   self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed) and
-#                   putaway_complete == 'Y' and asn_verify == 'Y' and self.is_no_or_empty(run_all)):
-#
-#                 # Calling the Putaway Complete Function.
-#                 self.call_putaway_complete_program()
-#
-#                 # Calling the ASN Verification Function
-#                 self.call_asn_verify_program()
-#
-#                 # Deliberately creating delay of 30 seconds for each function execution
-#                 time.sleep(30)
-#
-#                 # Calling the MHE journal program
-#                 self.call_mhe_journal_inbound_program()
-#
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
-#                   self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed) and
-#                   self.is_no_or_empty(putaway_complete) and asn_verify == 'Y' and self.is_no_or_empty(run_all)):
-#
-#                 # Calling the ASN Verification Function
-#                 self.call_asn_verify_program()
-#
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery)
-#                 and self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed)
-#                 and self.is_no_or_empty(putaway_complete) and run_all == 'Y'):
-#
-#                 # Calling the Create ASN function
-#                 self.call_asn_creation_program()
-#
-#                 # Calling the inbound delivery function
-#                 self.call_inbound_delivery_program()
-#
-#                 # Calling the goods holder announced function
-#                 self.call_goods_holder_announced_program()
-#
-#                 # Calling the goods holder measured function.
-#                 self.call_goods_holder_measured_program()
-#
-#                 # Calling the Putaway Complete Function.
-#                 self.call_putaway_complete_program()
-#
-#                 # Calling the ASN Verification Function
-#                 self.call_asn_verify_program()
-#
-#                 # Deliberately creating delay of 5 seconds for each function execution
-#                 time.sleep(30)
-#
-#                 # Calling the MHE Journal function.
-#                 self.call_mhe_journal_inbound_program()
-#                 logging.info("Run All Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and inbound_delivery == 'Y' and
-#                   self.is_no_or_empty(goods_holder_announced) and  self.is_no_or_empty(goods_holder_weighed) and
-#                   self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(asn_verify) and
-#                   self.is_no_or_empty(run_all)):
-#
-#                 # Calling the inbound delivery function
-#                 self.call_inbound_delivery_program()
-#                 logging.info("Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
-#                   goods_holder_announced == 'Y' and  self.is_no_or_empty(goods_holder_weighed) and
-#                   self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(asn_verify) and
-#                   self.is_no_or_empty(run_all)):
-#
-#                 # Calling the goods holder announced function
-#                 self.call_goods_holder_announced_program()
-#                 logging.info("Program Completed Successfully")
-#                 time.sleep(30)
-#
-#                 # Calling the MHE Journal function.
-#                 self.call_mhe_journal_inbound_program()
-#                 logging.info("Run All Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
-#                   self.is_no_or_empty(goods_holder_announced) and  goods_holder_weighed == 'Y' and
-#                   self.is_no_or_empty(putaway_complete) and self.is_no_or_empty(asn_verify) and
-#                   self.is_no_or_empty(run_all)):
-#
-#                 # Calling the goods holder measured function.
-#                 self.call_goods_holder_measured_program()
-#                 logging.info("Program Completed Successfully")
-#                 time.sleep(30)
-#
-#                 # Calling the MHE Journal function.
-#                 self.call_mhe_journal_inbound_program()
-#                 logging.info("Run All Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
-#                   self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed) and
-#                   putaway_complete == 'Y' and self.is_no_or_empty(asn_verify) and
-#                   self.is_no_or_empty(run_all)):
-#
-#                 # Calling the Putaway Complete Function.
-#                 self.call_putaway_complete_program()
-#                 logging.info("Program Completed Successfully")
-#                 time.sleep(30)
-#
-#                 # Calling the MHE Journal function.
-#                 self.call_mhe_journal_inbound_program()
-#                 logging.info("Run All Program Completed Successfully")
-#
-#             elif (self.is_no_or_empty(create_asn) and self.is_no_or_empty(inbound_delivery) and
-#                   self.is_no_or_empty(goods_holder_announced) and self.is_no_or_empty(goods_holder_weighed) and
-#                   self.is_no_or_empty(putaway_complete) and asn_verify == 'Y' and
-#                   self.is_no_or_empty(run_all)):
-#
-#                 # Calling the ASN Verification Function
-#                 self.call_asn_verify_program()
-#                 logging.info("Program Completed Successfully")
-#
-#             else:
-#                 logging.info(f"The combination provided doesnt match the requirement "
-#                              f"therefore the program didnt produce any output.")
-#
-#
-# inbound_master = inbound_master_step()
-# inbound_master.get_inbound_master_worksheet_extract()

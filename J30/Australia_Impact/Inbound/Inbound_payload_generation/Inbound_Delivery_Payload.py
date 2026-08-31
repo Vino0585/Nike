@@ -26,8 +26,8 @@ class Inbound_Delivery_Payload:
 
         headers = {
             "Content-Type": "application/json",
-            "selectedorganization": str(plant_id),
-            "selectedlocation": str(plant_id),
+            "selectedOrganization": str(plant_id),
+            "selectedLocation": str(plant_id),
             "Authorization": f'Bearer {bearer_token}'
         }
 
@@ -71,6 +71,7 @@ class Inbound_Delivery_Payload:
 
             token_handler = Get_Token(env=environment.lower(), plant=plant_id)
             bearer_token = token_handler.get_bearer()
+            run_user = getattr(token_handler, "username", "")
             if not bearer_token:
                 logging.error(f"Failed to get bearer token for {environment}/{plant_id}. Skipping.")
                 continue
@@ -92,6 +93,7 @@ class Inbound_Delivery_Payload:
                     "environment": environment,
                     "plant": plant_id,
                     "token": bearer_token,
+                    "username": run_user,
                     "Shipment_ID": inbound_delivery_id,
                     "Pre_Allocate": pre_allocate
                 }

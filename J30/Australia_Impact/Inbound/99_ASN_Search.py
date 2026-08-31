@@ -12,13 +12,14 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
+AUSTRALIA_IMPACT_ROOT = SCRIPT_DIR.parent
 
 class ASN_Search:
 
     def __init__(self):
         # --- Configuration ---
         # Centralize configuration variables for easy changes.
-        self.output_dir = PROJECT_ROOT / "Output_files"
+        self.output_dir = AUSTRALIA_IMPACT_ROOT / "Output_files"
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.OUTPUT_FILENAME = self.output_dir / "ASN_Search_Results.xlsx"
 
@@ -53,8 +54,12 @@ class ASN_Search:
                 # --- 2. URL Setup ---
                 awm_env = AWM_Env()
                 awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
-                program_name = Path(__file__).stem
-                api_url = awm_env.get_program_url(program=program_name)
+                api_url = awm_env.get_program_url(program="ASN_Search")
+                if not api_url:
+                    logging.error(
+                        f"Could not resolve endpoint URL for program ASN_Search in {envn.upper()}/{plant_id}."
+                    )
+                    continue
                 logging.info(f"Target URL: {api_url}")
 
                 # --- 3. Request Headers & Payload ---
@@ -159,8 +164,12 @@ class ASN_Search:
                 # --- 2. URL Setup ---
                 awm_env = AWM_Env()
                 awm_env.get_wm_host(host=envn.lower(), facility=plant_id)
-                program_name = Path(__file__).stem
-                api_url = awm_env.get_program_url(program=program_name)
+                api_url = awm_env.get_program_url(program="ASN_Search")
+                if not api_url:
+                    logging.error(
+                        f"Could not resolve endpoint URL for program ASN_Search in {envn.upper()}/{plant_id}."
+                    )
+                    continue
                 logging.info(f"Target URL: {api_url}")
 
                 # --- 3. Request Headers & Payload ---
