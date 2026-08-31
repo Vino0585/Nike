@@ -2,12 +2,16 @@ import requests
 import pandas as pd
 import logging
 import os
+from datetime import datetime
 
 from collections import defaultdict
 from pathlib import Path
 from Australia_Impact.Environment.Get_Token import Get_Token
 from Australia_Impact.Environment.WM_Environment import AWM_Env
 from Australia_Impact.Inbound.Inbound_payload_generation.ASN_Creation_Payload import Asn_Payload_Generator
+from Australia_Impact.Inbound.Inbound_payload_generation.Execution_Report_Writer import (
+    ExecutionReportWriter,
+)
 
 # Setup basic logging to provide better feedback than print()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -25,6 +29,11 @@ class ASN_Creation:
         return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
 
     def create_asns(self):
+        run_started_at = datetime.now()
+        run_user = ""
+        success_count = 0
+        failure_count = 0
+        step_records = []
         asn_gen = Asn_Payload_Generator()
         payload_packages = asn_gen.generate_payloads
         if not payload_packages:
@@ -59,6 +68,7 @@ class ASN_Creation:
 
                 token_handler = Get_Token(env=environment.lower(), plant=plant_id_for_token)
                 bearer_token = token_handler.get_bearer()
+                run_user = run_user or getattr(token_handler, "username", "")
                 logging.info(f"Successfully retrieved token for {environment.upper()} environment.")
 
                 env_handler = AWM_Env()
@@ -70,7 +80,13 @@ class ASN_Creation:
                             f"[{environment.upper()}] Processing Payload {i + 1}/{len(payloads)} for Plant {plant_id}")
 
                         env_handler.get_wm_host(host=environment.lower(), facility=str(plant_id))
-                        url_value = env_handler.get_program_url(program=Path(__file__).stem)
+                        url_value = env_handler.get_program_url(program="ASN_Creation")
+                        if not url_value:
+                            logging.error(
+                                f"ERROR: Could not resolve endpoint URL for program ASN_Creation "
+                                f"in {environment.upper()}/{plant_id}. Skipping payload {i + 1}."
+                            )
+                            continue
                         logging.info(f"Sending payload to URL: {url_value}")
 
                         headers = {
@@ -91,6 +107,7 @@ class ASN_Creation:
 
                         response_data = response.json()
                         logging.info(f"Success: {response_data.get('success', 'N/A')}")
+                        success_count += 1
 
                         # --- DATA COLLECTION FOR OUTPUT FILES ---
                         # This logic now runs only after a successful API call.
@@ -122,6 +139,18 @@ class ASN_Creation:
                         # This creates one row per successful payload.
                         current_lpns = [lpn.get('LpnId') for lpn in lpn_list if lpn.get('LpnId')]
                         formatted_lpn = ';'.join(current_lpns)
+                        step_records.append(
+                            {
+                                "Environment": environment.upper(),
+                                "Plant": plant_id,
+                                "ASN_ID": asn_id,
+                                "LPN_Count": len(current_lpns),
+                                "LPNs": formatted_lpn,
+                                "CarrierId": carrier_id,
+                                "OriginFacilityId": origin_facility,
+                                "ApiSuccess": response_data.get("success", "N/A"),
+                            }
+                        )
 
                         output_row = {
                             "PLANT": plant_id,
@@ -134,15 +163,19 @@ class ASN_Creation:
                         output_data.append(output_row)
 
                     except KeyError as e:
+                        failure_count += 1
                         logging.error(f"ERROR: Could not process payload {i + 1}. Data is malformed. Missing key: {e}")
                     except requests.exceptions.RequestException as e:
+                        failure_count += 1
                         logging.error(f"ERROR: API request failed for payload {i + 1}: {e}")
                         if e.response is not None:
                             logging.error(f"Status Code: {e.response.status_code}, Response: {e.response.text}")
                     except Exception as e:
+                        failure_count += 1
                         logging.error(f"ERROR: An unexpected error occurred for payload {i + 1}: {e}")
 
             except Exception as e:
+                failure_count += len(payloads)
                 logging.error(f"FATAL ERROR: Could not process batch for environment {environment.upper()}. Error: {e}")
 
         # Generate the final report from ALL collected data
@@ -152,7 +185,7 @@ class ASN_Creation:
                 report_df = pd.DataFrame(extracted_report_data)
 
                 # Define the Output path.
-                output_dir = PROJECT_ROOT / "Output_files"
+                output_dir = AUSTRALIA_IMPACT_ROOT / "Output_files"
                 output_dir.mkdir(parents=True, exist_ok=True)  # Just safe guaring.
                 output_filepath = output_dir / "ASN_Creation_Report.xlsx"
 
@@ -188,6 +221,22 @@ class ASN_Creation:
 
         else:
             logging.info("No data was successfully processed to generate an input sheet.")
+
+        run_ended_at = datetime.now()
+        report_path = ExecutionReportWriter().write_step_report(
+            step_name="ASN Creation",
+            run_user=run_user or os.getenv("USER", ""),
+            started_at=run_started_at,
+            ended_at=run_ended_at,
+            status="SUCCESS" if success_count and not failure_count else ("PARTIAL" if success_count else "FAILED"),
+            summary={
+                "TotalPayloads": len(payload_packages),
+                "SuccessfulPayloads": success_count,
+                "FailedPayloads": failure_count,
+            },
+            records=step_records,
+        )
+        logging.info(f"Execution document generated: {report_path}")
 
 
 if __name__ == '__main__':

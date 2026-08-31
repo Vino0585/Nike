@@ -1,0 +1,18 @@
+{
+  "counters": {
+    "lpn_sequence_state": 0,
+    "trailer_nbr": 0,
+    "asn_nbr": 0,
+    "lpn_number": 0,
+    "trailer_nbr:T083026": 8,
+    "trailer_nbr:T083126": 1
+  },
+  "values": {},
+  "metadata": {
+    "description": "Australia inbound shared sequence/runtime state"
+  },
+  "inbound_master_credentials": {
+    "vgana3": "Vino-35160826"
+  },
+  "inbound_master_last_user": "vgana3"
+}
