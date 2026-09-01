@@ -160,6 +160,11 @@ class Worksheet:
             create_asn = str(entry.get("CreateASN", "")).strip() or "N"
             inbound_delivery = str(entry.get("InboundDelivery", "")).strip() or "N"
             appointment = str(entry.get("Appointment", "")).strip() or "N"
+            receiving = (
+                str(entry.get("Receiving", "")).strip()
+                or str(entry.get("RF_Receiving", "")).strip()
+                or "N"
+            )
             run_all = str(entry.get("RunAll", "")).strip() or "N"
 
             self.all_master_sheet_extract_param.append(
@@ -167,6 +172,7 @@ class Worksheet:
                     "CreateASN": create_asn,
                     "InboundDelivery": inbound_delivery,
                     "Appointment": appointment,
+                    "Receiving": receiving,
                     "RunAll": run_all,
                 }
             )
@@ -308,3 +314,49 @@ class Worksheet:
             )
 
         return self.all_dock_door_check_param
+
+    def rf_receiving_worksheet_extract(self):
+        rf_params = []
+        if not self._master_excel_open(input_sheet_name="MasterInput"):
+            return []
+
+        required_fields = ["Plant", "Environment", "InboundDelivery", "LPNID", "LocationId"]
+        for i, entry in enumerate(self.list_of_entry):
+            missing = [field for field in required_fields if not str(entry.get(field, "")).strip()]
+            if missing:
+                logging.error(f"Row {i + 2}: Missing required fields in MasterInput: {', '.join(missing)}")
+                continue
+
+            inbound_deliveries = []
+            seen_shipments = set()
+            for shipment in str(entry.get("InboundDelivery", "")).split(";"):
+                shipment = shipment.strip()
+                if not shipment or shipment in seen_shipments:
+                    continue
+                seen_shipments.add(shipment)
+                inbound_deliveries.append(shipment)
+
+            lpn_ids = []
+            seen_lpns = set()
+            for lpn_id in str(entry.get("LPNID", "")).split(";"):
+                lpn_id = lpn_id.strip()
+                if not lpn_id or lpn_id in seen_lpns:
+                    continue
+                seen_lpns.add(lpn_id)
+                lpn_ids.append(lpn_id)
+
+            if not inbound_deliveries or not lpn_ids:
+                logging.error(f"Row {i + 2}: InboundDelivery and LPNID must each contain at least one value.")
+                continue
+
+            rf_params.append(
+                {
+                    "Plant": str(entry.get("Plant", "")).strip(),
+                    "Environment": str(entry.get("Environment", "")).strip(),
+                    "LocationId": str(entry.get("LocationId", "")).strip(),
+                    "InboundDeliveries": inbound_deliveries,
+                    "LPNIDs": lpn_ids,
+                }
+            )
+
+        return rf_params

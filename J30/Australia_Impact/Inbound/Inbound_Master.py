@@ -75,6 +75,12 @@ class inbound_master_step:
         print("\n")
         time.sleep(5)
 
+    def call_rf_receiving_program(self):
+        if not self._run_script("5_RF_Receiving.py", "RF Receiving Program"):
+            raise RuntimeError("RF Receiving Program failed")
+        print("\n")
+        time.sleep(5)
+
     # def call_exception_flow(self):
     #     logging.info("Exception Flow Started")
     #     logging.info("Filling iLPN Information for Routing Task Completed")
@@ -98,8 +104,9 @@ class inbound_master_step:
             {'flag': 'CreateASN', 'method': self.call_asn_creation_program},
             {'flag': 'InboundDelivery', 'method': self.call_inbound_delivery_program},
             {'flag': 'Appointment', 'method': self.call_appointment_program},
+            {'flag': 'Receiving', 'method': self.call_rf_receiving_program},
             # Future AU steps can be added here in sequence:
-            # {'flag': 'Receiving', 'method': self.call_receiving_program},
+            # {'flag': 'DropLocation', 'method': self.call_drop_location_program},
             # {'flag': 'DropLocation', 'method': self.call_drop_location_program},
             # {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program},
             # {'flag': 'ASNVerify', 'method': self.call_asn_verify_program},

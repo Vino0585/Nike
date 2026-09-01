@@ -30,6 +30,7 @@ class StateManager:
                 "trailer_nbr": 0,
                 "asn_nbr": 0,
                 "lpn_number": 0,
+                "pallet_nbr": 0,
             },
             "values": {},
             "metadata": {

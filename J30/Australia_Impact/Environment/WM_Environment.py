@@ -44,6 +44,26 @@ class AWM_Env():
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/yard/check-in"
         elif program == "Dock_Door_Check":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/entity/search"
+        elif program == "RF_Accept_Dock_Door":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Receiving/stateName/AcceptDockDoor/actionName/AcceptDockDoor"
+            )
+        elif program == "RF_Accept_Shipment":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Receiving/stateName/AcceptShipment/actionName/AcceptShipment"
+            )
+        elif program == "RF_Accept_LPN":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Receiving/stateName/AcceptLPN/actionName/AcceptLPN"
+            )
+        elif program == "RF_Accept_To_Pallet":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Sorting/stateName/AcceptToPallet/actionName/AcceptToPallet"
+            )
         elif program == "ASN_Verify":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/receiving/ui/asn/verify"
         elif program == "Message_Journal_Inbound":

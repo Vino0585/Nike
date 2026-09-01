@@ -5,7 +5,8 @@
     "asn_nbr": 0,
     "lpn_number": 0,
     "trailer_nbr:T083026": 8,
-    "trailer_nbr:T083126": 1
+    "trailer_nbr:T083126": 3,
+    "pallet_nbr:PAL083126": 1
   },
   "values": {},
   "metadata": {
