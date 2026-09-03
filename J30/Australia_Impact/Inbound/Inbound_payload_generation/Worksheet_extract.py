@@ -31,6 +31,7 @@ class Worksheet:
         self.all_appointment_extract_param = []
         self.all_check_in_extract_param = []
         self.all_dock_door_check_param = []
+        self.all_rf_locate_pallet_param = []
 
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
@@ -165,6 +166,7 @@ class Worksheet:
                 or str(entry.get("RF_Receiving", "")).strip()
                 or "N"
             )
+            drop_location = str(entry.get("DropLocation", "")).strip() or "N"
             run_all = str(entry.get("RunAll", "")).strip() or "N"
 
             self.all_master_sheet_extract_param.append(
@@ -173,6 +175,7 @@ class Worksheet:
                     "InboundDelivery": inbound_delivery,
                     "Appointment": appointment,
                     "Receiving": receiving,
+                    "DropLocation": drop_location,
                     "RunAll": run_all,
                 }
             )
@@ -360,3 +363,53 @@ class Worksheet:
             )
 
         return rf_params
+
+    def rf_locate_pallet_worksheet_extract(self):
+        self.all_rf_locate_pallet_param = []
+        if not self._master_excel_open(input_sheet_name="MasterInput"):
+            return []
+
+        required_fields = ["Plant", "Environment"]
+        for i, entry in enumerate(self.list_of_entry):
+            missing = [field for field in required_fields if not str(entry.get(field, "")).strip()]
+            if missing:
+                logging.error(f"Row {i + 2}: Missing required fields in MasterInput: {', '.join(missing)}")
+                continue
+
+            pallet_source_value = (
+                str(entry.get("PalletId", "")).strip()
+                or str(entry.get("PalletID", "")).strip()
+                or str(entry.get("Palletid", "")).strip()
+            )
+            pallet_ids = []
+            seen_pallets = set()
+            for pallet_id in pallet_source_value.split(";"):
+                pallet_id = pallet_id.strip()
+                if not pallet_id or pallet_id in seen_pallets:
+                    continue
+                seen_pallets.add(pallet_id)
+                pallet_ids.append(pallet_id)
+
+            if not pallet_ids:
+                logging.error(f"Row {i + 2}: PalletId/PalletID/Palletid has no usable values.")
+                continue
+
+            inbound_deliveries = []
+            seen_shipments = set()
+            for shipment_id in str(entry.get("InboundDelivery", "")).split(";"):
+                shipment_id = shipment_id.strip()
+                if not shipment_id or shipment_id in seen_shipments:
+                    continue
+                seen_shipments.add(shipment_id)
+                inbound_deliveries.append(shipment_id)
+
+            self.all_rf_locate_pallet_param.append(
+                {
+                    "Plant": str(entry.get("Plant", "")).strip(),
+                    "Environment": str(entry.get("Environment", "")).strip(),
+                    "InboundDeliveries": inbound_deliveries,
+                    "PalletIDs": pallet_ids,
+                }
+            )
+
+        return self.all_rf_locate_pallet_param

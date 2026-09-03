@@ -81,6 +81,12 @@ class inbound_master_step:
         print("\n")
         time.sleep(5)
 
+    def call_drop_location_program(self):
+        if not self._run_script("6_RF_Locate_Pallet.py", "RF Locate Pallet Program"):
+            raise RuntimeError("RF Locate Pallet Program failed")
+        print("\n")
+        time.sleep(5)
+
     # def call_exception_flow(self):
     #     logging.info("Exception Flow Started")
     #     logging.info("Filling iLPN Information for Routing Task Completed")
@@ -105,9 +111,8 @@ class inbound_master_step:
             {'flag': 'InboundDelivery', 'method': self.call_inbound_delivery_program},
             {'flag': 'Appointment', 'method': self.call_appointment_program},
             {'flag': 'Receiving', 'method': self.call_rf_receiving_program},
+            {'flag': 'DropLocation', 'method': self.call_drop_location_program},
             # Future AU steps can be added here in sequence:
-            # {'flag': 'DropLocation', 'method': self.call_drop_location_program},
-            # {'flag': 'DropLocation', 'method': self.call_drop_location_program},
             # {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program},
             # {'flag': 'ASNVerify', 'method': self.call_asn_verify_program},
         ]

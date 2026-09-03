@@ -64,6 +64,36 @@ class AWM_Env():
                 f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
                 "workflowScriptName/Sorting/stateName/AcceptToPallet/actionName/AcceptToPallet"
             )
+        elif program == "RF_Locate_Staging_Pallet_Scan":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Putaway/stateName/AcceptContainerForUserDirectedPutaway/"
+                "actionName/AcceptContainerForUserDirectedPutaway"
+            )
+        elif program == "RF_Locate_Staging_Accept_Location":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Putaway/stateName/AcceptLocationForUserDirectedPutaway/"
+                "actionName/AcceptLocationForUserDirectedPutaway"
+            )
+        elif program == "RF_Locate_Staging_Confirm_Put":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Putaway/stateName/AcceptLocationForUserDirectedPutaway/"
+                "actionName/AcceptLocationForUserDirectedPutaway"
+            )
+        elif program == "RF_Locate_Drop_Pallet_Scan":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Putaway/stateName/AcceptContainerForUserDirectedPutaway/"
+                "actionName/AcceptContainerForUserDirectedPutaway"
+            )
+        elif program == "RF_Locate_Drop_Accept_Location":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Putaway/stateName/AcceptLocationForUserDirectedPutaway/"
+                "actionName/AcceptLocationForUserDirectedPutaway"
+            )
         elif program == "ASN_Verify":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/receiving/ui/asn/verify"
         elif program == "Message_Journal_Inbound":

@@ -10,6 +10,7 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 
+import pandas as pd
 import requests
 
 CURRENT_FILE = Path(__file__).resolve()
@@ -122,6 +123,95 @@ class RF_Receiving:
         if pallet_count <= 1:
             return 1
         return min(MAX_THREAD_COUNT, pallet_count)
+
+    @staticmethod
+    def _normalize_semicolon_list(raw_value) -> list[str]:
+        seen = set()
+        normalized = []
+        for value in str(raw_value or "").split(";"):
+            value = value.strip()
+            if not value or value in seen:
+                continue
+            seen.add(value)
+            normalized.append(value)
+        return normalized
+
+    @classmethod
+    def _merge_unique_semicolon(cls, existing_value, new_values: list[str]) -> str:
+        merged = []
+        seen = set()
+        for value in cls._normalize_semicolon_list(existing_value) + cls._normalize_semicolon_list(";".join(new_values)):
+            if value in seen:
+                continue
+            seen.add(value)
+            merged.append(value)
+        return ";".join(merged)
+
+    def _update_master_input_pallet_ids(self, updates: list[dict]):
+        if not updates:
+            return
+
+        worksheet = Worksheet()
+        workbook_path = Path(worksheet.master_file_path)
+        if not workbook_path.exists():
+            logging.error(f"Worksheet not found for pallet updates: {workbook_path}")
+            return
+
+        try:
+            master_df = pd.read_excel(workbook_path, sheet_name="MasterInput", dtype=str).fillna("")
+        except Exception as ex:
+            logging.error(f"Failed to read MasterInput from {workbook_path}: {ex}")
+            return
+
+        if master_df.empty:
+            logging.warning("MasterInput is empty. No pallet updates were written.")
+            return
+
+        pallet_column = "PalletId"
+        if "PalletId" not in master_df.columns and "PalletID" in master_df.columns:
+            pallet_column = "PalletID"
+        if pallet_column not in master_df.columns:
+            master_df[pallet_column] = ""
+
+        for update in updates:
+            environment = str(update.get("environment", "")).strip()
+            plant = str(update.get("plant", "")).strip()
+            shipment_id = str(update.get("shipment_id", "")).strip()
+            pallet_ids = self._normalize_semicolon_list(";".join(update.get("pallet_ids", [])))
+            if not (environment and plant and shipment_id and pallet_ids):
+                continue
+
+            matched = False
+            for row_idx, row in master_df.iterrows():
+                row_env = str(row.get("Environment", "")).strip()
+                row_plant = str(row.get("Plant", "")).strip()
+                row_shipments = self._normalize_semicolon_list(row.get("InboundDelivery", ""))
+                if row_env != environment or row_plant != plant or shipment_id not in row_shipments:
+                    continue
+
+                master_df.at[row_idx, pallet_column] = self._merge_unique_semicolon(
+                    row.get(pallet_column, ""),
+                    pallet_ids,
+                )
+                matched = True
+
+            if not matched:
+                logging.warning(
+                    f"No MasterInput row matched Plant={plant}, Environment={environment}, "
+                    f"Shipment={shipment_id} for pallet writeback."
+                )
+
+        try:
+            with pd.ExcelWriter(
+                workbook_path,
+                engine="openpyxl",
+                mode="a",
+                if_sheet_exists="replace",
+            ) as writer:
+                master_df.to_excel(writer, sheet_name="MasterInput", index=False)
+            logging.info(f"Updated MasterInput {pallet_column} values in {workbook_path}")
+        except Exception as ex:
+            logging.error(f"Failed to write pallet updates to {workbook_path}: {ex}")
 
     def _process_pallet_worker(
         self,
@@ -302,6 +392,7 @@ class RF_Receiving:
         run_started_at = datetime.now()
         run_user = ""
         step_records = []
+        pallet_updates = []
         success_count = 0
         failure_count = 0
 
@@ -418,6 +509,21 @@ class RF_Receiving:
                     shipment_failed += 1
                     all_success = False
 
+                successful_pallet_ids = [
+                    str(result.get("pallet_id", "")).strip()
+                    for result in worker_results
+                    if result.get("success") and str(result.get("pallet_id", "")).strip()
+                ]
+                if successful_pallet_ids:
+                    pallet_updates.append(
+                        {
+                            "environment": environment,
+                            "plant": plant,
+                            "shipment_id": shipment_id,
+                            "pallet_ids": successful_pallet_ids,
+                        }
+                    )
+
                 for result in worker_results:
                     success_count += int(result.get("success_steps", 0))
                     failure_count += int(result.get("failed_steps", 0))
@@ -442,6 +548,8 @@ class RF_Receiving:
 
             if not all_success:
                 break
+
+        self._update_master_input_pallet_ids(pallet_updates)
 
         run_ended_at = datetime.now()
         report_status = "SUCCESS" if all_success else ("PARTIAL" if success_count else "FAILED")
