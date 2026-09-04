@@ -22,7 +22,6 @@ PROJECT_ROOT = SCRIPT_DIR.parent.parent
 AUSTRALIA_IMPACT_ROOT = SCRIPT_DIR.parent
 
 class ASN_Creation:
-
     @staticmethod
     def _get_ssl_verify_config():
         disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
@@ -83,7 +82,7 @@ class ASN_Creation:
         payload_packages = asn_gen.generate_payloads
         if not payload_packages:
             logging.error("No payloads were generated. Please check your Excel input and generator logic.")
-            return
+            return False
 
         payloads_by_env = defaultdict(list)
         for package in payload_packages:
@@ -149,8 +148,8 @@ class ASN_Creation:
                             timeout=30
                         )
                         response.raise_for_status()
-
                         response_data = response.json()
+
                         logging.info(f"Success: {response_data.get('success', 'N/A')}")
                         success_count += 1
 
@@ -285,8 +284,11 @@ class ASN_Creation:
             records=step_records,
         )
         logging.info(f"Execution document generated: {report_path}")
+        return bool(success_count and not failure_count)
 
 
 if __name__ == '__main__':
     asn_create = ASN_Creation()
-    asn_create.create_asns()
+    ok = asn_create.create_asns()
+    import sys
+    sys.exit(0 if ok else 1)

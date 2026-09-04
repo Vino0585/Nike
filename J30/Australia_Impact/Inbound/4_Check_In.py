@@ -99,7 +99,7 @@ class Check_In_Appointment:
         payload_packages = generator.generate_payloads
         if not payload_packages:
             logging.warning("No check-in payloads were generated.")
-            return
+            return False
 
         grouped = defaultdict(list)
         for package in payload_packages:
@@ -154,8 +154,11 @@ class Check_In_Appointment:
             records=step_records,
         )
         logging.info(f"Execution document generated: {report_path}")
+        return bool(success_count and not failure_count)
 
 
 if __name__ == "__main__":
     checker = Check_In_Appointment()
-    checker.send_all_check_ins()
+    ok = checker.send_all_check_ins()
+    import sys
+    sys.exit(0 if ok else 1)

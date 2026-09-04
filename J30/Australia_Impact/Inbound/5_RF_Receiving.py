@@ -125,6 +125,26 @@ class RF_Receiving:
         return min(MAX_THREAD_COUNT, pallet_count)
 
     @staticmethod
+    def _extract_confirmed_pallet_id(response_payload: dict, fallback_pallet_id: str) -> str:
+        """
+        Prefer the pallet identifier returned by WM after AcceptToPallet.
+        Fallback to the locally generated ID when response fields are unavailable.
+        """
+        try:
+            state = (
+                response_payload.get("workflowVO", {})
+                .get("header", {})
+                .get("state", {})
+            )
+            for key in ("palletId", "containerId", "destinationLpnId"):
+                value = str(state.get(key, "")).strip()
+                if value:
+                    return value
+        except Exception:
+            pass
+        return str(fallback_pallet_id or "").strip()
+
+    @staticmethod
     def _normalize_semicolon_list(raw_value) -> list[str]:
         seen = set()
         normalized = []
@@ -229,6 +249,7 @@ class RF_Receiving:
         shipment_context = f"{environment.upper()}/{plant} shipment {shipment_id} worker-{worker_idx}"
         machine = WorkerStateMachine()
         lpn_processed = 0
+        resolved_pallet_id = str(pallet_id).strip()
         failure_step = ""
         error_message = ""
         success_steps = 0
@@ -336,6 +357,10 @@ class RF_Receiving:
                         "success_steps": success_steps,
                         "failed_steps": failed_steps,
                     }
+                resolved_pallet_id = self._extract_confirmed_pallet_id(
+                    response_payload=pallet_response,
+                    fallback_pallet_id=resolved_pallet_id,
+                )
                 machine.transition(WorkerState.PALLET_ACCEPTED)
                 success_steps += 1
                 self._randomized_delay()
@@ -361,10 +386,15 @@ class RF_Receiving:
                     lpn_state_payload = next_lpn_payload
 
             machine.transition(WorkerState.COMPLETE)
+            if resolved_pallet_id and resolved_pallet_id != str(pallet_id).strip():
+                logging.info(
+                    f"WM returned pallet ID {resolved_pallet_id} for requested {pallet_id} "
+                    f"in {shipment_context} worker-{worker_idx}."
+                )
             return {
                 "success": True,
                 "worker": worker_idx,
-                "pallet_id": pallet_id,
+                "pallet_id": resolved_pallet_id or pallet_id,
                 "lpn_processed": lpn_processed,
                 "failure_step": "",
                 "error": "",

@@ -260,7 +260,7 @@ class Pre_Allocate_Inbound_Delivery:
 
         if not payloads:
             logging.warning("No payloads were generated. Exiting.")
-            return
+            return False
 
         run_user = str(payloads[0].get("username", "")).strip()
 
@@ -315,7 +315,10 @@ class Pre_Allocate_Inbound_Delivery:
             records=step_records,
         )
         logging.info(f"Execution document generated: {report_path}")
+        return bool(success_count and not failure_count)
 
 
 ib_delivery = Pre_Allocate_Inbound_Delivery()
-ib_delivery.send_pre_allocate_inbound_delivery()
+import sys
+ok = ib_delivery.send_pre_allocate_inbound_delivery()
+sys.exit(0 if ok else 1)

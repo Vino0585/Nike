@@ -517,8 +517,8 @@ class Worksheet:
                     "TrailerId": str(entry.get("TrailerId", "")).strip(),
                     "LocationId": str(entry.get("LocationId", "")).strip(),
                     "CarrierId": str(entry.get("CarrierId", "AUPU")).strip() or "AUPU",
-                    "VisitType": str(entry.get("VisitType", "PICKUP_EMPTY")).strip() or "PICKUP_EMPTY",
-                    "TrailerStatus": str(entry.get("TrailerStatus", "Empty")).strip() or "Empty",
+                    "VisitType": str(entry.get("VisitType", "DROP_UNLOAD")).strip() or "DROP_UNLOAD",
+                    "TrailerStatus": str(entry.get("TrailerStatus", "IB UnLoaded")).strip() or "IB UnLoaded",
                 }
             )
 

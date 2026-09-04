@@ -5,6 +5,7 @@ from pathlib import Path
 
 class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
     # Persist LPN sequence across separate script runs.
+    _ASN_STATE_FILE = Path(__file__).resolve().with_name(".asn_sequence_state.json")
     _LPN_STATE_FILE = Path(__file__).resolve().with_name(".lpn_sequence_state.json")
     _FR_ORDER_STATE_FILE = Path(__file__).resolve().with_name(".fr_order_sequence_state.json")
 
@@ -96,6 +97,34 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         return next_sequence
 
+    @classmethod
+    def _next_asn_sequence(cls, scope_key: str) -> int:
+        state = {}
+        if cls._ASN_STATE_FILE.exists():
+            try:
+                state = json.loads(cls._ASN_STATE_FILE.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                state = {}
+
+        if not isinstance(state, dict):
+            state = {}
+
+        last_sequence = int(state.get(scope_key, -1))
+        next_sequence = last_sequence + 1
+        if next_sequence > 99:
+            raise ValueError(
+                f"ASN sequence exhausted for scope {scope_key}. "
+                "Maximum 100 ASNs (00-99) per prefix/day."
+            )
+
+        state[scope_key] = next_sequence
+        try:
+            cls._ASN_STATE_FILE.write_text(json.dumps(state), encoding="utf-8")
+        except OSError:
+            pass
+
+        return next_sequence
+
     def asn_number_generation(self, num_of_asn_to_generate: int, envn: str, initial: str) -> list:
         if not isinstance(num_of_asn_to_generate, int) or num_of_asn_to_generate <= 0:
             print("Warning: Number of ASN is zero or invalid. No ASN IDs will be generated for this data row.")
@@ -103,12 +132,13 @@ class NumberGeneration:  # PEP 8 convention: Class names should be PascalCase
 
         # Clear previous results for new generation batch
         self.generated_asn_ids = []
-        timestamp = datetime.now().strftime('%m%d')
-        for i in range(num_of_asn_to_generate):
-            # Using a wider random range and the loop index for better uniqueness
-            unique_part = f"{random.randint(100, 999)}{i}"
-            # id_ = f"{initial}ASN{timestamp}{envn.upper()}{unique_part}" # 'id' is a built-in, better to use 'id_'
-            id_ = f"{initial}{timestamp}{unique_part}"
+        prefix = str(initial or "").strip().upper()
+        date_part = datetime.now().strftime('%m%d%y')
+        scope_key = f"{prefix}:{date_part}"
+
+        for _ in range(num_of_asn_to_generate):
+            next_sequence = self._next_asn_sequence(scope_key)
+            id_ = f"{prefix}{date_part}{next_sequence:02d}"
             self.generated_asn_ids.append(id_)
         return self.generated_asn_ids
 

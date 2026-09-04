@@ -534,7 +534,10 @@ class RF_Locate_Pallet:
                 for future in as_completed(futures):
                     staging_results.append(future.result())
 
-            row_staging_success = all(result.get("success") for result in staging_results)
+            row_staging_success = (
+                len(staging_results) == len(pallet_ids)
+                and all(result.get("success") for result in staging_results)
+            )
             for result in staging_results:
                 if result.get("success"):
                     success_count += 1
@@ -556,6 +559,10 @@ class RF_Locate_Pallet:
             if not row_staging_success:
                 logging.error(f"Staging locate failed for one or more pallets in {context}.")
                 break
+
+            logging.info(
+                f"Completed staging locate for all pallets in {context}; starting drop locate section."
+            )
 
             pallet_drop_assignments = {
                 pallet_id: random.choice(selected_drop_locations) for pallet_id in pallet_ids
