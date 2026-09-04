@@ -94,8 +94,33 @@ class AWM_Env():
                 "workflowScriptName/Putaway/stateName/AcceptLocationForUserDirectedPutaway/"
                 "actionName/AcceptLocationForUserDirectedPutaway"
             )
+        elif program == "RF_Putaway_Carton_Pallet_Scan":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Putaway/stateName/AcceptContainerForSystemDirectedPutaway/"
+                "actionName/AcceptContainerForSystemDirectedPutaway"
+            )
+        elif program == "RF_Putaway_Carton_Scan_Location":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Putaway/stateName/AcceptLocationForSystemDirectedPutaway/"
+                "actionName/AcceptLocationForSystemDirectedPutaway"
+            )
+        elif program == "RF_Putaway_Carton_Scan_Carton":
+            self.url = (
+                f"https://{self.host_name}/dmmobile-facade/services/rest/workflow/execute/"
+                "workflowScriptName/Putaway/stateName/AcceptLpnAndCompleteMove/"
+                "actionName/AcceptLpnAndCompleteMove"
+            )
         elif program == "ASN_Verify":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/receiving/ui/asn/verify"
+        elif program == "Check_Out":
+            self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/yard-management/transaction/checkout"
+        elif program == "Release_Dock_Door":
+            self.url = (
+                f"https://{self.host_name}/dmui-facade/api/dmui-facade/view/action/"
+                "com-manh-cp-dcinventory/DockDoor/ReleaseDoor"
+            )
         elif program == "Message_Journal_Inbound":
             self.url = f"https://{self.host_name}/dmui-facade/api/dmui-facade/entity/search"
         elif program == "iLPN_Information_Receiving":

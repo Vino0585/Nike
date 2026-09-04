@@ -3,6 +3,7 @@ import pandas as pd
 import logging
 import os
 from datetime import datetime
+from openpyxl import load_workbook
 
 from collections import defaultdict
 from pathlib import Path
@@ -27,6 +28,50 @@ class ASN_Creation:
         disable_ssl_verify = os.getenv("NIKE_DISABLE_SSL_VERIFY", "").strip().lower() in {"1", "true", "yes", "y"}
         ca_bundle = os.getenv("NIKE_CA_BUNDLE", "").strip() or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
         return False if disable_ssl_verify else (ca_bundle if ca_bundle else True)
+
+    @staticmethod
+    def _normalize_asn_value(value: object) -> str:
+        """Keep ASN values as text and preserve leading zeros."""
+        raw = str(value or "").strip()
+        if not raw:
+            return ""
+        # ASNs are expected to be 10-digit numeric strings in this AU flow.
+        if raw.isdigit() and len(raw) < 10:
+            return raw.zfill(10)
+        return raw
+
+    @staticmethod
+    def _format_asnid_as_text(workbook_path: Path):
+        """Force ASNID column to text format in MasterInput so Excel retains leading zeros."""
+        try:
+            workbook = load_workbook(workbook_path)
+            if "MasterInput" not in workbook.sheetnames:
+                workbook.close()
+                return
+
+            sheet = workbook["MasterInput"]
+            headers = {}
+            for col_idx in range(1, sheet.max_column + 1):
+                header_val = str(sheet.cell(row=1, column=col_idx).value or "").strip()
+                if header_val:
+                    headers[header_val] = col_idx
+
+            asn_col_idx = headers.get("ASNID")
+            if not asn_col_idx:
+                workbook.close()
+                return
+
+            for row_idx in range(2, sheet.max_row + 1):
+                cell = sheet.cell(row=row_idx, column=asn_col_idx)
+                normalized = ASN_Creation._normalize_asn_value(cell.value)
+                if normalized:
+                    cell.value = normalized
+                cell.number_format = "@"
+
+            workbook.save(workbook_path)
+            workbook.close()
+        except Exception as ex:
+            logging.error(f"Failed to enforce text format for MasterInput.ASNID in {workbook_path}: {ex}")
 
     def create_asns(self):
         run_started_at = datetime.now()
@@ -155,7 +200,7 @@ class ASN_Creation:
                         output_row = {
                             "PLANT": plant_id,
                             "ENVN": environment,
-                            "ASN_ID": asn_id,
+                            "ASN_ID": self._normalize_asn_value(asn_id),
                             "LPN_ID": formatted_lpn,
                             "Pre_Allocate": "Y",
                             "Failed": "N"
@@ -206,6 +251,7 @@ class ASN_Creation:
                 asn_df = report_df.rename(columns={"PLANT": "Plant", "ENVN": "Environment", "ASN_ID": "ASNID",
                                                    "LPN_ID": "LPNID", "Pre_Allocate": 'Pre_Allocate',
                                                    "Failed": "Failed"})
+                asn_df["ASNID"] = asn_df["ASNID"].apply(self._normalize_asn_value)
 
                 if output_filepath.exists():
                     with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
@@ -213,6 +259,8 @@ class ASN_Creation:
                 else:
                     with pd.ExcelWriter(output_filepath, engine='openpyxl', mode='w') as writer:
                         asn_df.to_excel(writer, sheet_name='MasterInput', index=False)
+
+                self._format_asnid_as_text(output_filepath)
 
                 logging.info(f"Successfully created multi-sheet report: {output_filepath}")
 

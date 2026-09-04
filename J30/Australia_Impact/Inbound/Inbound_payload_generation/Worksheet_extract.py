@@ -32,6 +32,8 @@ class Worksheet:
         self.all_check_in_extract_param = []
         self.all_dock_door_check_param = []
         self.all_rf_locate_pallet_param = []
+        self.all_rf_putaway_carton_storage_param = []
+        self.all_asn_verify_extract_param = []
 
     def _excel_open(self, input_sheet_name):
         self.list_of_entry = []
@@ -158,15 +160,41 @@ class Worksheet:
             return []
 
         for i, entry in enumerate(self.list_of_entry):
-            create_asn = str(entry.get("CreateASN", "")).strip() or "N"
-            inbound_delivery = str(entry.get("InboundDelivery", "")).strip() or "N"
+            create_asn = (
+                str(entry.get("CreateASN", "")).strip()
+                or str(entry.get("Create_ASN", "")).strip()
+                or "N"
+            )
+            inbound_delivery = (
+                str(entry.get("InboundDelivery", "")).strip()
+                or str(entry.get("Inbound_Delivery", "")).strip()
+                or "N"
+            )
             appointment = str(entry.get("Appointment", "")).strip() or "N"
             receiving = (
                 str(entry.get("Receiving", "")).strip()
                 or str(entry.get("RF_Receiving", "")).strip()
                 or "N"
             )
-            drop_location = str(entry.get("DropLocation", "")).strip() or "N"
+            drop_location = (
+                str(entry.get("DropLocation", "")).strip()
+                or str(entry.get("Drop_Location", "")).strip()
+                or str(entry.get("Drop Location", "")).strip()
+                or "N"
+            )
+            putaway_complete = (
+                str(entry.get("PutawayComplete", "")).strip()
+                or str(entry.get("Putaway_Complete", "")).strip()
+                or str(entry.get("Putaway Complete", "")).strip()
+                or "N"
+            )
+            asn_verify = (
+                str(entry.get("ASNVerify", "")).strip()
+                or str(entry.get("ASN_Verify", "")).strip()
+                or str(entry.get("ASN Verify", "")).strip()
+                or str(entry.get("ASNVerification", "")).strip()
+                or "N"
+            )
             run_all = str(entry.get("RunAll", "")).strip() or "N"
 
             self.all_master_sheet_extract_param.append(
@@ -176,6 +204,8 @@ class Worksheet:
                     "Appointment": appointment,
                     "Receiving": receiving,
                     "DropLocation": drop_location,
+                    "PutawayComplete": putaway_complete,
+                    "ASNVerify": asn_verify,
                     "RunAll": run_all,
                 }
             )
@@ -413,3 +443,83 @@ class Worksheet:
             )
 
         return self.all_rf_locate_pallet_param
+
+    def rf_putaway_carton_storage_extract(self):
+        self.all_rf_putaway_carton_storage_param = []
+        if not self._master_excel_open(input_sheet_name="MasterInput"):
+            return []
+
+        required_fields = ["Plant", "Environment"]
+        for i, entry in enumerate(self.list_of_entry):
+            missing = [field for field in required_fields if not str(entry.get(field, "")).strip()]
+            if missing:
+                logging.error(f"Row {i + 2}: Missing required fields in MasterInput: {', '.join(missing)}")
+                continue
+
+            pallet_source_value = (
+                str(entry.get("PalletId", "")).strip()
+                or str(entry.get("PalletID", "")).strip()
+                or str(entry.get("Palletid", "")).strip()
+            )
+            pallet_ids = []
+            seen_pallets = set()
+            for pallet_id in pallet_source_value.split(";"):
+                pallet_id = pallet_id.strip()
+                if not pallet_id or pallet_id in seen_pallets:
+                    continue
+                seen_pallets.add(pallet_id)
+                pallet_ids.append(pallet_id)
+
+            if not pallet_ids:
+                logging.error(f"Row {i + 2}: PalletId/PalletID/Palletid has no usable values.")
+                continue
+
+            self.all_rf_putaway_carton_storage_param.append(
+                {
+                    "Plant": str(entry.get("Plant", "")).strip(),
+                    "Environment": str(entry.get("Environment", "")).strip(),
+                    "PalletIDs": pallet_ids,
+                }
+            )
+
+        return self.all_rf_putaway_carton_storage_param
+
+    def asn_verify_checkout_release_extract(self):
+        self.all_asn_verify_extract_param = []
+        if not self._master_excel_open(input_sheet_name="MasterInput"):
+            return []
+
+        required_fields = ["Plant", "Environment", "ASNID", "TrailerId", "LocationId"]
+        for i, entry in enumerate(self.list_of_entry):
+            missing = [field for field in required_fields if not str(entry.get(field, "")).strip()]
+            if missing:
+                logging.error(f"Row {i + 2}: Missing required fields in MasterInput: {', '.join(missing)}")
+                continue
+
+            asn_ids = []
+            seen_asn = set()
+            for asn_id in str(entry.get("ASNID", "")).split(";"):
+                asn_id = asn_id.strip()
+                if not asn_id or asn_id in seen_asn:
+                    continue
+                seen_asn.add(asn_id)
+                asn_ids.append(asn_id)
+
+            if not asn_ids:
+                logging.error(f"Row {i + 2}: ASNID has no usable values.")
+                continue
+
+            self.all_asn_verify_extract_param.append(
+                {
+                    "Plant": str(entry.get("Plant", "")).strip(),
+                    "Environment": str(entry.get("Environment", "")).strip(),
+                    "ASNIDs": asn_ids,
+                    "TrailerId": str(entry.get("TrailerId", "")).strip(),
+                    "LocationId": str(entry.get("LocationId", "")).strip(),
+                    "CarrierId": str(entry.get("CarrierId", "AUPU")).strip() or "AUPU",
+                    "VisitType": str(entry.get("VisitType", "PICKUP_EMPTY")).strip() or "PICKUP_EMPTY",
+                    "TrailerStatus": str(entry.get("TrailerStatus", "Empty")).strip() or "Empty",
+                }
+            )
+
+        return self.all_asn_verify_extract_param

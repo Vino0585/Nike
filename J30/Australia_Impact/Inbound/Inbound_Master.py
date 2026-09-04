@@ -87,6 +87,18 @@ class inbound_master_step:
         print("\n")
         time.sleep(5)
 
+    def call_putaway_complete_program(self):
+        if not self._run_script("7_RF_Putaway_Carton_Storage.py", "RF Putaway Carton Storage Program"):
+            raise RuntimeError("RF Putaway Carton Storage Program failed")
+        print("\n")
+        time.sleep(5)
+
+    def call_asn_verify_program(self):
+        if not self._run_script("8_ASN_Verify.py", "ASN Verify, Check Out and Release Dock Door Program"):
+            raise RuntimeError("ASN Verify, Check Out and Release Dock Door Program failed")
+        print("\n")
+        time.sleep(5)
+
     # def call_exception_flow(self):
     #     logging.info("Exception Flow Started")
     #     logging.info("Filling iLPN Information for Routing Task Completed")
@@ -112,9 +124,9 @@ class inbound_master_step:
             {'flag': 'Appointment', 'method': self.call_appointment_program},
             {'flag': 'Receiving', 'method': self.call_rf_receiving_program},
             {'flag': 'DropLocation', 'method': self.call_drop_location_program},
+            {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program},
+            {'flag': 'ASNVerify', 'method': self.call_asn_verify_program},
             # Future AU steps can be added here in sequence:
-            # {'flag': 'PutawayComplete', 'method': self.call_putaway_complete_program},
-            # {'flag': 'ASNVerify', 'method': self.call_asn_verify_program},
         ]
 
         for entry in worksheet_entries:
@@ -128,7 +140,15 @@ class inbound_master_step:
             completed_steps = []
 
             if entry.get("RunAll") == 'Y':
-                for op in operations:
+                run_all_operations = operations
+                if entry.get("CreateASN") != "Y":
+                    logging.info(
+                        "RunAll is Y and CreateASN is not Y; skipping ASN Creation and using "
+                        "existing ASN values from MasterInput."
+                    )
+                    run_all_operations = operations[1:]
+
+                for op in run_all_operations:
                     try:
                         op['method']()
                         completed_steps.append(op['flag'])
@@ -188,6 +208,35 @@ class inbound_master_step:
                     break  # Stop at the first non-'Y' flag
 
             if methods_to_run:
+                if (
+                    entry.get("CreateASN") != "Y"
+                    and entry.get("InboundDelivery") != "Y"
+                    and (entry.get("Appointment") == "Y" or entry.get("Receiving") == "Y")
+                ):
+                    logging.info(
+                        "CreateASN and InboundDelivery flags are not Y; proceeding with "
+                        "Appointment/Receiving using existing MasterInput InboundDelivery values."
+                    )
+                if (
+                    (entry.get("DropLocation") == "Y" or entry.get("PutawayComplete") == "Y")
+                    and entry.get("Receiving") != "Y"
+                ):
+                    logging.info(
+                        "DropLocation/PutawayComplete triggered without Receiving; using existing "
+                        "MasterInput PalletId values."
+                    )
+                if (
+                    entry.get("ASNVerify") == "Y"
+                    and entry.get("CreateASN") != "Y"
+                    and entry.get("InboundDelivery") != "Y"
+                    and entry.get("Appointment") != "Y"
+                    and entry.get("Receiving") != "Y"
+                    and entry.get("DropLocation") != "Y"
+                    and entry.get("PutawayComplete") != "Y"
+                ):
+                    logging.info(
+                        "ASNVerify-only run detected; using existing MasterInput ASNID values."
+                    )
                 for index, method in enumerate(methods_to_run):
                     try:
                         method()
