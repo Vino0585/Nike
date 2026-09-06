@@ -1,0 +1,39 @@
+[
+  {
+    "step_name": "RF Locate Pallet",
+    "run_user": "vgana3",
+    "started_at": "2026-09-04T15:28:06.912666",
+    "ended_at": "2026-09-04T15:28:06.943923",
+    "duration_seconds": "0.03",
+    "status": "FAILED",
+    "summary": {
+      "TotalPallets": 2,
+      "SuccessfulTransactions": 0,
+      "FailedTransactions": 2,
+      "StagingLocation": "100801VNA1",
+      "DropLocationChoicesUsed": "1041VNA011;1013VNA011",
+      "MaxStagingThreadCount": 2,
+      "MaxDropThreadCount": 2
+    },
+    "records": [
+      {
+        "Context": "QA/1093",
+        "Phase": "Locate to VNA Staging",
+        "PalletId": "PAL09042613",
+        "Location": "100801VNA1",
+        "Result": "FAILED",
+        "Error": "Scan failed",
+        "ThreadMode": "2 thread(s)"
+      },
+      {
+        "Context": "QA/1093",
+        "Phase": "Locate to VNA Staging",
+        "PalletId": "PAL09042614",
+        "Location": "100801VNA1",
+        "Result": "FAILED",
+        "Error": "Scan failed",
+        "ThreadMode": "2 thread(s)"
+      }
+    ]
+  }
+]
