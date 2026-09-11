@@ -1,0 +1,167 @@
+{
+  "event": {
+    "timestamp": "2026-09-10T00:00:00"
+  },
+  "fulfillmentRequestHeader": {
+    "fulfillmentRequestNumber": "TEST091000007",
+    "orderGroupType": "ZLF",
+    "orderType": "Z003",
+    "fulfillmentRequestType": "ZLF",
+    "shippingPointCode": "1093",
+    "routeNumber": "200002",
+    "salesOrganizationCode": "8700",
+    "incoTermsCode": "DDP",
+    "exportIndicator": false,
+    "shipToAddressOverrideIndicator": false,
+    "customerDocumentRequiredIndicator": false,
+    "serviceLevelCode": "STD",
+    "appointmentSchedulingIndicator": false,
+    "currencyCode": "AUD",
+    "consumerRequestedMethod": "SHIP",
+    "fulfillmentMethod": "SHIP",
+    "immediateReleaseIndicator": false,
+    "salesDeliveryPriority": "03",
+    "directOrderDropIndicator": false,
+    "vendorNumber": "NIKE",
+    "fulfillmentRequestReference": [
+      {
+        "referenceNumberTypeCode": "SALES_DOCUMENT_NUMBER",
+        "referenceNumberValue": "STEST091000007"
+      },
+      {
+        "referenceNumberTypeCode": "CONSUMER_SALES_ORDER_NUMBER"
+      },
+      {
+        "referenceNumberTypeCode": "INITIATING_DOCUMENT_NUMBER",
+        "referenceNumberValue": "PO09104952"
+      }
+    ],
+    "fulfillmentRequestDate": {
+      "cancelByDt": "2026-09-10",
+      "plannedPickingTimestamp": "2026-09-10T00:00:00",
+      "plannedGoodsIssueTimestamp": "2026-09-10T00:00:00",
+      "estimatedDeliveryTimestamp": "2026-09-20T00:00:00",
+      "fulfillmentRequestCreateTimestamp": "2026-09-10T00:00:00",
+      "customerRequestTimestamp": "2026-09-20T00:00:00",
+      "customerOrderCreateTimestamp": "2026-09-10T00:00:00"
+    },
+    "fulfillmentRequestItem": [
+      {
+        "fulfilmentRequestItemNbr": "900001",
+        "gtin": "00888409942943",
+        "shippingPointCode": "1093",
+        "materialNumber": "DV4023-003",
+        "divisionCode": "20",
+        "poRequiredIndicator": false,
+        "alwaysAvailableIndicator": false,
+        "productLifecycleCode": "ACT",
+        "launchCode": "N",
+        "materialGroupCode": "02",
+        "storageLocationCode": "1000",
+        "batchNumber": "0043754328",
+        "prepackCode": "0",
+        "promotionalIndicator": false,
+        "customerBusinessTypeCode": "001",
+        "customerAccountType": "047",
+        "channelClassCode": "30",
+        "netPriceAmount": 37.56,
+        "manufacturersSuggestedRetailPrice": 100,
+        "salesUnitQuantity": 6,
+        "salesUnitQuantityUOM": "PR",
+        "baseUnitQuantity": 6,
+        "baseUnitQuantityUOM": "PR",
+        "grossWeight": 0.691,
+        "netWeight": 0.691,
+        "weightUOM": "KG",
+        "sizeCode": "8",
+        "stockCategoryCode": "01000",
+        "materialAvailableDate": "2026-06-16",
+        "assortmentNumber": "0043754328",
+        "fulfillmentRequestItemReferenceOrder": [
+          {
+            "referenceItemTypeCode": "SALES_DOCUMENT_NUMBER",
+            "referenceItemValue": "000010"
+          },
+          {
+            "referenceItemTypeCode": "PURCHASE_ORDER_ITEM_NUMBER",
+            "referenceItemValue": "1"
+          }
+        ],
+        "fulfillmentRequestItemDate": [
+          {
+            "lastShipmentTimestamp": "2026-09-20T00:00:00",
+            "scheduledDeliveryEndTimestamp": "2026-09-20T00:00:00",
+            "materialAvailableDate": "2026-06-19"
+          }
+        ],
+        "fulfillmentRequestItemInstruction": [
+          {
+            "instructionCode": "PKL",
+            "instructionTypeCode": "AIP",
+            "vasIndicator": true,
+            "instruction3Text": "TAM",
+            "packingIncrementCode": "000"
+          },
+          {
+            "instructionCode": "ASN",
+            "instructionTypeCode": "AIS",
+            "vasIndicator": true,
+            "instruction3Text": "TRE"
+          }
+        ]
+      }
+    ],
+    "fulfillmentRequestParty": [
+      {
+        "partyTypeCode": "SOLD_TO",
+        "partyIdentifierType": "WHOLE_SALE_DC",
+        "partyIdentifier": "0005044669",
+        "partyName1": "Renwick Connor",
+        "fulfillmentRequestLocationAddress": {
+          "addressLine1Text": "1129 PENDLETON CIRCLE",
+          "cityName": "CARINDALE",
+          "stateProvinceCode": "QLD",
+          "postalCode": "4152",
+          "countryCode": "AU",
+          "languageCode": "EN",
+          "streetAddress1": "1129 PENDLETON CIRCLE"
+        },
+        "fulfillmentRequestContact": {
+          "dayPhoneNumber": "1380485691",
+          "emailAddressText": "abc@gmail.com"
+        }
+      },
+      {
+        "partyTypeCode": "CARRIER",
+        "partyIdentifierType": "WHOLE_SALE_DC",
+        "partyIdentifier": "IPEC",
+        "fulfillmentRequestLocationAddress": {}
+      },
+      {
+        "partyTypeCode": "SHIP_TO",
+        "partyIdentifierType": "WHOLE_SALE_DC",
+        "partyIdentifier": "0005048027",
+        "partyName1": "Renwick Connor",
+        "customerSelfID": "4001",
+        "fulfillmentRequestLocationAddress": {
+          "addressLine1Text": "1129 PENDLETON CIRCLE",
+          "cityName": "CARINDALE",
+          "stateProvinceCode": "QLD",
+          "postalCode": "4152",
+          "countryCode": "AU",
+          "languageCode": "EN",
+          "streetAddress1": "1129 PENDLETON CIRCLE"
+        },
+        "fulfillmentRequestContact": {
+          "emailAddressText": "abc@gmail.com"
+        }
+      },
+      {
+        "partyTypeCode": "SHIP_FROM",
+        "partyIdentifierType": "WHOLE_SALE_DC",
+        "partyIdentifier": "1093"
+      }
+    ],
+    "fulfillmentRequestInstruction": []
+  }
+}
